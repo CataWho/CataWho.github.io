@@ -100,6 +100,16 @@
   padding: 6px 8px;
 }
 
+.hydra-link {
+  display: inline-block;
+  margin: 0 0 6px;
+  color: var(--wine);
+}
+.code-input {
+  font: 12px/1.5 var(--mono) !important;
+  min-height: 120px;
+}
+
 .code-editor {
   width: 100%;
   height: 180px;

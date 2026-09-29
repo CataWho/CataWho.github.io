@@ -19,7 +19,8 @@ create table public.items (
 );
 create table public.projects (
   id uuid primary key default gen_random_uuid(), profile_id uuid not null references public.profiles(id) on delete cascade,
-  title text not null, description text default '', code text not null, canvas_width integer default 600,
+  title text not null, description text default '', code text not null,
+  engine text not null default 'p5' check (engine in ('p5', 'hydra')), canvas_width integer default 600,
   canvas_height integer default 400, is_public boolean not null default true,
   created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );

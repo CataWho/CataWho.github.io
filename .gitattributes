@@ -1,0 +1,4 @@
+# Todos los archivos de texto con fin de línea LF (igual en Windows, Mac y GitHub).
+* text=auto eol=lf
+*.png binary
+*.webp binary

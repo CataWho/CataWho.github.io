@@ -51,9 +51,22 @@ de un canal automáticamente haría falta la API de YouTube, que requiere una cl
 "+ escribir" (en el inicio) o "+ escribir nota" (en notas.html). Cada nota tiene ✎ para editar y × para
 borrar, tanto en el inicio como en la página de notas. Se ordenan de la más nueva a la más vieja.
 
-## Laboratorio p5.js
+## Laboratorio (p5.js y Hydra)
 
-"+ nuevo proyecto" crea un sketch de ejemplo. En cada tarjeta:
+"+ nuevo proyecto" pide título, descripción y **lenguaje** (p5.js o Hydra). En el campo de código podés:
+
+- pegar tu código (las marcas ``` que aparecen al copiar desde un chat se sacan solas),
+- en Hydra, pegar directamente el **link del editor** (`hydra.ojack.xyz/?code=…`): se lee el código del link,
+- o dejarlo vacío para arrancar con un ejemplo.
+
+Los proyectos de Hydra tienen el botón **abrir en el editor de Hydra ↗** para seguir trabajándolos ahí.
+En el laboratorio, su `a.fft` se mueve solo; si lo elegís con **mostrar en inicio**, sigue la música de
+"escuchando", igual que el fondo.
+
+> Antes del primer proyecto de Hydra hay que correr una vez
+> `supabase/migrations/2026-09-29-project-engine.sql` en Supabase → SQL Editor (agrega la columna `engine`).
+
+En cada tarjeta:
 
 - ✎ al lado del título o la descripción para editarlos.
 - **Editar código:** el sketch se vuelve a correr cuando dejás de escribir y se guarda solo al rato.

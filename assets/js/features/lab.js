@@ -1,16 +1,22 @@
-// Laboratorio p5.js: las tarjetas de laboratorio.html y el proyecto destacado del inicio.
+// Laboratorio: las tarjetas de laboratorio.html y el proyecto destacado del inicio.
+// Cada proyecto está hecho en p5.js o en Hydra (columna "engine" de la tabla projects).
 
 import { esc, node, q, qa } from "../core/dom.js";
 import { deleteProject, saveProject } from "../core/db.js";
 import { state } from "../core/state.js";
 import { bindDialog, openDialog } from "../core/ui.js";
+import { feedAudio } from "./audio-analyser.js";
 import { saveHomeLayout } from "./home-layout.js";
 import { mountSketch } from "./sketch.js";
 
 const SAVE_DELAY = 1500; // ms sin escribir antes de guardar el código
 const RUN_DELAY = 600; // ms sin escribir antes de volver a correr el sketch
+const MIGRATION = "supabase/migrations/2026-09-29-project-engine.sql";
 
-const STARTER_CODE = `function setup() {
+const ENGINE_NAMES = { p5: "p5.js", hydra: "Hydra" };
+const engineOf = (project) => (project.engine === "hydra" ? "hydra" : "p5");
+
+const P5_STARTER = `function setup() {
   createCanvas(600, 600);
 }
 
@@ -23,6 +29,42 @@ function draw() {
   for (let i = 0; i < 10; i++) circle(60 + i * 60, 300 + sin(frameCount * 0.04 + i) * 70, 18);
 }
 `;
+
+const HYDRA_STARTER = `// Hydra — https://hydra.ojack.xyz
+// a.fft (de 0 a 1) sigue la música del inicio; en el laboratorio se mueve solo.
+osc(20, 0.05, 0.3)
+  .color(0.9, 0.25, 0.4)
+  .modulate(noise(3), () => a.fft[0] * 0.5)
+  .kaleid(4)
+  .out()
+`;
+
+const CODE_FENCE = /^\s*```/;
+
+/**
+ * Lo que se pega al crear un proyecto puede ser código o un link del editor de Hydra
+ * (…hydra.ojack.xyz/?code=…). También saca las líneas ``` que aparecen al copiar desde un chat.
+ */
+function readCodeInput(value) {
+  const text = String(value || "").trim();
+  try {
+    const url = new URL(text);
+    const encoded = url.searchParams.get("code");
+    // El editor de Hydra guarda el código como base64(encodeURIComponent(código)).
+    if (url.hostname.endsWith("hydra.ojack.xyz") && encoded)
+      return decodeURIComponent(atob(encoded.replace(/ /g, "+")));
+  } catch {
+    // No era un link: es código.
+  }
+  return text
+    .split("\n")
+    .filter((line) => !CODE_FENCE.test(line))
+    .join("\n");
+}
+
+/** Link para abrir un código en el editor oficial de Hydra. */
+const hydraEditorUrl = (code) =>
+  `https://hydra.ojack.xyz/?code=${encodeURIComponent(btoa(encodeURIComponent(code)))}`;
 
 const projects = () => state.archive.projects || [];
 const featuredProject = () =>
@@ -42,7 +84,9 @@ export function renderLabPreview() {
     q("[data-home-project-description]").textContent = "Creá uno en el laboratorio creativo.";
     return;
   }
-  mountSketch(frame, project.code);
+  mountSketch(frame, project.code, { engine: engineOf(project) });
+  // Si el destacado es de Hydra, escucha la música de "escuchando" como el fondo.
+  if (engineOf(project) === "hydra") feedAudio(frame);
   q("[data-home-project-title]").textContent = project.title;
   q("[data-home-project-description]").textContent =
     project.description || "Experimento hecho con código creativo.";
@@ -67,6 +111,11 @@ export function renderLab() {
 
 function projectCard(project, isFeatured) {
   const id = esc(project.id);
+  const engine = engineOf(project);
+  const hydraLink =
+    engine === "hydra"
+      ? `<a class="add-link hydra-link" data-hydra-link href="${esc(hydraEditorUrl(project.code))}" target="_blank" rel="noreferrer">abrir en el editor de Hydra ↗</a>`
+      : "";
   return node(`
     <article class="project-card" data-project-card="${id}">
       <header>
@@ -76,7 +125,7 @@ function projectCard(project, isFeatured) {
         </div>
         <button class="icon-button" data-edit-only data-edit-title title="Editar título" aria-label="Editar título">✎</button>
       </header>
-      <p class="eyebrow">p5.js · público</p>
+      <p class="eyebrow">${ENGINE_NAMES[engine]} · público</p>
       <div class="project-description-wrap">
         <p class="project-description-text">${esc(project.description || "Sin descripción todavía.")}</p>
         <button class="icon-button" data-edit-only data-edit-description title="Editar descripción" aria-label="Editar descripción">✎</button>
@@ -86,6 +135,7 @@ function projectCard(project, isFeatured) {
         <iframe class="project-frame" data-project-frame title="Canvas de ${esc(project.title)}"></iframe>
       </div>
       <p class="canvas-note" data-project-note>Preparando canvas…</p>
+      ${hydraLink}
       <details data-edit-only>
         <summary>Editar código</summary>
         <textarea class="code-editor" data-project-code spellcheck="false">${esc(project.code)}</textarea>
@@ -106,13 +156,20 @@ function bindProjectCard(project) {
   const status = q("[data-project-state]", card);
   const frame = q("[data-project-frame]", card);
   const note = q("[data-project-note]", card);
+  const hydraLink = q("[data-hydra-link]", card);
+  const engine = engineOf(project);
   let saveTimer;
   let runTimer;
 
   const run = () => {
-    note.textContent = "Preparando canvas…";
     note.classList.remove("has-error");
+    note.textContent =
+      engine === "hydra"
+        ? "Hydra en vivo · acá a.fft se mueve solo; en el inicio sigue la música."
+        : "Preparando canvas…";
+    if (hydraLink) hydraLink.href = hydraEditorUrl(project.code);
     mountSketch(frame, project.code, {
+      engine,
       onSize: ({ width, height }) => {
         frame.style.aspectRatio = `${width} / ${height}`;
         if (!note.classList.contains("has-error"))
@@ -164,7 +221,8 @@ function bindProjectCard(project) {
   q("[data-run-project]", card).onclick = run;
   q("[data-feature-project]", card).onclick = () => setFeaturedProject(project.id);
   q("[data-delete-project]", card).onclick = () => removeProject(project);
-  frame.style.aspectRatio = `${project.canvas_width || 600} / ${project.canvas_height || 400}`;
+  frame.style.aspectRatio =
+    engine === "hydra" ? "16 / 9" : `${project.canvas_width || 600} / ${project.canvas_height || 400}`;
   run();
 }
 
@@ -214,22 +272,45 @@ async function removeProject(project) {
 // --- Diálogo "nuevo proyecto" -------------------------------------------------
 
 let dialog;
+let updateHint = () => {};
 
 export function setupProjectDialog() {
   dialog = q('[data-modal="project"]');
-  if (dialog) bindDialog(dialog, createProject);
+  if (!dialog) return;
+  bindDialog(dialog, createProject);
+  // La ayuda del campo de código cambia según el lenguaje elegido.
+  const fields = q("form", dialog).elements;
+  updateHint = () => {
+    const isHydra = fields.engine.value === "hydra";
+    fields.code.placeholder = isHydra
+      ? "Pegá tu código de Hydra o el link del editor (hydra.ojack.xyz/?code=…). Si lo dejás vacío, arranca con un ejemplo."
+      : "Pegá tu sketch de p5.js. Si lo dejás vacío, arranca con un ejemplo.";
+  };
+  fields.engine.addEventListener("change", updateHint);
 }
 
-export const openProjectDialog = () => openDialog(dialog);
+export function openProjectDialog() {
+  openDialog(dialog);
+  updateHint();
+}
 
 async function createProject(fields) {
+  const engine = fields.engine.value === "hydra" ? "hydra" : "p5";
   const project = {
     id: crypto.randomUUID(),
     title: fields.title.value.trim(),
     description: fields.detail.value.trim(),
-    code: STARTER_CODE,
+    code: readCodeInput(fields.code.value) || (engine === "hydra" ? HYDRA_STARTER : P5_STARTER),
+    // Solo mandamos "engine" en Hydra: así p5.js funciona aunque todavía no se haya corrido la migración.
+    ...(engine === "hydra" && { engine }),
   };
-  await saveProject(project);
+  try {
+    await saveProject(project);
+  } catch (error) {
+    if (/engine/i.test(error.message))
+      throw new Error(`falta actualizar la base de datos. Corré ${MIGRATION} en Supabase → SQL Editor.`);
+    throw error;
+  }
   state.archive.projects.unshift(project);
   renderLab();
   dialog.close("saved");

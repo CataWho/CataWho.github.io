@@ -2,6 +2,8 @@
 // Devuelve 4 bandas (graves → agudos) entre 0 y 1, como el a.fft de Hydra.
 // Las previews de iTunes permiten este análisis porque mandan Access-Control-Allow-Origin: *.
 
+import { sendAudio } from "./sketch.js";
+
 // Rangos de la lista de frecuencias (de 128) que forman cada banda.
 const BANDS = [
   [1, 4], // graves
@@ -48,4 +50,27 @@ export function readBands() {
     for (let i = from; i < to; i++) sum += samples[i];
     return sum / (to - from) / 255;
   });
+}
+
+/**
+ * Lleva cada banda al mismo rango que la onda de reposo de los sketches (≈0.1–0.7):
+ * con música el visual late más fuerte pero no cambia de escala, y nunca llega a 0.
+ */
+const shape = (value) => 0.12 + Math.min(1, Math.max(0, (value - 0.3) * 1.5)) * 0.6;
+
+const fedFrames = new WeakSet();
+
+/** Mientras suena música y el iframe se ve, le pasa el sonido como a.fft. */
+export function feedAudio(frame) {
+  if (fedFrames.has(frame)) return;
+  fedFrames.add(frame);
+  let visible = true;
+  new IntersectionObserver(([entry]) => (visible = entry.isIntersecting)).observe(frame);
+  const pump = () => {
+    if (!frame.isConnected) return;
+    const bands = visible && readBands();
+    if (bands) sendAudio(frame, bands.map(shape));
+    requestAnimationFrame(pump);
+  };
+  requestAnimationFrame(pump);
 }
