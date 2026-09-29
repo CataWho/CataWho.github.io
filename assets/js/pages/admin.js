@@ -2,7 +2,7 @@
 // La primera vez que la dueña entra, se crea su perfil.
 
 import { q } from "../core/dom.js";
-import { currentUser, ensureProfile, hasDatabase, sendMagicLink } from "../core/db.js";
+import { currentUser, ensureProfile, hasDatabase, sendMagicLink, signOut } from "../core/db.js";
 
 const form = q("[data-admin-form]");
 const status = q("[data-admin-status]");
@@ -35,6 +35,11 @@ form.addEventListener("submit", async (event) => {
   } finally {
     button.disabled = false;
   }
+});
+
+q("[data-sign-out]").addEventListener("click", async () => {
+  await signOut();
+  location.reload();
 });
 
 start();

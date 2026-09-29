@@ -3,6 +3,11 @@
 Todo lo que sigue requiere haber entrado con tu sesión desde `admin.html`. Las visitas ven el contenido,
 pero no los controles.
 
+El navegador recuerda tu sesión aunque cierres la pestaña. Mientras está iniciada, la barra de abajo
+dice **modo edición** y tiene **cerrar sesión** (también está en `admin.html`). Para ver la web como la ve
+el público, abrila en una ventana de incógnito. Aunque alguien viera los botones, la base de datos rechaza
+cualquier cambio que no venga de tu cuenta.
+
 ## Inicio
 
 - **Perfil:** "editar perfil →" cambia nombre, bio y avatar. Podés subir una imagen o marcar
@@ -69,7 +74,7 @@ En el laboratorio, su `a.fft` se mueve solo; si lo elegís con **mostrar en inic
 En cada tarjeta:
 
 - ✎ al lado del título o la descripción para editarlos.
-- **Editar código:** el sketch se vuelve a correr cuando dejás de escribir y se guarda solo al rato.
+- **Editar código** (las visitas ven **Ver código**, en solo lectura): el sketch se vuelve a correr cuando dejás de escribir y se guarda solo al rato.
   Si el código tiene un error, aparece debajo del canvas con el número de línea.
 - **mostrar en inicio** elige qué proyecto se ve en la portada.
 - Los sketches que no están en pantalla se pausan solos, para no gastar batería.

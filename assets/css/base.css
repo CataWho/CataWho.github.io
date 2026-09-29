@@ -160,6 +160,36 @@ body.is-loading main {
   text-transform: uppercase;
 }
 
+/* Aviso "modo edición" (solo lo ve la dueña). */
+.owner-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--wine);
+}
+.owner-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rose);
+  animation: owner-pulse 2s ease-in-out infinite;
+}
+@keyframes owner-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+.owner-badge button {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
 /* --- Botones -------------------------------------------------------------- */
 
 .button {
@@ -331,6 +361,10 @@ dialog::backdrop {
 @media (max-width: 460px) {
   .site-header nav {
     gap: 12px;
+  }
+  /* En el celular no entran las tres cosas: con el aviso, se esconde "buenos aires". */
+  .site-footer:has(.owner-badge) [data-storage-state] {
+    display: none;
   }
   .shell {
     padding: 22px 13px 45px;

@@ -136,9 +136,9 @@ function projectCard(project, isFeatured) {
       </div>
       <p class="canvas-note" data-project-note>Preparando canvas…</p>
       ${hydraLink}
-      <details data-edit-only>
-        <summary>Editar código</summary>
-        <textarea class="code-editor" data-project-code spellcheck="false">${esc(project.code)}</textarea>
+      <details class="code-panel">
+        <summary>${state.isOwner ? "Editar código" : "Ver código"}</summary>
+        <textarea class="code-editor" data-project-code spellcheck="false" aria-label="Código de ${esc(project.title)}" ${state.isOwner ? "" : "readonly"}>${esc(project.code)}</textarea>
       </details>
       <footer>
         <span data-project-state>guardado</span>

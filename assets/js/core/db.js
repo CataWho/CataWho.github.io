@@ -138,6 +138,12 @@ export async function currentUser() {
   return data.user || null;
 }
 
+export async function signOut() {
+  if (!db) return;
+  const { error } = await db.auth.signOut();
+  if (error) throw error;
+}
+
 export async function sendMagicLink(email, redirectTo) {
   const { error } = await requireDb().auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
   if (error) throw error;
