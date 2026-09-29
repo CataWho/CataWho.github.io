@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c2337" />
+    <title>Notas — Archivo vivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/notes.css" />
+    <script type="module" src="assets/js/pages/notes.js"></script>
+  </head>
+  <body class="is-loading">
+    <header class="site-header">
+      <a class="brand" href="index.html">✳ archivo vivo</a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html">inicio</a>
+        <a href="laboratorio.html">laboratorio</a>
+        <a class="active" href="notas.html" aria-current="page">notas</a>
+        <a href="galeria.html">galería</a>
+      </nav>
+      <button class="plain-button" data-edit-only data-action="new-note">+ escribir nota</button>
+    </header>
+
+    <main class="shell subpage">
+      <section class="page-intro">
+        <p class="eyebrow">cuaderno abierto</p>
+        <h1>Notas<br /><i>&amp; artículos</i></h1>
+        <p>Ideas, diarios y textos para dejar a la vista.</p>
+      </section>
+      <section class="note-wall" data-full-note-list></section>
+    </main>
+
+    <footer class="site-footer">
+      <span>archivo vivo · Cata</span>
+      <span data-storage-state>cargando…</span>
+    </footer>
+  </body>
+</html>

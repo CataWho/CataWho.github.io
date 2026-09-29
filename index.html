@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c2337" />
+    <title>Archivo vivo — Cata</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/home.css" />
+    <script type="module" src="assets/js/pages/home.js"></script>
+  </head>
+  <body class="is-loading">
+    <header class="site-header">
+      <a class="brand" href="index.html">✳ archivo vivo</a>
+      <nav aria-label="Navegación principal">
+        <a class="active" href="index.html" aria-current="page">inicio</a>
+        <a href="laboratorio.html">laboratorio</a>
+        <a href="notas.html">notas</a>
+        <a href="galeria.html">galería</a>
+      </nav>
+      <a class="plain-button" href="admin.html">editar mi archivo</a>
+    </header>
+
+    <div class="ticker" aria-hidden="true">
+      <span>
+        un lugar para guardar lo que me mueve &nbsp;/&nbsp; música, imágenes, palabras y experimentos &nbsp;/&nbsp;
+        un lugar para guardar lo que me mueve &nbsp;/&nbsp; música, imágenes, palabras y experimentos &nbsp;/&nbsp;
+      </span>
+    </div>
+
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">diario personal · buenos aires</p>
+          <h1>Mi pequeño<br /><i>universo.</i></h1>
+          <p class="hero-text">Un archivo de cosas que escucho, leo, miro, hago y todavía quiero hacer.</p>
+          <a class="button dark" href="#coleccion">explorar archivo ↓</a>
+        </div>
+        <aside class="identity-card">
+          <div class="avatar" data-avatar>C</div>
+          <div>
+            <p class="eyebrow">perfil activo</p>
+            <h2 data-profile-name>Cata</h2>
+            <p data-profile-bio></p>
+          </div>
+          <button class="add-link" data-edit-only data-action="edit-profile">editar perfil →</button>
+        </aside>
+      </section>
+
+      <section class="collection" id="coleccion">
+        <!-- 01 / Música -->
+        <article class="window music-window" data-home-section="music">
+          <div class="window-bar">
+            <span>01 / escuchando</span>
+            <span class="window-chrome" aria-hidden="true">— □ ×</span>
+          </div>
+          <div class="window-content">
+            <div class="section-heading">
+              <h2>En repeat</h2>
+              <button class="add-link" data-edit-only data-action="add-music">+ buscar y agregar</button>
+            </div>
+            <div class="now-playing">
+              <div class="album-art" data-current-art>♫</div>
+              <div>
+                <p class="eyebrow">preview · iTunes</p>
+                <h3 data-current-title>Cargando música…</h3>
+                <p data-current-artist></p>
+                <div class="player-controls">
+                  <button class="preview-button" data-action="toggle-music" disabled>▶ reproducir preview</button>
+                  <label class="volume-control">
+                    <span aria-hidden="true">🔉</span>
+                    <input data-volume type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Volumen de la música" />
+                    <span aria-hidden="true">🔊</span>
+                  </label>
+                </div>
+                <a class="music-credit" data-music-credit href="https://music.apple.com/" target="_blank" rel="noreferrer" hidden>
+                  Contenido cortesía de iTunes
+                </a>
+              </div>
+            </div>
+            <audio data-audio-player></audio>
+            <div class="mini-list" data-music-list></div>
+          </div>
+        </article>
+
+        <!-- 02 / Laboratorio -->
+        <article class="window lab-window" data-home-section="lab">
+          <div class="window-bar">
+            <span>02 / laboratorio creativo</span>
+            <span class="window-chrome" aria-hidden="true">— □ ×</span>
+          </div>
+          <div class="window-content">
+            <div class="section-heading">
+              <h2>p5.js</h2>
+              <a class="add-link" href="laboratorio.html">ver todos →</a>
+            </div>
+            <div class="project-preview">
+              <div class="preview-canvas">
+                <iframe data-home-project-frame title="Proyecto destacado"></iframe>
+              </div>
+              <div>
+                <p class="eyebrow">laboratorio abierto</p>
+                <h3 data-home-project-title>Proyectos interactivos</h3>
+                <p data-home-project-description>Experimentos hechos con código creativo.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 03 / Libros -->
+        <article class="window books-window" data-home-section="books">
+          <div class="window-bar">
+            <span>03 / mesa de luz</span>
+            <span class="window-chrome" aria-hidden="true">— □ ×</span>
+          </div>
+          <div class="window-content">
+            <div class="section-heading">
+              <h2>Libros</h2>
+              <button class="add-link" data-edit-only data-action="add-book">+ buscar libro</button>
+            </div>
+            <div class="book-grid" data-book-list></div>
+          </div>
+        </article>
+
+        <!-- 04 / YouTube -->
+        <article class="window channels-window" data-home-section="channels">
+          <div class="window-bar">
+            <span>04 / canales y videos</span>
+            <span class="window-chrome" aria-hidden="true">— □ ×</span>
+          </div>
+          <div class="window-content">
+            <div class="section-heading">
+              <h2>En YouTube</h2>
+              <button class="add-link" data-edit-only data-action="add-channel">+ sumar</button>
+            </div>
+            <div class="channel-grid" data-channel-list></div>
+          </div>
+        </article>
+
+        <!-- 05 / Notas -->
+        <article class="window notes-window" data-home-section="notes">
+          <div class="window-bar">
+            <span>05 / cuaderno abierto</span>
+            <span class="window-chrome" aria-hidden="true">— □ ×</span>
+          </div>
+          <div class="window-content">
+            <div class="section-heading">
+              <h2>Notas & artículos</h2>
+              <span class="section-heading-actions">
+                <button class="add-link" data-edit-only data-action="new-note">+ escribir</button>
+                <a class="add-link" href="notas.html">leer todo →</a>
+              </span>
+            </div>
+            <div class="note-list" data-note-list></div>
+          </div>
+        </article>
+
+        <!-- 06 / Fotografías -->
+        <article class="window photo-window" data-home-section="photos">
+          <div class="window-bar">
+            <span>06 / cosas que vi</span>
+            <span class="window-chrome" aria-hidden="true">— □ ×</span>
+          </div>
+          <div class="window-content">
+            <div class="section-heading">
+              <h2>Fotografías</h2>
+              <a class="add-link" href="galeria.html">abrir galería →</a>
+            </div>
+            <div class="photo-preview" data-photo-preview></div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>archivo vivo · Cata</span>
+      <span data-storage-state>cargando…</span>
+    </footer>
+
+    <!-- Diálogo: editar perfil -->
+    <dialog data-modal="profile">
+      <form class="modal">
+        <header>
+          <span>editar perfil</span>
+          <button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button>
+        </header>
+        <label>Nombre<input name="name" required maxlength="60" /></label>
+        <label>Bio<textarea name="bio" maxlength="240"></textarea></label>
+        <label>Avatar<input name="avatar" type="file" accept="image/*" /></label>
+        <div class="avatar-choice">
+          <img src="assets/images/cata-avatar-pixel.webp" alt="Tu avatar pixel art con cámara" />
+          <label class="checkbox-label"><input name="generatedAvatar" type="checkbox" /> Usar mi avatar pixel art</label>
+        </div>
+        <menu>
+          <button class="button light" type="button" data-close-dialog>cancelar</button>
+          <button class="button dark" type="submit">guardar</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <!-- Diálogo: sumar música, libro o canal (los campos visibles cambian según el tipo) -->
+    <dialog data-modal="item">
+      <form class="modal">
+        <header>
+          <span data-modal-title>sumar al archivo</span>
+          <button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button>
+        </header>
+        <input type="hidden" name="type" />
+        <label data-title-label>Canción o disco<input name="title" required maxlength="140" autocomplete="off" /></label>
+        <label data-author-label hidden>Artista o autor<input name="author" maxlength="140" autocomplete="off" /></label>
+        <label data-music-mode hidden>
+          Buscar como
+          <select name="musicMode">
+            <option value="track">canción</option>
+            <option value="album">disco</option>
+          </select>
+        </label>
+        <label data-detail-label>Comentario opcional<textarea name="detail" maxlength="400"></textarea></label>
+        <label data-kind-label>
+          Estado de lectura
+          <select name="kind">
+            <option value="por leer">por leer</option>
+            <option value="leyendo">leyendo</option>
+            <option value="leído">leído</option>
+          </select>
+        </label>
+        <label data-link-label>
+          Enlace del canal, video o playlist
+          <input name="link" type="url" placeholder="https://youtube.com/…" />
+        </label>
+        <label data-video-label hidden>
+          Video o playlist destacado (opcional)
+          <input name="videoLink" type="url" placeholder="https://youtu.be/…" />
+        </label>
+        <label data-rating-label hidden>
+          Mi puntuación <output data-rating-display>sin puntuación</output>
+          <input name="rating" type="range" min="0" max="5" step="0.5" value="0" aria-label="Puntuación de cero a cinco estrellas" />
+        </label>
+        <div class="catalog-results" data-catalog-results hidden></div>
+        <menu>
+          <button class="button light" type="button" data-close-dialog>cancelar</button>
+          <button class="button dark" type="submit" data-item-submit>sumar</button>
+        </menu>
+      </form>
+    </dialog>
+  </body>
+</html>

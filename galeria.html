@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c2337" />
+    <title>Cosas que vi — Archivo vivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/gallery.css" />
+    <script type="module" src="assets/js/pages/gallery.js"></script>
+  </head>
+  <body class="is-loading">
+    <header class="site-header">
+      <a class="brand" href="index.html">✳ archivo vivo</a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html">inicio</a>
+        <a href="laboratorio.html">laboratorio</a>
+        <a href="notas.html">notas</a>
+        <a class="active" href="galeria.html" aria-current="page">galería</a>
+      </nav>
+      <button class="plain-button" data-edit-only data-upload-photo>+ subir fotografías</button>
+    </header>
+
+    <main class="shell subpage">
+      <section class="page-intro gallery-intro">
+        <p class="eyebrow">06 / registro visual</p>
+        <h1>Cosas <i>que vi.</i></h1>
+        <p>Pequeñas colecciones de lugares, momentos y cosas que me hicieron mirar.</p>
+      </section>
+
+      <div class="gallery-toolbar">
+        <div class="gallery-tabs" aria-label="Vista de galería">
+          <button type="button" data-gallery-view="albums" aria-pressed="true">Álbumes</button>
+          <button type="button" data-gallery-view="all" aria-pressed="false">Todas las fotos</button>
+        </div>
+        <button type="button" class="button dark" data-edit-only data-new-album>+ crear álbum</button>
+      </div>
+
+      <div class="gallery-subheading">
+        <div>
+          <button type="button" class="add-link" data-gallery-back hidden>← volver a álbumes</button>
+          <h2 data-gallery-heading>Mis álbumes</h2>
+        </div>
+        <div class="gallery-manage" data-edit-only>
+          <button type="button" class="text-action" data-album-edit hidden>Renombrar álbum</button>
+          <button type="button" class="text-action" data-album-delete hidden>Eliminar álbum</button>
+        </div>
+      </div>
+      <p class="gallery-help" data-edit-only>
+        Entrá a un álbum para subir fotos allí. Usá “Editar” para nombrarlas, moverlas o elegir la portada. Arrastrá las
+        fotos o usá las flechas para ordenarlas.
+      </p>
+      <p class="gallery-status" data-gallery-status role="status" aria-live="polite"></p>
+      <input data-photo-input type="file" accept="image/*" multiple hidden />
+      <section class="gallery-grid album-grid" data-gallery-list aria-label="Colección de fotografías"></section>
+    </main>
+
+    <footer class="site-footer">
+      <span>archivo vivo · Cata</span>
+      <span data-storage-state>cargando…</span>
+    </footer>
+
+    <!-- Diálogo: editar foto -->
+    <dialog data-photo-editor aria-labelledby="photo-editor-title">
+      <form class="modal">
+        <header>
+          <span id="photo-editor-title">Editar fotografía</span>
+          <button type="button" class="close" data-close-dialog aria-label="Cerrar">×</button>
+        </header>
+        <label>Nombre de la foto<input name="title" required maxlength="140" /></label>
+        <label>Álbum<select name="album"></select></label>
+        <label class="checkbox-label"><input name="cover" type="checkbox" /> Usar como portada del álbum elegido</label>
+        <menu>
+          <button type="button" class="button light" data-close-dialog>cancelar</button>
+          <button type="submit" class="button dark">guardar cambios</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <!-- Diálogo: crear o renombrar álbum -->
+    <dialog data-album-editor aria-labelledby="album-editor-title">
+      <form class="modal">
+        <header>
+          <span id="album-editor-title" data-album-dialog-title>Nuevo álbum</span>
+          <button type="button" class="close" data-close-dialog aria-label="Cerrar">×</button>
+        </header>
+        <label>
+          Nombre del álbum
+          <input name="title" required maxlength="100" placeholder="Por ejemplo: tardes de verano" />
+        </label>
+        <menu>
+          <button type="button" class="button light" data-close-dialog>cancelar</button>
+          <button type="submit" class="button dark">guardar álbum</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <!-- Visor de fotos -->
+    <dialog class="photo-viewer" data-photo-viewer aria-labelledby="viewer-title">
+      <header>
+        <h2 id="viewer-title" data-viewer-title></h2>
+        <button type="button" data-viewer-close aria-label="Cerrar fotografía">× Cerrar</button>
+      </header>
+      <img alt="" />
+      <footer>
+        <button type="button" data-photo-step="-1" aria-label="Foto anterior">← anterior</button>
+        <span data-viewer-count></span>
+        <button type="button" data-photo-step="1" aria-label="Foto siguiente">siguiente →</button>
+      </footer>
+    </dialog>
+  </body>
+</html>

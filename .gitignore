@@ -1,0 +1,14 @@
+# Secretos: nunca se suben
+.env
+.env.*
+*.pem
+*.key
+
+# Dependencias y configuración local
+node_modules/
+.claude/settings.local.json
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini

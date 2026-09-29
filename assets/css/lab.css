@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Laboratorio (laboratorio.html): tarjetas de proyectos p5.js.
+   ========================================================================== */
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.project-card {
+  border: var(--line);
+  background: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+  padding: 16px;
+}
+.project-card header,
+.project-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.project-card footer {
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  margin-top: 9px;
+}
+.project-card footer > span:last-child {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+/* Título y descripción editables en el lugar. */
+.project-title-label {
+  flex: 1;
+  min-width: 0;
+  font: 700 25px/1 var(--sans);
+  letter-spacing: -0.06em;
+}
+.project-title-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.project-title-input,
+.project-description-input {
+  display: none;
+  width: 100%;
+  border: 1px solid var(--ink);
+  background: #fff;
+  padding: 7px;
+  font: inherit;
+}
+.project-title-input:not([readonly]),
+.project-description-input:not([readonly]) {
+  display: block;
+  outline: 2px solid var(--rose);
+}
+.project-description-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: start;
+  margin: 8px 0;
+}
+.project-description-input {
+  grid-column: 1 / -1;
+  min-height: 72px;
+  resize: vertical;
+}
+.project-description-text {
+  font-size: 13px;
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Canvas del sketch. */
+.project-canvas {
+  border: 2px solid var(--ink);
+  background: var(--wine-dark);
+  margin: 12px 0 0;
+  overflow: hidden;
+}
+.project-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border: 0;
+}
+.canvas-note {
+  font: 10px var(--mono);
+  margin: 8px 0;
+}
+.canvas-note.has-error {
+  color: #fff;
+  background: var(--wine);
+  padding: 6px 8px;
+}
+
+.code-editor {
+  width: 100%;
+  height: 180px;
+  margin-top: 9px;
+  padding: 12px;
+  background: #201a1c;
+  color: #e7e4df;
+  font: 12px/1.5 var(--mono);
+  resize: vertical;
+}
+
+@media (max-width: 800px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+}

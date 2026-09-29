@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c2337" />
+    <title>Laboratorio — Archivo vivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/lab.css" />
+    <script type="module" src="assets/js/pages/lab.js"></script>
+  </head>
+  <body class="is-loading">
+    <header class="site-header">
+      <a class="brand" href="index.html">✳ archivo vivo</a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html">inicio</a>
+        <a class="active" href="laboratorio.html" aria-current="page">laboratorio</a>
+        <a href="notas.html">notas</a>
+        <a href="galeria.html">galería</a>
+      </nav>
+      <button class="plain-button" data-edit-only data-action="new-project">+ nuevo proyecto</button>
+    </header>
+
+    <main class="shell subpage">
+      <section class="page-intro">
+        <p class="eyebrow">código creativo abierto</p>
+        <h1>Laboratorio<br /><i>p5.js</i></h1>
+        <p>Todos mis experimentos, juntos. Cada proyecto muestra su canvas completo y se adapta al ancho de su tarjeta.</p>
+      </section>
+      <section class="project-grid" data-project-grid></section>
+    </main>
+
+    <footer class="site-footer">
+      <span>archivo vivo · Cata</span>
+      <span data-storage-state>cargando…</span>
+    </footer>
+
+    <!-- Diálogo: nuevo proyecto -->
+    <dialog data-modal="project">
+      <form class="modal">
+        <header>
+          <span>nuevo proyecto p5.js</span>
+          <button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button>
+        </header>
+        <label>Título<input name="title" required maxlength="100" /></label>
+        <label>Descripción<textarea name="detail" maxlength="300"></textarea></label>
+        <menu>
+          <button class="button light" type="button" data-close-dialog>cancelar</button>
+          <button class="button dark" type="submit">crear</button>
+        </menu>
+      </form>
+    </dialog>
+  </body>
+</html>

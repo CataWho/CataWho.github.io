@@ -1,0 +1,36 @@
+/* ==========================================================================
+   Acceso privado (admin.html).
+   ========================================================================== */
+
+.admin-panel {
+  max-width: 520px;
+  border: var(--line);
+  background: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.admin-panel .window-bar {
+  min-height: 37px;
+  padding: 0 11px;
+  border-bottom: var(--line);
+  background: var(--wine);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+.admin-panel .window-content {
+  padding: 17px;
+}
+.admin-panel input {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px;
+  border: 1px solid var(--ink);
+  background: #fff;
+  font: 14px var(--sans);
+  text-transform: none;
+  letter-spacing: normal;
+}

@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Notas (notas.html): muro de notas y artículos.
+   ========================================================================== */
+
+.note-wall {
+  columns: 3 240px;
+  column-gap: 16px;
+}
+.full-note {
+  position: relative;
+  break-inside: avoid;
+  margin: 0 0 16px;
+  padding: 18px;
+  border: var(--line);
+  background: var(--paper);
+  box-shadow: 4px 4px var(--wine);
+}
+.full-note h2 {
+  font-size: 26px;
+  line-height: 1;
+  margin: 10px 0;
+}
+.full-note p {
+  white-space: pre-wrap;
+}
+.full-note .card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 4px;
+}
+
+@media (max-width: 800px) {
+  .note-wall {
+    columns: 2 180px;
+  }
+}
