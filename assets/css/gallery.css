@@ -36,7 +36,7 @@
   border: 1px solid var(--ink);
   padding: 10px 15px;
   background: var(--paper);
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .gallery-tabs button[aria-pressed="true"] {
   background: var(--wine);
@@ -84,7 +84,7 @@
   background: transparent;
   text-align: left;
   padding: 0;
-  cursor: pointer;
+  cursor: var(--cursor-link);
   color: var(--ink);
   min-width: 0;
 }
@@ -187,7 +187,7 @@
   border: 1px solid var(--ink);
   background: var(--paper);
   font: 10px var(--mono);
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .photo-actions button:hover:not(:disabled) {
   background: var(--wine);
@@ -195,7 +195,7 @@
 }
 .photo-actions button:disabled {
   opacity: 0.35;
-  cursor: default;
+  cursor: var(--cursor-arrow);
 }
 
 /* --- Visor de fotos ------------------------------------------------------- */
@@ -236,7 +236,7 @@
   padding: 8px;
   background: var(--paper);
   font: 11px var(--mono);
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 
 /* --- Responsive ----------------------------------------------------------- */

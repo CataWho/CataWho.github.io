@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c2337" />
+    <title data-i18n="title.quiet">Zona tranquila — Archivo vivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/quiet.css" />
+    <script type="module" src="assets/js/pages/quiet.js"></script>
+  </head>
+  <body class="is-loading">
+    <header class="site-header">
+      <a class="brand" href="index.html">✳ archivo vivo</a>
+      <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
+        <a href="index.html" data-i18n="nav.home">inicio</a>
+        <a href="laboratorio.html" data-i18n="nav.lab">laboratorio</a>
+        <a href="notas.html" data-i18n="nav.notes">notas</a>
+        <a href="galeria.html" data-i18n="nav.gallery">galería</a>
+        <a class="active" href="zona-tranquila.html" aria-current="page" data-i18n="nav.quiet">zona tranquila</a>
+      </nav>
+      <a class="plain-button" href="admin.html" data-i18n="header.edit">editar mi archivo</a>
+    </header>
+
+    <main class="shell subpage">
+      <section class="page-intro">
+        <p class="eyebrow" data-i18n="quiet.eyebrow">07 / un rato de calma</p>
+        <h1><span data-i18n="quiet.title1">Zona</span><br /><i data-i18n="quiet.title2">tranquila.</i></h1>
+        <p data-i18n="quiet.intro">Un parquecito de Palermo para frenar un momento. El cielo sigue la hora de Buenos Aires.</p>
+      </section>
+
+      <article class="window quiet-window">
+        <div class="window-bar">
+          <span data-i18n="quiet.bar">bosques de palermo · buenos aires</span>
+          <span data-quiet-clock></span>
+        </div>
+        <div class="quiet-stage">
+          <canvas
+            data-quiet-canvas
+            role="img"
+            aria-label="Parque de Palermo en pixel art: un lago con patos, el Planetario, jacarandás y un perrito que pasea por el camino." data-i18n-aria-label="quiet.canvasAria"
+          ></canvas>
+        </div>
+        <div class="quiet-controls">
+          <p class="quiet-hint" data-i18n="quiet.hint">Tocá el pasto para tirarle la pelota al perrito.</p>
+          <div class="quiet-phases" role="group" aria-label="Momento del día" data-i18n-aria-label="quiet.phaseAria">
+            <button type="button" data-phase="auto" aria-pressed="true" data-i18n="quiet.now">ahora</button>
+            <button type="button" data-phase="day" aria-pressed="false" data-i18n="quiet.day">día</button>
+            <button type="button" data-phase="golden" aria-pressed="false" data-i18n="quiet.golden">atardecer</button>
+            <button type="button" data-phase="night" aria-pressed="false" data-i18n="quiet.night">noche</button>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <span>archivo vivo · Cata</span>
+      <span data-storage-state>buenos aires</span>
+    </footer>
+  </body>
+</html>

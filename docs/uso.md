@@ -39,6 +39,30 @@ Detrás de "Mi pequeño universo" corre un visual de [Hydra](https://hydra.ojack
 - Quien tenga activado "reducir movimiento" en su compu ve el fondo liso.
 - No uses `s0.initCam()` ni otras fuentes de cámara: le pedirían permiso a cada visitante.
 
+## Zona tranquila
+
+`zona-tranquila.html` muestra los Bosques de Palermo en pixel art, dibujados con código
+(`assets/js/features/quiet-place.js`): el lago con patos, el Planetario, jacarandás, un palo borracho y un
+perrito que pasea. Tocando el pasto se le tira la pelota y va a buscarla.
+
+El cielo sigue la hora real de Buenos Aires (día, atardecer o noche) y también se puede elegir con los
+botones de abajo.
+
+## Cursor y destellos
+
+El cursor es una flecha pixel art (`assets/cursors/`): clara de base y rosa sobre lo que se puede tocar.
+Al mover el mouse aparecen destellos pixelados que se apagan solos. No aparecen en pantallas táctiles ni si
+la compu tiene activado "reducir movimiento".
+
+## Idiomas (español / inglés)
+
+Arriba a la derecha está el selector **ES / EN**. La web recuerda la elección; la primera vez usa el idioma del
+navegador. Un link con `?lang=en` (por ejemplo `https://catawho.github.io/?lang=en`) abre directo en inglés.
+
+Todas las traducciones están en `assets/js/core/i18n.js`, con el español y el inglés de cada texto uno al
+lado del otro: para corregir una, se cambia ahí. Lo que escribís vos (notas, títulos, descripciones) no se
+traduce.
+
 ## Libros
 
 **+ buscar libro** consulta Open Library por título (y autor, opcional). Antes de elegir el resultado

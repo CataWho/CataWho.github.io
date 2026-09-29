@@ -2,6 +2,7 @@
 
 import { esc, node, q, qa } from "../core/dom.js";
 import { deleteItem, deleteMedia, safeFileName, saveItem, updateItem, uploadMedia } from "../core/db.js";
+import { t } from "../core/i18n.js";
 import { removeItem, state } from "../core/state.js";
 import { bindDialog, openDialog } from "../core/ui.js";
 import { LOOSE, albums, findPhoto, nextSortOrder, orderedPhotos, photosInAlbum } from "./photos.js";
@@ -27,10 +28,10 @@ export function renderGallery() {
   const activeAlbum = findAlbum(view);
 
   q("[data-gallery-heading]").textContent = showingAlbums
-    ? "Mis álbumes"
+    ? t("gallery.myAlbums")
     : view === "all"
-      ? "Todas las fotografías"
-      : activeAlbum?.title || "Sin álbum";
+      ? t("gallery.allHeading")
+      : activeAlbum?.title || t("gallery.loose");
   q("[data-gallery-back]").hidden = showingAlbums;
   qa("[data-gallery-view]").forEach((button) =>
     button.setAttribute("aria-pressed", String(button.dataset.galleryView === view)),
@@ -40,7 +41,7 @@ export function renderGallery() {
   list.classList.toggle("album-grid", showingAlbums);
 
   if (showingAlbums) {
-    list.replaceChildren(...[...albums(), { id: LOOSE, title: "Sin álbum" }].map(albumCard));
+    list.replaceChildren(...[...albums(), { id: LOOSE, title: t("gallery.loose") }].map(albumCard));
   } else {
     const photos = visiblePhotos();
     list.replaceChildren(
@@ -59,7 +60,7 @@ function albumCard(album) {
   const cover = photos.find((photo) => photo.id === album.metadata?.cover_id) || photos[0];
   return node(`
     <button type="button" class="album-card" data-open-album="${esc(album.id)}">
-      <span class="album-tab">${String(photos.length).padStart(2, "0")} fotografías</span>
+      <span class="album-tab">${t("gallery.photoCount", { count: String(photos.length).padStart(2, "0") })}</span>
       <span class="album-cover">${cover ? `<img src="${esc(cover.image_url)}" alt="" loading="lazy">` : '<span class="album-empty">＋</span>'}</span>
       <span class="album-title">${esc(album.title)} <span aria-hidden="true">↗</span></span>
     </button>`);
@@ -67,18 +68,17 @@ function albumCard(album) {
 
 function photoCard(photo, index, total) {
   const id = esc(photo.id);
-  const title = esc(photo.title);
   const actions = state.isOwner
     ? `<div class="photo-actions">
-         <button type="button" data-edit-photo="${id}">✎ Editar</button>
-         <button type="button" data-photo-move="up" data-photo-id="${id}" ${index === 0 ? "disabled" : ""} aria-label="Mover ${title} antes">←</button>
-         <button type="button" data-photo-move="down" data-photo-id="${id}" ${index === total - 1 ? "disabled" : ""} aria-label="Mover ${title} después">→</button>
-         <button type="button" data-delete-photo="${id}" aria-label="Eliminar ${title}">Eliminar</button>
+         <button type="button" data-edit-photo="${id}">${t("common.editButton")}</button>
+         <button type="button" data-photo-move="up" data-photo-id="${id}" ${index === 0 ? "disabled" : ""} aria-label="${esc(t("gallery.moveBefore", { title: photo.title }))}">←</button>
+         <button type="button" data-photo-move="down" data-photo-id="${id}" ${index === total - 1 ? "disabled" : ""} aria-label="${esc(t("gallery.moveAfter", { title: photo.title }))}">→</button>
+         <button type="button" data-delete-photo="${id}" aria-label="${esc(t("common.delete", { title: photo.title }))}">${t("common.deleteShort")}</button>
        </div>`
     : "";
   return node(`
     <figure class="gallery-item" data-photo-id="${id}" draggable="${state.isOwner && !busy}">
-      <button type="button" class="photo-open" data-open-photo="${id}" aria-label="Ver ${esc(photo.title)} completa">
+      <button type="button" class="photo-open" data-open-photo="${id}" aria-label="${esc(t("gallery.viewPhoto", { title: photo.title }))}">
         <img src="${esc(photo.image_url)}" alt="${esc(photo.title)}" loading="lazy" draggable="false">
       </button>
       <figcaption><span class="photo-number">${String(index + 1).padStart(2, "0")}</span><h3>${esc(photo.title)}</h3></figcaption>
@@ -135,7 +135,7 @@ function openPhotoEditor(id) {
   dialog.dataset.photoId = id;
   fields.title.value = photo.title;
   fields.album.replaceChildren(
-    node('<option value="">Sin álbum</option>'),
+    node(`<option value="">${t("gallery.loose")}</option>`),
     ...albums().map((album) => node(`<option value="${esc(album.id)}">${esc(album.title)}</option>`)),
   );
   fields.album.value = photo.metadata?.album_id || "";
@@ -158,7 +158,7 @@ async function savePhotoDetails(fields, dialog) {
     album.metadata = albumMeta;
   }
   dialog.close();
-  setStatus("Foto guardada.");
+  setStatus(t("gallery.photoSaved"));
   renderGallery();
 }
 
@@ -167,7 +167,7 @@ function openAlbumEditor(id) {
   const dialog = q("[data-album-editor]");
   openDialog(dialog);
   dialog.dataset.albumId = id || "";
-  q("[data-album-dialog-title]", dialog).textContent = album ? "Renombrar álbum" : "Nuevo álbum";
+  q("[data-album-dialog-title]", dialog).textContent = t(album ? "gallery.rename" : "gallery.newAlbumTitle");
   q('[name="title"]', dialog).value = album?.title || "";
 }
 
@@ -183,14 +183,13 @@ async function saveAlbum(fields, dialog) {
     view = saved.id;
   }
   dialog.close();
-  setStatus("Álbum guardado.");
+  setStatus(t("gallery.albumSaved"));
   renderGallery();
 }
 
 async function deleteAlbum(id) {
   const album = findAlbum(id);
-  if (!album || !confirm(`¿Eliminar el álbum “${album.title}”? Sus fotos se conservarán en “Sin álbum”.`))
-    return;
+  if (!album || !confirm(t("gallery.confirmDeleteAlbum", { title: album.title }))) return;
   await withGalleryBusy(async () => {
     for (const photo of photosInAlbum(id)) {
       const metadata = { ...photo.metadata, album_id: null };
@@ -200,8 +199,8 @@ async function deleteAlbum(id) {
     await deleteItem(id);
     removeItem(id);
     view = "albums";
-    setStatus("Álbum eliminado. Las fotos se conservaron.");
-  }, "No se pudo completar");
+    setStatus(t("gallery.albumDeleted"));
+  }, t("gallery.couldNotFinish"));
 }
 
 async function withGalleryBusy(task, errorPrefix) {
@@ -261,7 +260,7 @@ function bindPhotoOrdering(list) {
 
 /** Guarda el nuevo orden. Solo cambia los lugares de las fotos que se ven; el resto queda igual. */
 async function savePhotoOrder(ids) {
-  setStatus("Guardando orden…");
+  setStatus(t("gallery.savingOrder"));
   const selected = new Set(ids);
   const reordered = ids.values();
   const ordered = orderedPhotos().map((photo) =>
@@ -274,27 +273,27 @@ async function savePhotoOrder(ids) {
       await updateItem(photo.id, { metadata });
       photo.metadata = metadata;
     }
-    setStatus("Orden guardado.");
-  }, "No se pudo guardar todo el orden");
+    setStatus(t("gallery.orderSaved"));
+  }, t("gallery.orderFailed"));
 }
 
 // --- Subir y borrar fotos -------------------------------------------------------
 
 async function deletePhoto(id) {
   const photo = findPhoto(id);
-  if (!photo || !confirm(`¿Eliminar “${photo.title}” de la galería?`)) return;
+  if (!photo || !confirm(t("gallery.confirmDeletePhoto", { title: photo.title }))) return;
   await withGalleryBusy(async () => {
     await deleteItem(id);
     removeItem(id);
-    setStatus("Foto eliminada.");
+    setStatus(t("gallery.photoDeleted"));
     if (photo.metadata?.storagePath) {
       try {
         await deleteMedia(photo.metadata.storagePath);
       } catch {
-        setStatus("Foto eliminada de la galería. Quedó pendiente limpiar el archivo en Storage.");
+        setStatus(t("gallery.storageLeft"));
       }
     }
-  }, "No se pudo eliminar");
+  }, t("gallery.deleteFailed"));
 }
 
 async function uploadPhotos(event) {
@@ -305,16 +304,16 @@ async function uploadPhotos(event) {
   await withGalleryBusy(async () => {
     try {
       for (const file of files) {
-        setStatus(`Subiendo ${count + 1} de ${files.length}…`);
+        setStatus(t("gallery.uploading", { current: count + 1, total: files.length }));
         await uploadOne(file, albumId);
         count++;
       }
-      setStatus(`${count} foto(s) cargada(s). Usá “Editar” para cambiar sus nombres.`);
+      setStatus(t("gallery.uploaded", { count }));
     } catch (error) {
-      setStatus(`${count} foto(s) cargada(s). No se pudo completar la subida: ${error.message}`);
+      setStatus(t("gallery.uploadPartial", { count, message: error.message }));
     }
     view = albumId || LOOSE;
-  }, "No se pudo subir");
+  }, t("gallery.uploadFailed"));
   event.target.value = "";
 }
 

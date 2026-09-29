@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#7c2337" />
-    <title>Laboratorio — Archivo vivo</title>
+    <title data-i18n="title.lab">Laboratorio — Archivo vivo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,20 +18,21 @@
   <body class="is-loading">
     <header class="site-header">
       <a class="brand" href="index.html">✳ archivo vivo</a>
-      <nav aria-label="Navegación principal">
-        <a href="index.html">inicio</a>
-        <a class="active" href="laboratorio.html" aria-current="page">laboratorio</a>
-        <a href="notas.html">notas</a>
-        <a href="galeria.html">galería</a>
+      <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
+        <a href="index.html" data-i18n="nav.home">inicio</a>
+        <a class="active" href="laboratorio.html" aria-current="page" data-i18n="nav.lab">laboratorio</a>
+        <a href="notas.html" data-i18n="nav.notes">notas</a>
+        <a href="galeria.html" data-i18n="nav.gallery">galería</a>
+        <a href="zona-tranquila.html" data-i18n="nav.quiet">zona tranquila</a>
       </nav>
-      <button class="plain-button" data-edit-only data-action="new-project">+ nuevo proyecto</button>
+      <button class="plain-button" data-edit-only data-action="new-project" data-i18n="lab.new">+ nuevo proyecto</button>
     </header>
 
     <main class="shell subpage">
       <section class="page-intro">
-        <p class="eyebrow">código creativo abierto</p>
-        <h1>Laboratorio<br /><i>código vivo</i></h1>
-        <p>Mis experimentos en p5.js y Hydra, juntos y corriendo en vivo.</p>
+        <p class="eyebrow" data-i18n="lab.eyebrow">código creativo abierto</p>
+        <h1><span data-i18n="lab.title1">Laboratorio</span><br /><i data-i18n="lab.title2">código vivo</i></h1>
+        <p data-i18n="lab.intro">Mis experimentos en p5.js y Hydra, juntos y corriendo en vivo.</p>
       </section>
       <section class="project-grid" data-project-grid></section>
     </main>
@@ -45,22 +46,22 @@
     <dialog data-modal="project">
       <form class="modal">
         <header>
-          <span>nuevo proyecto</span>
-          <button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button>
+          <span data-i18n="lab.dialogTitle">nuevo proyecto</span>
+          <button class="close" type="button" data-close-dialog aria-label="Cerrar" data-i18n-aria-label="common.close">×</button>
         </header>
-        <label>Título<input name="title" required maxlength="100" /></label>
-        <label>Descripción<textarea name="detail" maxlength="300"></textarea></label>
+        <label><span data-i18n="common.title">Título</span><input name="title" required maxlength="100" /></label>
+        <label><span data-i18n="common.description">Descripción</span><textarea name="detail" maxlength="300"></textarea></label>
         <label>
-          Lenguaje
+          <span data-i18n="lab.language">Lenguaje</span>
           <select name="engine">
             <option value="p5">p5.js</option>
             <option value="hydra">Hydra</option>
           </select>
         </label>
-        <label>Código (opcional)<textarea name="code" class="code-input" spellcheck="false"></textarea></label>
+        <label><span data-i18n="lab.code">Código (opcional)</span><textarea name="code" class="code-input" spellcheck="false"></textarea></label>
         <menu>
-          <button class="button light" type="button" data-close-dialog>cancelar</button>
-          <button class="button dark" type="submit">crear</button>
+          <button class="button light" type="button" data-close-dialog data-i18n="common.cancel">cancelar</button>
+          <button class="button dark" type="submit" data-i18n="lab.create">crear</button>
         </menu>
       </form>
     </dialog>

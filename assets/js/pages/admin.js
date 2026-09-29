@@ -2,7 +2,11 @@
 // La primera vez que la dueña entra, se crea su perfil.
 
 import { q } from "../core/dom.js";
+import { mountLanguageSwitch, t, translatePage } from "../core/i18n.js";
 import { currentUser, ensureProfile, hasDatabase, sendMagicLink, signOut } from "../core/db.js";
+
+translatePage();
+mountLanguageSwitch();
 
 const form = q("[data-admin-form]");
 const status = q("[data-admin-status]");
@@ -11,7 +15,7 @@ async function start() {
   if (!hasDatabase) return;
   const user = await currentUser();
   if (!user) {
-    status.textContent = "Ingresá el email que usarás siempre para administrar este perfil.";
+    status.textContent = t("admin.enterEmail");
     return;
   }
   try {
@@ -29,7 +33,7 @@ form.addEventListener("submit", async (event) => {
   button.disabled = true;
   try {
     await sendMagicLink(new FormData(form).get("email"), `${location.origin}${location.pathname}`);
-    status.textContent = "Listo: revisá tu email y abrí el enlace de acceso.";
+    status.textContent = t("admin.sent");
   } catch (error) {
     status.textContent = error.message;
   } finally {

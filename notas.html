@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#7c2337" />
-    <title>Notas — Archivo vivo</title>
+    <title data-i18n="title.notes">Notas — Archivo vivo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,20 +18,21 @@
   <body class="is-loading">
     <header class="site-header">
       <a class="brand" href="index.html">✳ archivo vivo</a>
-      <nav aria-label="Navegación principal">
-        <a href="index.html">inicio</a>
-        <a href="laboratorio.html">laboratorio</a>
-        <a class="active" href="notas.html" aria-current="page">notas</a>
-        <a href="galeria.html">galería</a>
+      <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
+        <a href="index.html" data-i18n="nav.home">inicio</a>
+        <a href="laboratorio.html" data-i18n="nav.lab">laboratorio</a>
+        <a class="active" href="notas.html" aria-current="page" data-i18n="nav.notes">notas</a>
+        <a href="galeria.html" data-i18n="nav.gallery">galería</a>
+        <a href="zona-tranquila.html" data-i18n="nav.quiet">zona tranquila</a>
       </nav>
-      <button class="plain-button" data-edit-only data-action="new-note">+ escribir nota</button>
+      <button class="plain-button" data-edit-only data-action="new-note" data-i18n="notes.write">+ escribir nota</button>
     </header>
 
     <main class="shell subpage">
       <section class="page-intro">
-        <p class="eyebrow">cuaderno abierto</p>
-        <h1>Notas<br /><i>&amp; artículos</i></h1>
-        <p>Ideas, diarios y textos para dejar a la vista.</p>
+        <p class="eyebrow" data-i18n="notes.eyebrow">cuaderno abierto</p>
+        <h1><span data-i18n="notes.title1">Notas</span><br /><i data-i18n="notes.title2">&amp; artículos</i></h1>
+        <p data-i18n="notes.intro">Ideas, diarios y textos para dejar a la vista.</p>
       </section>
       <section class="note-wall" data-full-note-list></section>
     </main>

@@ -3,6 +3,7 @@
 
 import { node, q, qa } from "../core/dom.js";
 import { updateProfile } from "../core/db.js";
+import { t } from "../core/i18n.js";
 import { state } from "../core/state.js";
 
 /** Guarda la disposición en la base y la aplica. Devuelve true si salió bien. */
@@ -13,7 +14,7 @@ export async function saveHomeLayout(layout) {
     applyHomeLayout();
     return true;
   } catch (error) {
-    alert(`No se pudo guardar la disposición: ${error.message}`);
+    alert(t("layout.saveFailed", { message: error.message }));
     return false;
   }
 }
@@ -42,9 +43,9 @@ export function setupHomeLayout() {
     bar.append(
       node(`
         <span class="section-layout-controls">
-          <button type="button" data-layout-size="wide" title="Aumentar o reducir ancho" aria-label="Cambiar ancho de sección">↔</button>
-          <button type="button" data-layout-size="tall" title="Aumentar o reducir alto" aria-label="Cambiar alto de sección">↕</button>
-          <button type="button" data-layout-grip draggable="true" title="Arrastrar para reordenar" aria-label="Arrastrar para reordenar sección">⠿</button>
+          <button type="button" data-layout-size="wide" title="${t("layout.wide")}" aria-label="${t("layout.wideAria")}">↔</button>
+          <button type="button" data-layout-size="tall" title="${t("layout.tall")}" aria-label="${t("layout.tallAria")}">↕</button>
+          <button type="button" data-layout-grip draggable="true" title="${t("layout.grip")}" aria-label="${t("layout.gripAria")}">⠿</button>
         </span>`),
     ),
   );

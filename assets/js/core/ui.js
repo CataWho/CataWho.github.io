@@ -1,12 +1,13 @@
 // Piezas de interfaz reutilizables: diálogos y botones "ocupados".
 
 import { q, qa } from "./dom.js";
+import { t } from "./i18n.js";
 
 /**
  * Desactiva uno o más botones mientras corre una tarea (por ejemplo, guardar).
  * Así un doble clic no crea el mismo contenido dos veces.
  */
-export async function whileBusy(buttons, task, busyText = "guardando…") {
+export async function whileBusy(buttons, task, busyText = t("common.saving")) {
   const list = [buttons].flat().filter(Boolean);
   const before = list.map((button) => ({ label: button.textContent, disabled: button.disabled }));
   list.forEach((button) => {
@@ -54,7 +55,7 @@ export function bindDialog(dialog, onSubmit) {
       await whileBusy(qa('[type="submit"]', form), () => onSubmit(form.elements, dialog));
     } catch (error) {
       console.error(error);
-      setFormStatus(dialog, `No se pudo guardar: ${error.message}`);
+      setFormStatus(dialog, t("common.saveFailed", { message: error.message }));
     }
   });
 }

@@ -14,9 +14,11 @@ archivo-vivo/
 ├── laboratorio.html      proyectos p5.js
 ├── notas.html            notas y artículos
 ├── galeria.html          álbumes y fotos
+├── zona-tranquila.html   el parque de Palermo en pixel art
 ├── admin.html            acceso privado (Magic Link)
 │
 ├── assets/
+│   ├── cursors/          cursores pixel art (flecha y flecha activa)
 │   ├── css/
 │   │   ├── base.css      colores, tipografía, header, botones, diálogos (todas las páginas)
 │   │   └── home.css, lab.css, notes.css, gallery.css, admin.css   (una por página)
@@ -24,7 +26,7 @@ archivo-vivo/
 │   ├── images/           avatar pixel art (optimizado)
 │   └── js/
 │       ├── config.js     URL y clave pública de Supabase
-│       ├── core/         piezas base: base de datos, estado, arranque, ayudas de HTML y diálogos
+│       ├── core/         piezas base: base de datos, estado, arranque, idiomas (i18n.js), diálogos
 │       ├── features/     una sección por archivo (música, libros, notas, galería, laboratorio…)
 │       └── pages/        el punto de entrada de cada página: arma la página con sus secciones
 │

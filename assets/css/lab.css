@@ -111,7 +111,7 @@
 }
 
 .code-panel summary {
-  cursor: pointer;
+  cursor: var(--cursor-link);
   font: 11px var(--mono);
   text-transform: uppercase;
   margin: 6px 0;

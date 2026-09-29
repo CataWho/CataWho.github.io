@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Editar mi archivo</title>
+    <title data-i18n="admin.title">Editar mi archivo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,31 +19,31 @@
     <header class="site-header">
       <a class="brand" href="index.html">✳ archivo vivo</a>
       <span></span>
-      <a class="plain-button" href="index.html">volver al sitio</a>
+      <a class="plain-button" href="index.html" data-i18n="admin.back">volver al sitio</a>
     </header>
 
     <main class="shell subpage">
       <section class="page-intro">
-        <p class="eyebrow">acceso privado</p>
-        <h1>Editar<br /><i>mi archivo.</i></h1>
-        <p>
+        <p class="eyebrow" data-i18n="admin.eyebrow">acceso privado</p>
+        <h1><span data-i18n="admin.title1">Editar</span><br /><i data-i18n="admin.title2">mi archivo.</i></h1>
+        <p data-i18n="admin.intro">
           Esta pantalla no forma parte del perfil público. Escribí tu email y recibirás un enlace de acceso de un solo
           uso.
         </p>
       </section>
 
       <section class="admin-panel">
-        <div class="window-bar"><span>cata / administración</span></div>
+        <div class="window-bar"><span data-i18n="admin.bar">cata / administración</span></div>
         <div class="window-content">
           <form data-admin-form>
-            <label class="eyebrow">Tu email<input type="email" name="email" required placeholder="tu@email.com" /></label>
-            <p data-admin-status>Configurá Supabase primero para activar el acceso.</p>
-            <button class="button dark">enviarme enlace de acceso</button>
+            <label class="eyebrow"><span data-i18n="admin.email">Tu email</span><input type="email" name="email" required placeholder="tu@email.com" data-i18n-placeholder="admin.emailPlaceholder" /></label>
+            <p data-admin-status data-i18n="admin.configure">Configurá Supabase primero para activar el acceso.</p>
+            <button class="button dark" data-i18n="admin.send">enviarme enlace de acceso</button>
           </form>
           <div data-admin-signed-in hidden>
-            <p>Sesión activa. Podés volver al sitio: allí aparecerán los controles de edición.</p>
-            <a class="button dark" href="index.html">abrir edición</a>
-            <button class="button light" type="button" data-sign-out>cerrar sesión</button>
+            <p data-i18n="admin.active">Sesión activa. Podés volver al sitio: allí aparecerán los controles de edición.</p>
+            <a class="button dark" href="index.html" data-i18n="admin.open">abrir edición</a>
+            <button class="button light" type="button" data-sign-out data-i18n="session.signOut">cerrar sesión</button>
           </div>
         </div>
       </section>

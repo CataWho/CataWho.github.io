@@ -16,6 +16,26 @@
   --mono: "DM Mono", monospace;
   --sans: "Space Grotesk", sans-serif;
   --footer-height: 40px;
+  /* Cursores pixel art (assets/cursors). El número "0 0" es la punta de la flecha. */
+  --cursor-arrow: url("/assets/cursors/flecha.svg") 0 0, auto;
+  --cursor-link: url("/assets/cursors/flecha-activa.svg") 0 0, pointer;
+}
+
+html {
+  cursor: var(--cursor-arrow);
+}
+/* Todo lo que se puede tocar usa la flecha rosa. */
+a,
+button,
+summary,
+select,
+label:has(> input[type="checkbox"]),
+input[type="range"],
+input[type="checkbox"] {
+  cursor: var(--cursor-link);
+}
+button:disabled {
+  cursor: var(--cursor-arrow);
 }
 
 * {
@@ -91,7 +111,9 @@ body.is-loading main {
 }
 .site-header nav {
   display: flex;
-  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 24px;
   justify-self: center;
 }
 .site-header nav a {
@@ -105,6 +127,29 @@ body.is-loading main {
   color: var(--wine);
   text-decoration: underline;
   text-underline-offset: 5px;
+}
+
+/* Selector de idioma ES / EN (lo agrega i18n.js a la derecha del header). */
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.lang-switch {
+  display: flex;
+  border: 1px solid var(--ink);
+}
+.lang-switch button {
+  padding: 3px 6px;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 10px var(--mono);
+  cursor: var(--cursor-link);
+}
+.lang-switch button[aria-pressed="true"] {
+  background: var(--wine);
+  color: var(--paper);
 }
 
 /* --- Layout general ------------------------------------------------------ */
@@ -160,6 +205,15 @@ body.is-loading main {
   text-transform: uppercase;
 }
 
+/* Capa de los destellos del cursor: encima de todo y sin bloquear clics. */
+.cursor-sparkles {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
 /* Aviso "modo edición" (solo lo ve la dueña). */
 .owner-badge {
   display: flex;
@@ -187,7 +241,7 @@ body.is-loading main {
   color: inherit;
   font: inherit;
   text-transform: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 
 /* --- Botones -------------------------------------------------------------- */
@@ -199,7 +253,7 @@ body.is-loading main {
   text-transform: uppercase;
   box-shadow: 3px 3px 0 var(--ink);
   text-decoration: none;
-  cursor: pointer;
+  cursor: var(--cursor-link);
   display: inline-block;
 }
 .button.dark {
@@ -227,7 +281,7 @@ body.is-loading main {
   border: 0;
   color: var(--ink);
   text-transform: uppercase;
-  cursor: pointer;
+  cursor: var(--cursor-link);
   padding: 0;
 }
 .plain-button:hover,
@@ -246,7 +300,7 @@ body.is-loading main {
   color: var(--wine);
   padding: 7px 10px;
   font: 11px var(--mono);
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .text-action:hover {
   background: var(--wine);
@@ -259,7 +313,7 @@ body.is-loading main {
   background: var(--paper);
   width: 28px;
   height: 28px;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .delete-button {
   color: var(--wine);
@@ -293,7 +347,7 @@ dialog::backdrop {
   color: inherit;
   border: 0;
   font-size: 20px;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .modal label {
   display: block;

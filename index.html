@@ -18,17 +18,18 @@
   <body class="is-loading">
     <header class="site-header">
       <a class="brand" href="index.html">✳ archivo vivo</a>
-      <nav aria-label="Navegación principal">
-        <a class="active" href="index.html" aria-current="page">inicio</a>
-        <a href="laboratorio.html">laboratorio</a>
-        <a href="notas.html">notas</a>
-        <a href="galeria.html">galería</a>
+      <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
+        <a class="active" href="index.html" aria-current="page" data-i18n="nav.home">inicio</a>
+        <a href="laboratorio.html" data-i18n="nav.lab">laboratorio</a>
+        <a href="notas.html" data-i18n="nav.notes">notas</a>
+        <a href="galeria.html" data-i18n="nav.gallery">galería</a>
+        <a href="zona-tranquila.html" data-i18n="nav.quiet">zona tranquila</a>
       </nav>
-      <a class="plain-button" href="admin.html">editar mi archivo</a>
+      <a class="plain-button" href="admin.html" data-i18n="header.edit">editar mi archivo</a>
     </header>
 
     <div class="ticker" aria-hidden="true">
-      <span>
+      <span data-i18n="ticker">
         un lugar para guardar lo que me mueve &nbsp;/&nbsp; música, imágenes, palabras y experimentos &nbsp;/&nbsp;
         un lugar para guardar lo que me mueve &nbsp;/&nbsp; música, imágenes, palabras y experimentos &nbsp;/&nbsp;
       </span>
@@ -37,19 +38,19 @@
     <main class="shell">
       <section class="hero">
         <div data-hero-visual>
-          <p class="eyebrow">diario personal · buenos aires</p>
-          <h1>Mi pequeño<br /><i>universo.</i></h1>
-          <p class="hero-text">Un archivo de cosas que escucho, leo, miro, hago y todavía quiero hacer.</p>
-          <a class="button dark" href="#coleccion">explorar archivo ↓</a>
+          <p class="eyebrow" data-i18n="hero.eyebrow">diario personal · buenos aires</p>
+          <h1><span data-i18n="hero.title1">Mi pequeño</span><br /><i data-i18n="hero.title2">universo.</i></h1>
+          <p class="hero-text" data-i18n="hero.text">Un archivo de cosas que escucho, leo, miro, hago y todavía quiero hacer.</p>
+          <a class="button dark" href="#coleccion" data-i18n="hero.cta">explorar archivo ↓</a>
         </div>
         <aside class="identity-card">
           <div class="avatar" data-avatar>C</div>
           <div>
-            <p class="eyebrow">perfil activo</p>
+            <p class="eyebrow" data-i18n="profile.eyebrow">perfil activo</p>
             <h2 data-profile-name>Cata</h2>
             <p data-profile-bio></p>
           </div>
-          <button class="add-link" data-edit-only data-action="edit-profile">editar perfil →</button>
+          <button class="add-link" data-edit-only data-action="edit-profile" data-i18n="profile.edit">editar perfil →</button>
         </aside>
       </section>
 
@@ -57,39 +58,39 @@
         <!-- 01 / Música -->
         <article class="window music-window" data-home-section="music">
           <div class="window-bar">
-            <span>01 / escuchando</span>
+            <span data-i18n="music.bar">01 / escuchando</span>
             <span class="window-chrome" aria-hidden="true">— □ ×</span>
           </div>
           <div class="window-content">
             <div class="section-heading">
-              <h2>En repeat</h2>
-              <button class="add-link" data-edit-only data-action="add-music">+ buscar y agregar</button>
+              <h2 data-i18n="music.title">En repeat</h2>
+              <button class="add-link" data-edit-only data-action="add-music" data-i18n="music.add">+ buscar y agregar</button>
             </div>
             <div class="now-playing">
               <div class="album-art" data-current-art>♫</div>
               <div>
                 <p class="eyebrow">preview · iTunes</p>
-                <h3 data-current-title>Cargando música…</h3>
+                <h3 data-current-title data-i18n="music.loading">Cargando música…</h3>
                 <p data-current-artist></p>
                 <div class="player-controls">
                   <span class="transport">
-                    <button class="preview-button" data-action="previous-music" data-music-control disabled aria-label="Canción anterior">⏮&#xFE0E;</button>
-                    <button class="preview-button" data-action="toggle-music" data-music-control disabled aria-label="Reproducir">▶ reproducir</button>
-                    <button class="preview-button" data-action="next-music" data-music-control disabled aria-label="Canción siguiente">⏭&#xFE0E;</button>
+                    <button class="preview-button" data-action="previous-music" data-music-control disabled aria-label="Canción anterior" data-i18n-aria-label="music.prev">⏮&#xFE0E;</button>
+                    <button class="preview-button" data-action="toggle-music" data-music-control disabled aria-label="Reproducir" data-i18n-aria-label="music.playAria" data-i18n="music.play">▶ reproducir</button>
+                    <button class="preview-button" data-action="next-music" data-music-control disabled aria-label="Canción siguiente" data-i18n-aria-label="music.next">⏭&#xFE0E;</button>
                   </span>
                   <label class="volume-control">
                     <span aria-hidden="true">🔉</span>
-                    <input data-volume type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Volumen de la música" />
+                    <input data-volume type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Volumen de la música" data-i18n-aria-label="music.volume" />
                     <span aria-hidden="true">🔊</span>
                   </label>
                 </div>
-                <a class="music-credit" data-music-credit href="https://music.apple.com/" target="_blank" rel="noreferrer" hidden>
+                <a class="music-credit" data-music-credit href="https://music.apple.com/" target="_blank" rel="noreferrer" hidden data-i18n="music.credit">
                   Contenido cortesía de iTunes
                 </a>
               </div>
             </div>
             <audio data-audio-player crossorigin="anonymous"></audio>
-            <div class="genre-bar" data-music-genres role="group" aria-label="Filtrar por género" hidden></div>
+            <div class="genre-bar" data-music-genres role="group" aria-label="Filtrar por género" data-i18n-aria-label="music.filter" hidden></div>
             <div class="mini-list" data-music-list></div>
           </div>
         </article>
@@ -97,22 +98,22 @@
         <!-- 02 / Laboratorio -->
         <article class="window lab-window" data-home-section="lab">
           <div class="window-bar">
-            <span>02 / laboratorio creativo</span>
+            <span data-i18n="lab.bar">02 / laboratorio creativo</span>
             <span class="window-chrome" aria-hidden="true">— □ ×</span>
           </div>
           <div class="window-content">
             <div class="section-heading">
-              <h2>Código vivo</h2>
-              <a class="add-link" href="laboratorio.html">ver todos →</a>
+              <h2 data-i18n="lab.homeTitle">Código vivo</h2>
+              <a class="add-link" href="laboratorio.html" data-i18n="lab.seeAll">ver todos →</a>
             </div>
             <div class="project-preview">
               <div class="preview-canvas">
-                <iframe data-home-project-frame title="Proyecto destacado"></iframe>
+                <iframe data-home-project-frame title="Proyecto destacado" data-i18n-title="lab.featuredAria"></iframe>
               </div>
               <div>
-                <p class="eyebrow">laboratorio abierto</p>
-                <h3 data-home-project-title>Proyectos interactivos</h3>
-                <p data-home-project-description>Experimentos hechos con código creativo.</p>
+                <p class="eyebrow" data-i18n="lab.eyebrowHome">laboratorio abierto</p>
+                <h3 data-home-project-title data-i18n="lab.defaultTitle">Proyectos interactivos</h3>
+                <p data-home-project-description data-i18n="lab.defaultDescription">Experimentos hechos con código creativo.</p>
               </div>
             </div>
           </div>
@@ -121,13 +122,13 @@
         <!-- 03 / Libros -->
         <article class="window books-window" data-home-section="books">
           <div class="window-bar">
-            <span>03 / mesa de luz</span>
+            <span data-i18n="books.bar">03 / mesa de luz</span>
             <span class="window-chrome" aria-hidden="true">— □ ×</span>
           </div>
           <div class="window-content">
             <div class="section-heading">
-              <h2>Libros</h2>
-              <button class="add-link" data-edit-only data-action="add-book">+ buscar libro</button>
+              <h2 data-i18n="books.title">Libros</h2>
+              <button class="add-link" data-edit-only data-action="add-book" data-i18n="books.add">+ buscar libro</button>
             </div>
             <div class="book-grid" data-book-list></div>
           </div>
@@ -136,13 +137,13 @@
         <!-- 04 / YouTube -->
         <article class="window channels-window" data-home-section="channels">
           <div class="window-bar">
-            <span>04 / canales y videos</span>
+            <span data-i18n="channels.bar">04 / canales y videos</span>
             <span class="window-chrome" aria-hidden="true">— □ ×</span>
           </div>
           <div class="window-content">
             <div class="section-heading">
-              <h2>En YouTube</h2>
-              <button class="add-link" data-edit-only data-action="add-channel">+ sumar</button>
+              <h2 data-i18n="channels.title">En YouTube</h2>
+              <button class="add-link" data-edit-only data-action="add-channel" data-i18n="channels.add">+ sumar</button>
             </div>
             <div class="channel-grid" data-channel-list></div>
           </div>
@@ -151,15 +152,15 @@
         <!-- 05 / Notas -->
         <article class="window notes-window" data-home-section="notes">
           <div class="window-bar">
-            <span>05 / cuaderno abierto</span>
+            <span data-i18n="notes.bar">05 / cuaderno abierto</span>
             <span class="window-chrome" aria-hidden="true">— □ ×</span>
           </div>
           <div class="window-content">
             <div class="section-heading">
-              <h2>Notas & artículos</h2>
+              <h2 data-i18n="notes.homeTitle">Notas & artículos</h2>
               <span class="section-heading-actions">
-                <button class="add-link" data-edit-only data-action="new-note">+ escribir</button>
-                <a class="add-link" href="notas.html">leer todo →</a>
+                <button class="add-link" data-edit-only data-action="new-note" data-i18n="notes.writeShort">+ escribir</button>
+                <a class="add-link" href="notas.html" data-i18n="notes.readAll">leer todo →</a>
               </span>
             </div>
             <div class="note-list" data-note-list></div>
@@ -169,13 +170,13 @@
         <!-- 06 / Fotografías -->
         <article class="window photo-window" data-home-section="photos">
           <div class="window-bar">
-            <span>06 / cosas que vi</span>
+            <span data-i18n="photos.bar">06 / cosas que vi</span>
             <span class="window-chrome" aria-hidden="true">— □ ×</span>
           </div>
           <div class="window-content">
             <div class="section-heading">
-              <h2>Fotografías</h2>
-              <a class="add-link" href="galeria.html">abrir galería →</a>
+              <h2 data-i18n="photos.title">Fotografías</h2>
+              <a class="add-link" href="galeria.html" data-i18n="photos.open">abrir galería →</a>
             </div>
             <div class="photo-preview" data-photo-preview></div>
           </div>
@@ -192,19 +193,19 @@
     <dialog data-modal="profile">
       <form class="modal">
         <header>
-          <span>editar perfil</span>
-          <button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button>
+          <span data-i18n="profile.dialogTitle">editar perfil</span>
+          <button class="close" type="button" data-close-dialog aria-label="Cerrar" data-i18n-aria-label="common.close">×</button>
         </header>
-        <label>Nombre<input name="name" required maxlength="60" /></label>
+        <label><span data-i18n="profile.name">Nombre</span><input name="name" required maxlength="60" /></label>
         <label>Bio<textarea name="bio" maxlength="240"></textarea></label>
         <label>Avatar<input name="avatar" type="file" accept="image/*" /></label>
         <div class="avatar-choice">
-          <img src="assets/images/cata-avatar-pixel.webp" alt="Tu avatar pixel art con cámara" />
-          <label class="checkbox-label"><input name="generatedAvatar" type="checkbox" /> Usar mi avatar pixel art</label>
+          <img src="assets/images/cata-avatar-pixel.webp" alt="Tu avatar pixel art con cámara" data-i18n-alt="profile.pixelAlt" />
+          <label class="checkbox-label"><input name="generatedAvatar" type="checkbox" /> <span data-i18n="profile.usePixel">Usar mi avatar pixel art</span></label>
         </div>
         <menu>
-          <button class="button light" type="button" data-close-dialog>cancelar</button>
-          <button class="button dark" type="submit">guardar</button>
+          <button class="button light" type="button" data-close-dialog data-i18n="common.cancel">cancelar</button>
+          <button class="button dark" type="submit" data-i18n="common.save">guardar</button>
         </menu>
       </form>
     </dialog>
@@ -213,44 +214,44 @@
     <dialog data-modal="item">
       <form class="modal">
         <header>
-          <span data-modal-title>sumar al archivo</span>
-          <button class="close" type="button" data-close-dialog aria-label="Cerrar">×</button>
+          <span data-modal-title data-i18n="item.title">sumar al archivo</span>
+          <button class="close" type="button" data-close-dialog aria-label="Cerrar" data-i18n-aria-label="common.close">×</button>
         </header>
         <input type="hidden" name="type" />
-        <label data-title-label>Canción o disco<input name="title" required maxlength="140" autocomplete="off" /></label>
-        <label data-author-label hidden>Artista o autor<input name="author" maxlength="140" autocomplete="off" /></label>
+        <label data-title-label><span data-i18n="item.song">Canción o disco</span><input name="title" required maxlength="140" autocomplete="off" /></label>
+        <label data-author-label hidden><span data-i18n="item.artist">Artista o autor</span><input name="author" maxlength="140" autocomplete="off" /></label>
         <label data-music-mode hidden>
-          Buscar como
+          <span data-i18n="item.searchAs">Buscar como</span>
           <select name="musicMode">
-            <option value="track">canción</option>
-            <option value="album">disco</option>
+            <option value="track" data-i18n="item.track">canción</option>
+            <option value="album" data-i18n="item.album">disco</option>
           </select>
         </label>
-        <label data-detail-label>Comentario opcional<textarea name="detail" maxlength="400"></textarea></label>
+        <label data-detail-label><span data-i18n="item.comment">Comentario opcional</span><textarea name="detail" maxlength="400"></textarea></label>
         <label data-kind-label>
-          Estado de lectura
+          <span data-i18n="item.readingState">Estado de lectura</span>
           <select name="kind">
-            <option value="por leer">por leer</option>
-            <option value="leyendo">leyendo</option>
-            <option value="leído">leído</option>
+            <option value="por leer" data-i18n="reading.por leer">por leer</option>
+            <option value="leyendo" data-i18n="reading.leyendo">leyendo</option>
+            <option value="leído" data-i18n="reading.leído">leído</option>
           </select>
         </label>
         <label data-link-label>
-          Enlace del canal, video o playlist
+          <span data-i18n="item.link">Enlace del canal, video o playlist</span>
           <input name="link" type="url" placeholder="https://youtube.com/…" />
         </label>
         <label data-video-label hidden>
-          Video o playlist destacado (opcional)
+          <span data-i18n="item.featured">Video o playlist destacado (opcional)</span>
           <input name="videoLink" type="url" placeholder="https://youtu.be/…" />
         </label>
         <label data-rating-label hidden>
-          Mi puntuación <output data-rating-display>sin puntuación</output>
-          <input name="rating" type="range" min="0" max="5" step="0.5" value="0" aria-label="Puntuación de cero a cinco estrellas" />
+          <span data-i18n="item.rating">Mi puntuación</span> <output data-rating-display data-i18n="item.noRating">sin puntuación</output>
+          <input name="rating" type="range" min="0" max="5" step="0.5" value="0" aria-label="Puntuación de cero a cinco estrellas" data-i18n-aria-label="item.ratingAria" />
         </label>
         <div class="catalog-results" data-catalog-results hidden></div>
         <menu>
-          <button class="button light" type="button" data-close-dialog>cancelar</button>
-          <button class="button dark" type="submit" data-item-submit>sumar</button>
+          <button class="button light" type="button" data-close-dialog data-i18n="common.cancel">cancelar</button>
+          <button class="button dark" type="submit" data-item-submit data-i18n="item.submit">sumar</button>
         </menu>
       </form>
     </dialog>

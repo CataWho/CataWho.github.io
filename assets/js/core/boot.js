@@ -4,6 +4,8 @@
 import { node, q } from "./dom.js";
 import { state } from "./state.js";
 import { currentUser, getArchive, signOut } from "./db.js";
+import { startCursorSparkles } from "../features/cursor-sparkles.js";
+import { mountLanguageSwitch, t, translatePage } from "./i18n.js";
 
 /**
  * Solo la dueña ve este aviso en la barra de abajo: así siempre sabe que tiene
@@ -14,8 +16,8 @@ function showOwnerBadge() {
   if (!footer) return;
   const badge = node(`
     <span class="owner-badge">
-      <span class="owner-dot" aria-hidden="true"></span>modo edición
-      <button type="button">cerrar sesión</button>
+      <span class="owner-dot" aria-hidden="true"></span>${t("session.editMode")}
+      <button type="button">${t("session.signOut")}</button>
     </span>`);
   q("button", badge).addEventListener("click", async () => {
     await signOut();
@@ -25,13 +27,16 @@ function showOwnerBadge() {
 }
 
 export async function boot(renderPage) {
+  // Primero el idioma, así la página no se ve un instante en el otro.
+  translatePage();
+  mountLanguageSwitch();
   const footerStatus = q("[data-storage-state]");
   try {
     state.archive = await getArchive();
   } catch (error) {
     console.error(error);
-    if (footerStatus) footerStatus.textContent = "sin conexión";
-    alert(`No se pudieron cargar los datos: ${error.message}`);
+    if (footerStatus) footerStatus.textContent = t("footer.offline");
+    alert(t("footer.loadFailed", { message: error.message }));
   }
 
   const user = await currentUser();
@@ -42,4 +47,5 @@ export async function boot(renderPage) {
 
   renderPage();
   document.body.classList.remove("is-loading");
+  startCursorSparkles();
 }

@@ -39,6 +39,8 @@
   color: var(--paper);
   border: var(--line);
   padding: clamp(26px, 5vw, 65px);
+  /* Un poco menos de aire arriba y abajo: el cartel queda ~15 px más bajo. */
+  padding-block: clamp(20px, 4.4vw, 57px);
   position: relative;
   overflow: hidden;
 }
@@ -117,8 +119,8 @@
   margin: 0;
 }
 .avatar {
-  height: 120px;
-  width: 120px;
+  width: min(100%, 260px);
+  aspect-ratio: 1;
   border: var(--line);
   display: grid;
   place-items: center;
@@ -218,7 +220,7 @@
   min-width: 25px;
   height: 24px;
   font: 11px var(--mono);
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .section-layout-controls button:hover {
   background: var(--paper);
@@ -302,7 +304,7 @@
   background: transparent;
   border: 1px solid var(--paper);
   padding: 5px;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .preview-button:hover:not(:disabled) {
   background: var(--paper);
@@ -314,7 +316,7 @@
 }
 .preview-button:disabled {
   opacity: 0.55;
-  cursor: default;
+  cursor: var(--cursor-arrow);
 }
 .volume-control {
   display: flex;
@@ -350,7 +352,7 @@
   padding: 5px 9px;
   font: 10px var(--mono);
   text-transform: uppercase;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .genre-chip span {
   margin-left: 3px;
@@ -431,7 +433,7 @@
   border: 1px solid var(--ink);
   background: var(--paper);
   color: var(--wine);
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .mini-delete {
   width: 25px;
@@ -470,7 +472,7 @@
   padding: 7px;
   border: 1px solid #b8adaf;
   background: #fff;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .catalog-result:hover {
   border-color: var(--wine);
@@ -619,7 +621,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  cursor: pointer;
+  cursor: var(--cursor-link);
 }
 .channel-card summary::-webkit-details-marker {
   display: none;

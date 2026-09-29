@@ -3,6 +3,7 @@
 // Cuando suena música en "escuchando", el visual reacciona a ella a través de a.fft.
 
 import { q } from "../core/dom.js";
+import { t } from "../core/i18n.js";
 import { feedAudio } from "./audio-analyser.js";
 import { mountSketch } from "./sketch.js";
 
@@ -22,7 +23,7 @@ export async function startHeroVisual() {
 
   const frame = document.createElement("iframe");
   frame.className = "hero-visual";
-  frame.title = "Visual de fondo hecho con Hydra";
+  frame.title = t("hero.visualTitle");
   frame.setAttribute("aria-hidden", "true");
   frame.tabIndex = -1;
   frame.addEventListener("load", () => hero.classList.add("has-visual"), { once: true });

@@ -2,6 +2,7 @@
 
 import { esc, q } from "../core/dom.js";
 import { deleteMedia, safeFileName, storagePathFromUrl, updateProfile, uploadMedia } from "../core/db.js";
+import { t } from "../core/i18n.js";
 import { state } from "../core/state.js";
 import { bindDialog, openDialog } from "../core/ui.js";
 
@@ -14,7 +15,8 @@ export function renderProfile() {
   q("[data-profile-name]").textContent = profile.display_name;
   q("[data-profile-bio]").textContent = profile.bio || "";
   const avatarUrl = profile.avatar_url || PIXEL_AVATAR;
-  q("[data-avatar]").innerHTML = `<img src="${esc(avatarUrl)}" alt="Avatar de ${esc(profile.display_name)}">`;
+  q("[data-avatar]").innerHTML =
+    `<img src="${esc(avatarUrl)}" alt="${esc(t("profile.avatarAlt", { name: profile.display_name }))}">`;
 }
 
 export function setupProfileDialog() {

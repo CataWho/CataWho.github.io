@@ -3,15 +3,15 @@
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm";
 import { config } from "../config.js";
+import { t } from "./i18n.js";
 
 const BUCKET = "archive-media";
-const NO_PERMISSION = "No se guardó: la sesión venció o no tenés permiso. Volvé a entrar desde admin.html.";
 
 export const hasDatabase = Boolean(config.supabaseUrl && config.supabaseAnonKey);
 const db = hasDatabase ? createClient(config.supabaseUrl, config.supabaseAnonKey) : null;
 
 function requireDb() {
-  if (!db) throw new Error("Supabase no está configurado (revisá assets/js/config.js).");
+  if (!db) throw new Error(t("db.notConfigured"));
   return db;
 }
 
@@ -19,7 +19,7 @@ function requireDb() {
 // simplemente no cambia ninguna fila. Por eso pedimos las filas afectadas y
 // fallamos si no hubo ninguna.
 function expectRows(data) {
-  if (!data?.length) throw new Error(NO_PERMISSION);
+  if (!data?.length) throw new Error(t("db.noPermission"));
 }
 
 // --- Lectura --------------------------------------------------------------
@@ -152,7 +152,7 @@ export async function sendMagicLink(email, redirectTo) {
 /** La primera vez que la dueña entra, crea su perfil. Después solo lo verifica. */
 export async function ensureProfile() {
   const user = await currentUser();
-  if (!user) throw new Error("No hay una sesión activa");
+  if (!user) throw new Error(t("db.noSession"));
   const { data: existing, error: readError } = await requireDb()
     .from("profiles")
     .select("*")
@@ -160,7 +160,7 @@ export async function ensureProfile() {
     .maybeSingle();
   if (readError) throw readError;
   if (existing) {
-    if (existing.owner_id !== user.id) throw new Error("Este perfil ya pertenece a otra cuenta");
+    if (existing.owner_id !== user.id) throw new Error(t("db.otherOwner"));
     return existing;
   }
   const { data, error } = await db

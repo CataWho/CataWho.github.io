@@ -5,8 +5,10 @@
 
 import { esc, node, q, qa } from "../core/dom.js";
 import { deleteItem, updateItem } from "../core/db.js";
+import { genreName, t } from "../core/i18n.js";
 import { findItem, itemsOf, removeItem, state } from "../core/state.js";
 
+// Claves internas de los filtros (lo que se muestra sale de las traducciones).
 const ALL = "todo";
 const NO_GENRE = "otros";
 const RESTART_AFTER = 3; // segundos: "anterior" reinicia la canción si ya pasó este tiempo
@@ -30,7 +32,7 @@ export function renderMusic() {
   renderGenres();
   const music = visibleMusic();
   list.replaceChildren(...music.map(musicRow));
-  if (!music.length) list.append(node('<p class="mini-empty">Todavía no hay canciones acá.</p>'));
+  if (!music.length) list.append(node(`<p class="mini-empty">${t("music.emptyGenre")}</p>`));
   qa("[data-play-music]", list).forEach((button) => {
     button.onclick = () => playItem(button.dataset.playMusic);
   });
@@ -50,10 +52,17 @@ function renderGenres() {
   // Con un solo género no tiene sentido mostrar filtros.
   bar.hidden = counts.size < 2;
   if (!counts.has(activeGenre)) activeGenre = ALL;
-  const genres = [...counts.keys()].sort((a, b) => (a === NO_GENRE) - (b === NO_GENRE) || a.localeCompare(b, "es"));
+  const genres = [...counts.keys()].sort(
+    (a, b) => (a === NO_GENRE) - (b === NO_GENRE) || a.localeCompare(b, "es"),
+  );
+  const label = (genre) =>
+    genre === ALL ? t("music.all") : genre === NO_GENRE ? t("music.otherGenre") : genreName(genre);
   const chip = (genre, count) =>
-    `<button type="button" class="genre-chip" data-genre="${esc(genre)}" aria-pressed="${genre === activeGenre}">${esc(genre)} <span>${count}</span></button>`;
-  bar.innerHTML = [chip(ALL, itemsOf("music").length), ...genres.map((genre) => chip(genre, counts.get(genre)))].join("");
+    `<button type="button" class="genre-chip" data-genre="${esc(genre)}" aria-pressed="${genre === activeGenre}">${esc(label(genre))} <span>${count}</span></button>`;
+  bar.innerHTML = [
+    chip(ALL, itemsOf("music").length),
+    ...genres.map((genre) => chip(genre, counts.get(genre))),
+  ].join("");
   qa("[data-genre]", bar).forEach((button) => {
     button.onclick = () => {
       activeGenre = button.dataset.genre;
@@ -69,8 +78,8 @@ function musicRow(item, index) {
       <span class="mini-number">${String(index + 1).padStart(2, "0")}</span>
       <span class="mini-art">${art ? `<img src="${esc(art)}" alt="" loading="lazy">` : "♫"}</span>
       <div><b>${esc(item.title)}</b><br><small>${esc(item.detail || item.metadata?.artist || item.kind)}</small></div>
-      <button class="mini-play" data-play-music="${esc(item.id)}" aria-label="Reproducir ${esc(item.title)}">▶</button>
-      <button class="mini-delete" data-edit-only data-delete-music="${esc(item.id)}" aria-label="Eliminar ${esc(item.title)}">×</button>
+      <button class="mini-play" data-play-music="${esc(item.id)}" aria-label="${esc(t("music.playItem", { title: item.title }))}">▶</button>
+      <button class="mini-delete" data-edit-only data-delete-music="${esc(item.id)}" aria-label="${esc(t("common.delete", { title: item.title }))}">×</button>
     </div>`);
 }
 
@@ -91,14 +100,14 @@ function markPlaying() {
 
 async function deleteMusic(id) {
   const item = findItem(id);
-  if (!item || !confirm(`¿Eliminar “${item.title}” de la lista?`)) return;
+  if (!item || !confirm(t("music.confirmDelete", { title: item.title }))) return;
   try {
     await deleteItem(item.id);
     removeItem(item.id);
     if (String(q("[data-current-title]")?.dataset.parentId) === String(id)) resetPlayer();
     renderMusic();
   } catch (error) {
-    alert(`No se pudo eliminar: ${error.message}`);
+    alert(t("common.deleteFailed", { message: error.message }));
   }
 }
 
@@ -116,9 +125,13 @@ async function fillMissingGenres() {
   try {
     const response = await fetch(`https://itunes.apple.com/lookup?id=${ids.join(",")}&country=AR`);
     const { results = [] } = await response.json();
-    const genreById = new Map(results.map((result) => [String(result.trackId || result.collectionId), result.primaryGenreName]));
+    const genreById = new Map(
+      results.map((result) => [String(result.trackId || result.collectionId), result.primaryGenreName]),
+    );
     const updated = missing.filter((item) => genreById.get(String(idOf(item))));
-    updated.forEach((item) => (item.metadata = { ...item.metadata, genre: genreById.get(String(idOf(item))) }));
+    updated.forEach(
+      (item) => (item.metadata = { ...item.metadata, genre: genreById.get(String(idOf(item))) }),
+    );
     if (updated.length) renderMusic();
     if (state.isOwner) for (const item of updated) await updateItem(item.id, { metadata: item.metadata });
   } catch (error) {
@@ -182,16 +195,16 @@ function resetPlayer() {
   player.removeAttribute("src");
   qa("[data-music-control]").forEach((button) => (button.disabled = true));
   setPlaying(false);
-  q("[data-current-title]").textContent = "Todavía no agregaste música";
+  q("[data-current-title]").textContent = t("music.empty");
   q("[data-current-title]").dataset.parentId = "";
-  q("[data-current-artist]").textContent = "Buscá una canción o un disco.";
+  q("[data-current-artist]").textContent = t("music.emptyHint");
   q("[data-current-art]").textContent = "♫";
   q("[data-music-credit]").hidden = true;
 }
 
 function setPlaying(isPlaying) {
-  playButton().textContent = isPlaying ? "Ⅱ pausa" : "▶ reproducir";
-  playButton().setAttribute("aria-label", isPlaying ? "Pausar" : "Reproducir");
+  playButton().textContent = t(isPlaying ? "music.pause" : "music.play");
+  playButton().setAttribute("aria-label", t(isPlaying ? "music.pauseAria" : "music.playAria"));
   q(".now-playing")?.classList.toggle("is-playing", isPlaying);
 }
 
@@ -199,7 +212,7 @@ function playItem(id) {
   queue = buildQueue();
   queueIndex = queue.findIndex((entry) => String(entry.item.id) === String(id));
   if (queueIndex < 0) {
-    alert("Apple no ofrece una preview para esta canción/disco en este catálogo.");
+    alert(t("music.noPreview"));
     return;
   }
   playCurrent();

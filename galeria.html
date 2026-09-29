@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#7c2337" />
-    <title>Cosas que vi — Archivo vivo</title>
+    <title data-i18n="title.gallery">Cosas que vi — Archivo vivo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,47 +18,48 @@
   <body class="is-loading">
     <header class="site-header">
       <a class="brand" href="index.html">✳ archivo vivo</a>
-      <nav aria-label="Navegación principal">
-        <a href="index.html">inicio</a>
-        <a href="laboratorio.html">laboratorio</a>
-        <a href="notas.html">notas</a>
-        <a class="active" href="galeria.html" aria-current="page">galería</a>
+      <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
+        <a href="index.html" data-i18n="nav.home">inicio</a>
+        <a href="laboratorio.html" data-i18n="nav.lab">laboratorio</a>
+        <a href="notas.html" data-i18n="nav.notes">notas</a>
+        <a class="active" href="galeria.html" aria-current="page" data-i18n="nav.gallery">galería</a>
+        <a href="zona-tranquila.html" data-i18n="nav.quiet">zona tranquila</a>
       </nav>
-      <button class="plain-button" data-edit-only data-upload-photo>+ subir fotografías</button>
+      <button class="plain-button" data-edit-only data-upload-photo data-i18n="gallery.upload">+ subir fotografías</button>
     </header>
 
     <main class="shell subpage">
       <section class="page-intro gallery-intro">
-        <p class="eyebrow">06 / registro visual</p>
-        <h1>Cosas <i>que vi.</i></h1>
-        <p>Pequeñas colecciones de lugares, momentos y cosas que me hicieron mirar.</p>
+        <p class="eyebrow" data-i18n="gallery.eyebrow">06 / registro visual</p>
+        <h1><span data-i18n="gallery.title1">Cosas</span> <i data-i18n="gallery.title2">que vi.</i></h1>
+        <p data-i18n="gallery.intro">Pequeñas colecciones de lugares, momentos y cosas que me hicieron mirar.</p>
       </section>
 
       <div class="gallery-toolbar">
-        <div class="gallery-tabs" aria-label="Vista de galería">
-          <button type="button" data-gallery-view="albums" aria-pressed="true">Álbumes</button>
-          <button type="button" data-gallery-view="all" aria-pressed="false">Todas las fotos</button>
+        <div class="gallery-tabs" aria-label="Vista de galería" data-i18n-aria-label="gallery.viewAria">
+          <button type="button" data-gallery-view="albums" aria-pressed="true" data-i18n="gallery.albums">Álbumes</button>
+          <button type="button" data-gallery-view="all" aria-pressed="false" data-i18n="gallery.all">Todas las fotos</button>
         </div>
-        <button type="button" class="button dark" data-edit-only data-new-album>+ crear álbum</button>
+        <button type="button" class="button dark" data-edit-only data-new-album data-i18n="gallery.newAlbum">+ crear álbum</button>
       </div>
 
       <div class="gallery-subheading">
         <div>
-          <button type="button" class="add-link" data-gallery-back hidden>← volver a álbumes</button>
-          <h2 data-gallery-heading>Mis álbumes</h2>
+          <button type="button" class="add-link" data-gallery-back hidden data-i18n="gallery.back">← volver a álbumes</button>
+          <h2 data-gallery-heading data-i18n="gallery.myAlbums">Mis álbumes</h2>
         </div>
         <div class="gallery-manage" data-edit-only>
-          <button type="button" class="text-action" data-album-edit hidden>Renombrar álbum</button>
-          <button type="button" class="text-action" data-album-delete hidden>Eliminar álbum</button>
+          <button type="button" class="text-action" data-album-edit hidden data-i18n="gallery.rename">Renombrar álbum</button>
+          <button type="button" class="text-action" data-album-delete hidden data-i18n="gallery.deleteAlbum">Eliminar álbum</button>
         </div>
       </div>
-      <p class="gallery-help" data-edit-only>
+      <p class="gallery-help" data-edit-only data-i18n="gallery.help">
         Entrá a un álbum para subir fotos allí. Usá “Editar” para nombrarlas, moverlas o elegir la portada. Arrastrá las
         fotos o usá las flechas para ordenarlas.
       </p>
       <p class="gallery-status" data-gallery-status role="status" aria-live="polite"></p>
       <input data-photo-input type="file" accept="image/*" multiple hidden />
-      <section class="gallery-grid album-grid" data-gallery-list aria-label="Colección de fotografías"></section>
+      <section class="gallery-grid album-grid" data-gallery-list aria-label="Colección de fotografías" data-i18n-aria-label="gallery.collectionAria"></section>
     </main>
 
     <footer class="site-footer">
@@ -70,15 +71,15 @@
     <dialog data-photo-editor aria-labelledby="photo-editor-title">
       <form class="modal">
         <header>
-          <span id="photo-editor-title">Editar fotografía</span>
-          <button type="button" class="close" data-close-dialog aria-label="Cerrar">×</button>
+          <span id="photo-editor-title" data-i18n="gallery.editPhoto">Editar fotografía</span>
+          <button type="button" class="close" data-close-dialog aria-label="Cerrar" data-i18n-aria-label="common.close">×</button>
         </header>
-        <label>Nombre de la foto<input name="title" required maxlength="140" /></label>
-        <label>Álbum<select name="album"></select></label>
-        <label class="checkbox-label"><input name="cover" type="checkbox" /> Usar como portada del álbum elegido</label>
+        <label><span data-i18n="gallery.photoName">Nombre de la foto</span><input name="title" required maxlength="140" /></label>
+        <label><span data-i18n="gallery.album">Álbum</span><select name="album"></select></label>
+        <label class="checkbox-label"><input name="cover" type="checkbox" /> <span data-i18n="gallery.useCover">Usar como portada del álbum elegido</span></label>
         <menu>
-          <button type="button" class="button light" data-close-dialog>cancelar</button>
-          <button type="submit" class="button dark">guardar cambios</button>
+          <button type="button" class="button light" data-close-dialog data-i18n="common.cancel">cancelar</button>
+          <button type="submit" class="button dark" data-i18n="common.saveChanges">guardar cambios</button>
         </menu>
       </form>
     </dialog>
@@ -87,16 +88,16 @@
     <dialog data-album-editor aria-labelledby="album-editor-title">
       <form class="modal">
         <header>
-          <span id="album-editor-title" data-album-dialog-title>Nuevo álbum</span>
-          <button type="button" class="close" data-close-dialog aria-label="Cerrar">×</button>
+          <span id="album-editor-title" data-album-dialog-title data-i18n="gallery.newAlbumTitle">Nuevo álbum</span>
+          <button type="button" class="close" data-close-dialog aria-label="Cerrar" data-i18n-aria-label="common.close">×</button>
         </header>
         <label>
-          Nombre del álbum
-          <input name="title" required maxlength="100" placeholder="Por ejemplo: tardes de verano" />
+          <span data-i18n="gallery.albumName">Nombre del álbum</span>
+          <input name="title" required maxlength="100" placeholder="Por ejemplo: tardes de verano" data-i18n-placeholder="gallery.albumPlaceholder" />
         </label>
         <menu>
-          <button type="button" class="button light" data-close-dialog>cancelar</button>
-          <button type="submit" class="button dark">guardar álbum</button>
+          <button type="button" class="button light" data-close-dialog data-i18n="common.cancel">cancelar</button>
+          <button type="submit" class="button dark" data-i18n="gallery.saveAlbum">guardar álbum</button>
         </menu>
       </form>
     </dialog>
@@ -105,13 +106,13 @@
     <dialog class="photo-viewer" data-photo-viewer aria-labelledby="viewer-title">
       <header>
         <h2 id="viewer-title" data-viewer-title></h2>
-        <button type="button" data-viewer-close aria-label="Cerrar fotografía">× Cerrar</button>
+        <button type="button" data-viewer-close aria-label="Cerrar fotografía" data-i18n-aria-label="gallery.closePhoto" data-i18n="gallery.closeViewer">× Cerrar</button>
       </header>
       <img alt="" />
       <footer>
-        <button type="button" data-photo-step="-1" aria-label="Foto anterior">← anterior</button>
+        <button type="button" data-photo-step="-1" aria-label="Foto anterior" data-i18n-aria-label="gallery.prevPhoto" data-i18n="gallery.prev">← anterior</button>
         <span data-viewer-count></span>
-        <button type="button" data-photo-step="1" aria-label="Foto siguiente">siguiente →</button>
+        <button type="button" data-photo-step="1" aria-label="Foto siguiente" data-i18n-aria-label="gallery.nextPhoto" data-i18n="gallery.next">siguiente →</button>
       </footer>
     </dialog>
   </body>

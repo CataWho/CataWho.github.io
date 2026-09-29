@@ -3,6 +3,7 @@
 
 import { esc, node, q, qa } from "../core/dom.js";
 import { deleteProject, saveProject } from "../core/db.js";
+import { t } from "../core/i18n.js";
 import { state } from "../core/state.js";
 import { bindDialog, openDialog } from "../core/ui.js";
 import { feedAudio } from "./audio-analyser.js";
@@ -80,16 +81,15 @@ export function renderLabPreview() {
   const project = featuredProject();
   if (!project) {
     frame.removeAttribute("srcdoc");
-    q("[data-home-project-title]").textContent = "Todavía no hay proyecto";
-    q("[data-home-project-description]").textContent = "Creá uno en el laboratorio creativo.";
+    q("[data-home-project-title]").textContent = t("lab.noProject");
+    q("[data-home-project-description]").textContent = t("lab.noProjectHint");
     return;
   }
   mountSketch(frame, project.code, { engine: engineOf(project) });
   // Si el destacado es de Hydra, escucha la música de "escuchando" como el fondo.
   if (engineOf(project) === "hydra") feedAudio(frame);
   q("[data-home-project-title]").textContent = project.title;
-  q("[data-home-project-description]").textContent =
-    project.description || "Experimento hecho con código creativo.";
+  q("[data-home-project-description]").textContent = project.description || t("lab.defaultDescription");
 }
 
 // --- Página del laboratorio --------------------------------------------------
@@ -98,8 +98,7 @@ export function renderLab() {
   const grid = q("[data-project-grid]");
   if (!grid) return;
   if (!projects().length) {
-    grid.innerHTML =
-      '<p class="empty-state">Todavía no hay proyectos. Tocá “nuevo proyecto” para empezar.</p>';
+    grid.innerHTML = `<p class="empty-state">${t("lab.empty")}</p>`;
     return;
   }
   const featuredId = String(featuredProject()?.id);
@@ -112,40 +111,41 @@ export function renderLab() {
 function projectCard(project, isFeatured) {
   const id = esc(project.id);
   const engine = engineOf(project);
+  // "Sin descripción todavía." solo lo ve la dueña, como recordatorio: a las visitas no se les muestra nada.
   const hydraLink =
     engine === "hydra"
-      ? `<a class="add-link hydra-link" data-hydra-link href="${esc(hydraEditorUrl(project.code))}" target="_blank" rel="noreferrer">abrir en el editor de Hydra ↗</a>`
+      ? `<a class="add-link hydra-link" data-hydra-link href="${esc(hydraEditorUrl(project.code))}" target="_blank" rel="noreferrer">${t("lab.openHydra")}</a>`
       : "";
   return node(`
     <article class="project-card" data-project-card="${id}">
       <header>
         <div class="project-title-label">
           <span class="project-title-text">${esc(project.title)}</span>
-          <input class="project-title-input" value="${esc(project.title)}" maxlength="100" readonly aria-label="Título del proyecto">
+          <input class="project-title-input" value="${esc(project.title)}" maxlength="100" readonly aria-label="${t("lab.titleAria")}">
         </div>
-        <button class="icon-button" data-edit-only data-edit-title title="Editar título" aria-label="Editar título">✎</button>
+        <button class="icon-button" data-edit-only data-edit-title title="${t("lab.editTitle")}" aria-label="${t("lab.editTitle")}">✎</button>
       </header>
-      <p class="eyebrow">${ENGINE_NAMES[engine]} · público</p>
-      <div class="project-description-wrap">
-        <p class="project-description-text">${esc(project.description || "Sin descripción todavía.")}</p>
-        <button class="icon-button" data-edit-only data-edit-description title="Editar descripción" aria-label="Editar descripción">✎</button>
-        <textarea class="project-description-input" maxlength="300" readonly aria-label="Descripción del proyecto">${esc(project.description || "")}</textarea>
+      <p class="eyebrow">${t("lab.public", { engine: ENGINE_NAMES[engine] })}</p>
+      <div class="project-description-wrap" ${project.description || state.isOwner ? "" : "hidden"}>
+        <p class="project-description-text">${esc(project.description || t("lab.noDescription"))}</p>
+        <button class="icon-button" data-edit-only data-edit-description title="${t("lab.editDescription")}" aria-label="${t("lab.editDescription")}">✎</button>
+        <textarea class="project-description-input" maxlength="300" readonly aria-label="${t("lab.descriptionAria")}">${esc(project.description || "")}</textarea>
       </div>
       <div class="project-canvas">
-        <iframe class="project-frame" data-project-frame title="Canvas de ${esc(project.title)}"></iframe>
+        <iframe class="project-frame" data-project-frame title="${esc(t("lab.canvasTitle", { title: project.title }))}"></iframe>
       </div>
-      <p class="canvas-note" data-project-note>Preparando canvas…</p>
+      <p class="canvas-note" data-project-note>${t("lab.preparing")}</p>
       ${hydraLink}
       <details class="code-panel">
-        <summary>${state.isOwner ? "Editar código" : "Ver código"}</summary>
-        <textarea class="code-editor" data-project-code spellcheck="false" aria-label="Código de ${esc(project.title)}" ${state.isOwner ? "" : "readonly"}>${esc(project.code)}</textarea>
+        <summary>${t(state.isOwner ? "lab.editCode" : "lab.viewCode")}</summary>
+        <textarea class="code-editor" data-project-code spellcheck="false" aria-label="${esc(t("lab.codeAria", { title: project.title }))}" ${state.isOwner ? "" : "readonly"}>${esc(project.code)}</textarea>
       </details>
       <footer>
-        <span data-project-state>guardado</span>
+        <span data-project-state>${t("lab.saved")}</span>
         <span data-edit-only>
-          <button class="add-link" data-feature-project>${isFeatured ? "✓ en el inicio" : "mostrar en inicio"}</button>
-          <button class="add-link" data-run-project>actualizar vista ↻</button>
-          <button class="add-link delete-text" data-delete-project>eliminar</button>
+          <button class="add-link" data-feature-project>${t(isFeatured ? "lab.onHome" : "lab.showOnHome")}</button>
+          <button class="add-link" data-run-project>${t("lab.refresh")}</button>
+          <button class="add-link delete-text" data-delete-project>${t("lab.delete")}</button>
         </span>
       </footer>
     </article>`);
@@ -163,27 +163,23 @@ function bindProjectCard(project) {
 
   const run = () => {
     note.classList.remove("has-error");
-    note.textContent =
-      engine === "hydra"
-        ? "Hydra en vivo · acá a.fft se mueve solo; en el inicio sigue la música."
-        : "Preparando canvas…";
+    note.textContent = engine === "hydra" ? t("lab.hydraNote") : t("lab.preparing");
     if (hydraLink) hydraLink.href = hydraEditorUrl(project.code);
     mountSketch(frame, project.code, {
       engine,
       onSize: ({ width, height }) => {
         frame.style.aspectRatio = `${width} / ${height}`;
-        if (!note.classList.contains("has-error"))
-          note.textContent = `Canvas: ${width} × ${height}px · completo y a escala.`;
+        if (!note.classList.contains("has-error")) note.textContent = t("lab.canvasSize", { width, height });
       },
       onError: (message) => {
-        note.textContent = `Error en el código: ${message}`;
+        note.textContent = t("lab.codeError", { message });
         note.classList.add("has-error");
       },
     });
   };
 
   const save = async () => {
-    status.textContent = "guardando…";
+    status.textContent = t("common.saving");
     try {
       await saveProject({
         id: project.id,
@@ -191,28 +187,28 @@ function bindProjectCard(project) {
         description: project.description,
         code: project.code,
       });
-      status.textContent = "guardado";
+      status.textContent = t("lab.saved");
     } catch (error) {
-      status.textContent = "no se pudo guardar";
+      status.textContent = t("lab.saveFailed");
       console.error(error);
     }
   };
 
   // Título y descripción se editan "en el lugar": el ✎ habilita el campo.
   inlineEdit(card, "title", (value) => {
-    project.title = value || "Proyecto sin título";
+    project.title = value || t("lab.untitled");
     save();
     return project.title;
   });
   inlineEdit(card, "description", (value) => {
     project.description = value;
     save();
-    return value || "Sin descripción todavía.";
+    return value || t("lab.noDescription");
   });
 
   q("[data-project-code]", card).addEventListener("input", (event) => {
     project.code = event.target.value;
-    status.textContent = "cambios sin guardar";
+    status.textContent = t("lab.unsaved");
     clearTimeout(saveTimer);
     clearTimeout(runTimer);
     saveTimer = setTimeout(save, SAVE_DELAY);
@@ -249,12 +245,12 @@ async function setFeaturedProject(projectId) {
   if (!(await saveHomeLayout({ ...state.archive.profile.layout, featured_project_id: projectId }))) return;
   qa("[data-project-card]").forEach((card) => {
     const isFeatured = card.dataset.projectCard === String(projectId);
-    q("[data-feature-project]", card).textContent = isFeatured ? "✓ en el inicio" : "mostrar en inicio";
+    q("[data-feature-project]", card).textContent = t(isFeatured ? "lab.onHome" : "lab.showOnHome");
   });
 }
 
 async function removeProject(project) {
-  if (!confirm(`¿Eliminar el proyecto “${project.title}”?`)) return;
+  if (!confirm(t("lab.confirmDelete", { title: project.title }))) return;
   try {
     await deleteProject(project.id);
     state.archive.projects = projects().filter((item) => item.id !== project.id);
@@ -265,7 +261,7 @@ async function removeProject(project) {
       });
     renderLab();
   } catch (error) {
-    alert(`No se pudo eliminar: ${error.message}`);
+    alert(t("common.deleteFailed", { message: error.message }));
   }
 }
 
@@ -282,9 +278,7 @@ export function setupProjectDialog() {
   const fields = q("form", dialog).elements;
   updateHint = () => {
     const isHydra = fields.engine.value === "hydra";
-    fields.code.placeholder = isHydra
-      ? "Pegá tu código de Hydra o el link del editor (hydra.ojack.xyz/?code=…). Si lo dejás vacío, arranca con un ejemplo."
-      : "Pegá tu sketch de p5.js. Si lo dejás vacío, arranca con un ejemplo.";
+    fields.code.placeholder = isHydra ? t("lab.hydraHint") : t("lab.p5Hint");
   };
   fields.engine.addEventListener("change", updateHint);
 }
@@ -307,8 +301,7 @@ async function createProject(fields) {
   try {
     await saveProject(project);
   } catch (error) {
-    if (/engine/i.test(error.message))
-      throw new Error(`falta actualizar la base de datos. Corré ${MIGRATION} en Supabase → SQL Editor.`);
+    if (/engine/i.test(error.message)) throw new Error(t("lab.needsMigration", { file: MIGRATION }));
     throw error;
   }
   state.archive.projects.unshift(project);

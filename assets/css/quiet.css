@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Zona tranquila (zona-tranquila.html): el parque de Palermo en pixel art.
+   ========================================================================== */
+
+.quiet-window {
+  border: var(--line);
+  background: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.quiet-window .window-bar {
+  min-height: 37px;
+  padding: 0 11px;
+  border-bottom: var(--line);
+  background: var(--wine);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+
+.quiet-stage {
+  background: var(--wine-dark);
+  border-bottom: var(--line);
+}
+.quiet-stage canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  /* Agranda los píxeles sin suavizarlos: así se ve pixel art de verdad. */
+  image-rendering: pixelated;
+  cursor: var(--cursor-link);
+}
+
+.quiet-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 17px;
+}
+.quiet-hint {
+  margin: 0;
+  font: 11px var(--mono);
+  color: var(--muted);
+}
+.quiet-phases {
+  display: flex;
+  gap: 5px;
+}
+.quiet-phases button {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 6px 10px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  cursor: var(--cursor-link);
+}
+.quiet-phases button[aria-pressed="true"] {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: var(--paper);
+}

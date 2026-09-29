@@ -5,11 +5,12 @@
 
 import { esc, node, q, qa } from "../core/dom.js";
 import { saveItem, updateItem } from "../core/db.js";
+import { t } from "../core/i18n.js";
 import { addItem, findItem, itemsOf } from "../core/state.js";
 import { bindDialog, openDialog, setFormStatus, whileBusy } from "../core/ui.js";
 import { isYoutubeUrl, youtubeEmbedUrl } from "./youtube.js";
 
-const DIALOG_TITLES = { music: "Buscar música", book: "Buscar libro", channel: "Agregar canal o video" };
+const DIALOG_TITLES = { music: "item.searchMusic", book: "item.searchBook", channel: "item.addChannel" };
 
 let dialog;
 let hits = [];
@@ -62,20 +63,16 @@ export function openItemDialog(type, editItem = null) {
   showRating(Number(fields.rating.value));
   resetResults();
 
-  q("[data-modal-title]", dialog).textContent = editItem
-    ? type === "book"
-      ? "Editar libro"
-      : "Editar canal o video"
-    : DIALOG_TITLES[type];
-  q("[data-title-label]", dialog).firstChild.textContent =
-    type === "music" ? "Canción o disco" : type === "book" ? "Título del libro" : "Nombre del canal o video";
-  fields.title.placeholder =
-    type === "music"
-      ? "Escribí canción o disco…"
-      : type === "book"
-        ? "Escribí título…"
-        : "Nombre del canal o video";
-  fields.author.placeholder = type === "music" ? "Artista" : "Autor/a";
+  q("[data-modal-title]", dialog).textContent = t(
+    editItem ? (type === "book" ? "item.editBook" : "item.editChannel") : DIALOG_TITLES[type],
+  );
+  q("[data-title-label]", dialog).firstChild.textContent = t(
+    type === "music" ? "item.song" : type === "book" ? "item.bookTitle" : "item.channelName",
+  );
+  fields.title.placeholder = t(
+    type === "music" ? "item.songPlaceholder" : type === "book" ? "item.bookPlaceholder" : "item.channelName",
+  );
+  fields.author.placeholder = t(type === "music" ? "item.artistPlaceholder" : "item.authorPlaceholder");
 
   // Qué campos se ven según el tipo.
   const show = {
@@ -92,13 +89,13 @@ export function openItemDialog(type, editItem = null) {
   // En música y libros nuevos no hay botón "sumar": se agrega tocando un resultado.
   const submit = q("[data-item-submit]", dialog);
   submit.hidden = isSearch;
-  submit.textContent = editItem ? "guardar cambios" : "sumar";
+  submit.textContent = t(editItem ? "common.saveChanges" : "item.submit");
 }
 
 function showRating(value) {
   q("[data-rating-display]", dialog).textContent = value
     ? `${"★".repeat(Math.floor(value))}${value % 1 ? "½" : ""} · ${value}/5`
-    : "sin puntuación";
+    : t("item.noRating");
 }
 
 // --- Guardar desde el formulario (canales y edición de libros) --------------
@@ -111,9 +108,8 @@ async function saveForm(fields) {
   if (type === "channel") {
     const url = fields.link.value.trim();
     const previewUrl = fields.videoLink.value.trim();
-    if (url && !isYoutubeUrl(url)) throw new Error("Pegá un enlace de YouTube.");
-    if (previewUrl && !youtubeEmbedUrl(previewUrl))
-      throw new Error("El destacado tiene que ser un video o una playlist pública de YouTube.");
+    if (url && !isYoutubeUrl(url)) throw new Error(t("item.youtubeOnly"));
+    if (previewUrl && !youtubeEmbedUrl(previewUrl)) throw new Error(t("item.youtubeFeatured"));
     item = {
       type,
       title: fields.title.value.trim(),
@@ -166,7 +162,7 @@ async function search() {
 
   const request = ++searchSerial;
   results.hidden = false;
-  results.innerHTML = '<p class="catalog-status">Buscando…</p>';
+  results.innerHTML = `<p class="catalog-status">${t("item.searching")}</p>`;
   try {
     const found =
       type === "music"
@@ -177,7 +173,7 @@ async function search() {
     renderResults(results, type);
   } catch (error) {
     if (request !== searchSerial) return;
-    results.innerHTML = `<p class="catalog-status">No pude buscar ahora. Revisá la conexión e intentá de nuevo. <small>${esc(error.message)}</small></p>`;
+    results.innerHTML = `<p class="catalog-status">${t("item.searchFailed")} <small>${esc(error.message)}</small></p>`;
   }
 }
 
@@ -185,7 +181,7 @@ async function searchItunes(query, mode) {
   const entity = mode === "album" ? "album" : "song";
   const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=${entity}&limit=8&country=AR`;
   const response = await fetch(url);
-  if (!response.ok) throw new Error("iTunes no respondió");
+  if (!response.ok) throw new Error(t("item.itunesDown"));
   return (await response.json()).results || [];
 }
 
@@ -197,7 +193,7 @@ async function searchOpenLibrary(title, author) {
   });
   if (author) params.set("author", author);
   const response = await fetch(`https://openlibrary.org/search.json?${params}`);
-  if (!response.ok) throw new Error("Open Library no respondió");
+  if (!response.ok) throw new Error(t("item.openLibraryDown"));
   return (await response.json()).docs || [];
 }
 
@@ -213,8 +209,7 @@ function alreadySaved(type, hit, mode) {
 
 function renderResults(container, type) {
   if (!hits.length) {
-    container.innerHTML =
-      '<p class="catalog-status">No encontré coincidencias. Probá con otro título o agregá también artista/autor.</p>';
+    container.innerHTML = `<p class="catalog-status">${t("item.noResults")}</p>`;
     return;
   }
   const mode = q("form", dialog).elements.musicMode.value;
@@ -223,8 +218,8 @@ function renderResults(container, type) {
       const title = type === "music" ? hit.trackName || hit.collectionName : hit.title;
       const subtitle =
         type === "music"
-          ? hit.artistName || "Álbum"
-          : (hit.author_name || []).join(", ") || "Autor desconocido";
+          ? hit.artistName || t("item.albumFallback")
+          : (hit.author_name || []).join(", ") || t("item.unknownAuthor");
       const year = hit.first_publish_year ? ` · ${hit.first_publish_year}` : "";
       const image =
         type === "music"
@@ -237,7 +232,7 @@ function renderResults(container, type) {
         <button class="catalog-result" type="button" data-result-index="${index}" ${saved ? "disabled" : ""}>
           ${image ? `<img src="${esc(image)}" alt="" loading="lazy">` : "<span></span>"}
           <span><b>${esc(title)}</b><small>${esc(subtitle)}${year}</small></span>
-          <span class="catalog-add">${saved ? "ya está" : "agregar"}</span>
+          <span class="catalog-add">${t(saved ? "item.alreadySaved" : "item.add")}</span>
         </button>`);
     }),
   );
@@ -250,7 +245,7 @@ async function chooseResult(button) {
   const label = q(".catalog-add", button);
   const allResults = qa(".catalog-result", dialog);
   setFormStatus(dialog, "");
-  label.textContent = "cargando…";
+  label.textContent = t("common.loading");
   try {
     // Bloqueamos todos los resultados para que no se guarden dos a la vez.
     await whileBusy(
@@ -265,8 +260,8 @@ async function chooseResult(button) {
     onChange(type);
     dialog.close("saved");
   } catch (error) {
-    label.textContent = "agregar";
-    setFormStatus(dialog, `No se pudo agregar: ${error.message}`);
+    label.textContent = t("item.add");
+    setFormStatus(dialog, t("common.addFailed", { message: error.message }));
   }
 }
 
@@ -284,7 +279,7 @@ async function musicItemFrom(hit, mode) {
     const response = await fetch(
       `https://itunes.apple.com/lookup?id=${encodeURIComponent(hit.collectionId)}&entity=song&country=AR`,
     );
-    if (!response.ok) throw new Error("No pude cargar las canciones del disco");
+    if (!response.ok) throw new Error(t("item.albumTracksFailed"));
     const tracks = ((await response.json()).results || [])
       .filter((track) => track.wrapperType === "track")
       .map(trackInfo);
