@@ -15,6 +15,7 @@
   --line: 2px solid var(--ink);
   --mono: "DM Mono", monospace;
   --sans: "Space Grotesk", sans-serif;
+  --footer-height: 40px;
 }
 
 * {
@@ -33,15 +34,22 @@ body:not(.is-owner) [data-edit-only] {
 
 body {
   margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   color: var(--ink);
   font: 15px/1.45 var(--sans);
   background-color: var(--paper);
   background-image: radial-gradient(#bdb8b6 0.7px, transparent 0.8px);
   background-size: 7px 7px;
+  padding-bottom: var(--footer-height);
 }
 
 /* Mientras se cargan los datos, el contenido queda atenuado. */
 main {
+  flex: 1 0 auto;
+  width: 100%;
   transition: opacity 0.3s;
 }
 body.is-loading main {
@@ -135,10 +143,17 @@ body.is-loading main {
   font: 14px var(--mono);
 }
 
+/* Pie de página fijo: siempre visible abajo de la pantalla, como una barra de tareas. */
 .site-footer {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 50;
+  height: var(--footer-height);
+  padding: 0 clamp(16px, 5vw, 72px);
   border-top: var(--line);
-  padding: 14px clamp(16px, 5vw, 72px);
+  background: var(--paper);
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 20px;
   font: 10px var(--mono);
@@ -319,9 +334,6 @@ dialog::backdrop {
   }
   .shell {
     padding: 22px 13px 45px;
-  }
-  .site-footer {
-    flex-direction: column;
   }
 }
 

@@ -296,6 +296,7 @@ async function musicItemFrom(hit, mode) {
       external_url: hit.collectionViewUrl,
       metadata: {
         mode: "album",
+        genre: hit.primaryGenreName || null,
         artist: hit.artistName,
         artworkUrl: hit.artworkUrl100,
         albumId: hit.collectionId,
@@ -311,6 +312,7 @@ async function musicItemFrom(hit, mode) {
     external_url: hit.trackViewUrl,
     metadata: {
       mode: "track",
+      genre: hit.primaryGenreName || null,
       artist: hit.artistName,
       artworkUrl: hit.artworkUrl100,
       previewUrl: hit.previewUrl,

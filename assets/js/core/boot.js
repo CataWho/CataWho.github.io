@@ -3,16 +3,15 @@
 
 import { q } from "./dom.js";
 import { state } from "./state.js";
-import { currentUser, getArchive, hasDatabase } from "./db.js";
+import { currentUser, getArchive } from "./db.js";
 
 export async function boot(renderPage) {
   const footerStatus = q("[data-storage-state]");
   try {
     state.archive = await getArchive();
-    if (footerStatus) footerStatus.textContent = hasDatabase ? "Supabase conectado" : "sin base de datos";
   } catch (error) {
     console.error(error);
-    if (footerStatus) footerStatus.textContent = "no se pudieron cargar los datos";
+    if (footerStatus) footerStatus.textContent = "sin conexión";
     alert(`No se pudieron cargar los datos: ${error.message}`);
   }
 

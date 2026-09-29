@@ -15,9 +15,24 @@ pero no los controles.
 **+ buscar y agregar** → elegí *canción* o *disco* y escribí título y artista. La búsqueda usa el catálogo
 de iTunes: tocá un resultado y queda guardado. Si ya está en tu lista, aparece como "ya está".
 
-El reproductor recorre todas las previews de 30 segundos (incluidas las canciones de los discos) y vuelve
-a empezar al terminar. Apple solo permite previews promocionales; cada una muestra el enlace
+El reproductor tiene ⏮ anterior, ▶ / Ⅱ y ⏭ siguiente, y recorre todas las previews de 30 segundos
+(incluidas las canciones de los discos) volviendo a empezar al terminar. "Anterior" reinicia la canción si
+ya pasaron 3 segundos.
+
+Arriba de la lista aparecen los **géneros** (los informa iTunes, en castellano). Al tocar uno, la lista y la
+reproducción quedan solo en ese género. La lista tiene alto fijo y se desliza por dentro. Apple solo permite previews promocionales; cada una muestra el enlace
 "Contenido cortesía de iTunes".
+
+## Fondo animado del inicio (Hydra)
+
+Detrás de "Mi pequeño universo" corre un visual de [Hydra](https://hydra.ojack.xyz). El código está en
+`assets/hydra/fondo-inicio.js`: para cambiarlo, pegá ahí cualquier código del editor de Hydra.
+
+- `a.fft` no usa el micrófono: sigue a la música que suena en "escuchando". Si no suena nada, se mueve solo
+  con una onda suave, así nunca queda en negro.
+- Se dibuja a la mitad de resolución y se pausa cuando no está en pantalla, para no gastar batería.
+- Quien tenga activado "reducir movimiento" en su compu ve el fondo liso.
+- No uses `s0.initCam()` ni otras fuentes de cámara: le pedirían permiso a cada visitante.
 
 ## Libros
 

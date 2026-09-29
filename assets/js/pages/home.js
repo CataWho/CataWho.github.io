@@ -1,11 +1,13 @@
 // Página de inicio (index.html).
 
-import { qa } from "../core/dom.js";
+import { q, qa } from "../core/dom.js";
 import { boot } from "../core/boot.js";
 import { renderBooks } from "../features/books.js";
 import { openItemDialog, setupItemDialog } from "../features/catalog.js";
 import { renderChannels } from "../features/channels.js";
 import { setupHomeLayout } from "../features/home-layout.js";
+import { listenTo } from "../features/audio-analyser.js";
+import { startHeroVisual } from "../features/hero-visual.js";
 import { renderLabPreview } from "../features/lab.js";
 import { bindMusicPlayer, renderMusic } from "../features/music.js";
 import { openNoteDialog, renderNotes, setupNoteDialog } from "../features/notes.js";
@@ -35,6 +37,8 @@ boot(() => {
   setupHomeLayout();
 
   bindMusicPlayer();
+  listenTo(q("[data-audio-player]"));
+  startHeroVisual();
   setupProfileDialog();
   setupItemDialog((type) => RENDER_BY_TYPE[type]?.());
   setupNoteDialog();

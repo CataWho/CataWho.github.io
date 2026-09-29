@@ -36,7 +36,7 @@
 
     <main class="shell">
       <section class="hero">
-        <div>
+        <div data-hero-visual>
           <p class="eyebrow">diario personal · buenos aires</p>
           <h1>Mi pequeño<br /><i>universo.</i></h1>
           <p class="hero-text">Un archivo de cosas que escucho, leo, miro, hago y todavía quiero hacer.</p>
@@ -72,7 +72,11 @@
                 <h3 data-current-title>Cargando música…</h3>
                 <p data-current-artist></p>
                 <div class="player-controls">
-                  <button class="preview-button" data-action="toggle-music" disabled>▶ reproducir preview</button>
+                  <span class="transport">
+                    <button class="preview-button" data-action="previous-music" data-music-control disabled aria-label="Canción anterior">⏮&#xFE0E;</button>
+                    <button class="preview-button" data-action="toggle-music" data-music-control disabled aria-label="Reproducir">▶ reproducir</button>
+                    <button class="preview-button" data-action="next-music" data-music-control disabled aria-label="Canción siguiente">⏭&#xFE0E;</button>
+                  </span>
                   <label class="volume-control">
                     <span aria-hidden="true">🔉</span>
                     <input data-volume type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Volumen de la música" />
@@ -84,7 +88,8 @@
                 </a>
               </div>
             </div>
-            <audio data-audio-player></audio>
+            <audio data-audio-player crossorigin="anonymous"></audio>
+            <div class="genre-bar" data-music-genres role="group" aria-label="Filtrar por género" hidden></div>
             <div class="mini-list" data-music-list></div>
           </div>
         </article>
@@ -180,7 +185,7 @@
 
     <footer class="site-footer">
       <span>archivo vivo · Cata</span>
-      <span data-storage-state>cargando…</span>
+      <span data-storage-state>buenos aires</span>
     </footer>
 
     <!-- Diálogo: editar perfil -->

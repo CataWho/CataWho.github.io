@@ -51,6 +51,35 @@
   color: var(--rose);
   line-height: 1;
 }
+/* Visual de Hydra de fondo (ver assets/js/features/hero-visual.js). */
+.hero-visual {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s;
+}
+.has-visual .hero-visual {
+  opacity: 1;
+}
+/* Un velo bordó del lado del texto, para que siempre se lea bien. */
+.hero > .has-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, #3e1220e6 0%, #3e1220a6 45%, #3e122000 85%);
+}
+.hero > .has-visual::after {
+  display: none;
+}
+.hero > div > :not(.hero-visual) {
+  position: relative;
+  z-index: 2;
+}
 .hero h1 {
   font-size: clamp(62px, 9vw, 134px);
   letter-spacing: -0.09em;
@@ -208,8 +237,20 @@
 
 /* --- 01 Música ------------------------------------------------------------ */
 
+/* La ventana de música ocupa todo el alto de sus dos filas (lo que miden
+   laboratorio + libros al lado) y la lista scrollea por dentro. Así nunca
+   crece sin fin ni deja huecos en la grilla. */
 .music-window {
   grid-row: span 2;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.music-window .window-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .now-playing {
   padding: 14px;
@@ -250,14 +291,26 @@
   gap: 14px;
   flex-wrap: wrap;
 }
+.transport {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+}
 .preview-button {
   font: 9px var(--mono);
   color: var(--paper);
   background: transparent;
   border: 1px solid var(--paper);
-  margin-top: 12px;
   padding: 5px;
   cursor: pointer;
+}
+.preview-button:hover:not(:disabled) {
+  background: var(--paper);
+  color: var(--wine-dark);
+}
+.preview-button[data-action$="-music"]:not([data-action="toggle-music"]) {
+  min-width: 28px;
+  font-size: 11px;
 }
 .preview-button:disabled {
   opacity: 0.55;
@@ -282,16 +335,69 @@
   font: 9px var(--mono);
   text-underline-offset: 3px;
 }
+/* Filtros por género. */
+/* Si no entran en una fila, las etiquetas bajan a la siguiente (nunca quedan cortadas). */
+.genre-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px 0 8px;
+}
+.genre-chip {
+  flex: none;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 5px 9px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.genre-chip span {
+  margin-left: 3px;
+  opacity: 0.6;
+}
+.genre-chip:hover {
+  border-color: var(--wine);
+  color: var(--wine);
+}
+.genre-chip[aria-pressed="true"] {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: var(--paper);
+}
+
 .mini-list {
   display: grid;
+  align-content: start;
+  flex: 1 1 0;
+  min-height: 180px;
+  /* "contain: size" hace que la lista no empuje el alto de la ventana. */
+  contain: size;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rose) transparent;
+}
+.mini-empty {
+  font: 11px var(--mono);
+  color: var(--muted);
+  margin: 14px 0;
 }
 .mini-row {
-  padding: 10px 0;
+  padding: 10px 6px;
   border-bottom: 1px solid var(--rule);
   display: grid;
   grid-template-columns: 24px 38px 1fr auto auto;
   gap: 8px;
   align-items: center;
+}
+.mini-row.is-playing {
+  background: #ebe3e4;
+  box-shadow: inset 3px 0 var(--wine);
+}
+.mini-row.is-playing .mini-number {
+  color: var(--wine);
+  opacity: 1;
 }
 .mini-number {
   font: 10px var(--mono);
@@ -641,6 +747,13 @@
   }
   .music-window {
     grid-row: auto;
+  }
+  /* En una sola columna no hay vecinas que marquen el alto: usamos uno fijo. */
+  .mini-list {
+    contain: none;
+    flex: none;
+    min-height: 0;
+    max-height: 380px;
   }
   .section-wide {
     grid-column: span 1;

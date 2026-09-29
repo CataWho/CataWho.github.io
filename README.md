@@ -20,6 +20,7 @@ archivo-vivo/
 │   ├── css/
 │   │   ├── base.css      colores, tipografía, header, botones, diálogos (todas las páginas)
 │   │   └── home.css, lab.css, notes.css, gallery.css, admin.css   (una por página)
+│   ├── hydra/            código de Hydra del fondo del inicio (se pega tal cual del editor)
 │   ├── images/           avatar pixel art (optimizado)
 │   └── js/
 │       ├── config.js     URL y clave pública de Supabase
