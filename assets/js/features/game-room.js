@@ -92,7 +92,7 @@ function makeClouds() {
   const rand = seeded(12);
   // Desparejas a propósito: cada una con su tamaño, su altura y su lugar.
   return [
-    makeCloud(rand, { side: 0.2, depth: 0.03, width: 0.46, peak: 0.75, height: 0.75, count: 14 }), // grande y alargada, contra la pared
+    makeCloud(rand, { side: 0.255, depth: 0.03, width: 0.44, peak: 0.75, height: 0.75, count: 14 }), // grande y alargada, casi contra la pared
     makeCloud(rand, { side: 0.84, depth: 0.06, width: 0.24, peak: 0.45, height: 1.35, count: 8 }), // alta y angosta
     makeCloud(rand, { side: 0.3, depth: 0.38, width: 0.3, peak: 0.3, height: 0.6, count: 9 }), // lejos, corrida del centro
     makeCloud(rand, { side: 0.95, depth: 0.6, width: 0.32, peak: 0.2, height: 0.7, count: 7 }), // chiquita, contra la pared
