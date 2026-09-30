@@ -85,9 +85,10 @@ export class Shot {
   /**
    * gravity: si cae (los huevos); onLand(shot, world): qué pasa cuando toca el piso;
    * fragile: si Estela lo puede reventar con el sable (y onPop: qué pasa cuando lo revienta).
+   * group: disparos que son parte de un mismo ataque (un chorro): pegan una sola vez entre todos.
    */
-  constructor({ x, y, vx, vy = 0, gravity = 0, w, h, hit, fromHero, kind, life = 240, onLand, fragile = false, onPop, clash = true }) {
-    Object.assign(this, { x, y, vx, vy, gravity, w, h, hit, fromHero, kind, life, onLand, fragile, onPop, clash, t: 0, gone: false });
+  constructor({ x, y, vx, vy = 0, gravity = 0, w, h, hit, fromHero, kind, life = 240, onLand, fragile = false, onPop, clash = true, group = null }) {
+    Object.assign(this, { x, y, vx, vy, gravity, w, h, hit, fromHero, kind, life, onLand, fragile, onPop, clash, group, t: 0, gone: false });
     this.facing = Math.sign(vx) || 1;
   }
 
@@ -183,6 +184,8 @@ export function resolveCombat(world) {
     for (const target of targets) {
       const body = target.hurtBox();
       if (!overlaps(box, body)) continue;
+      if (shot.group && target.lastGroup === shot.group) continue; // ese chorro ya le pegó
+      if (shot.group) target.lastGroup = shot.group;
       const result = target.takeHit(shot.hit, shot, world);
       if (!result) continue;
       shot.gone = true;

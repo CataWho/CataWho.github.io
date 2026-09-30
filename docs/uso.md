@@ -55,9 +55,10 @@ uno, **Estela · buscadora de mundos**, y dos lugares de "próximamente".
 
 **Cómo se juega.** En la compu, con el teclado (hay que hacer clic en la pantalla del juego primero):
 **A/D** caminar, **W** saltar, **S** agacharse (también sirven las flechas); **J** golpe, **K** patada,
-**L** onda estelar, **S + L** corte lunar, **Enter** empieza o pausa. Para cubrirse, caminar hacia el lado
-contrario al monstruo: Estela retrocede con el sable en guardia. La pausa muestra todos los controles. En el celular aparece una botonera
-(cruceta, golpe, patada, poder y start) y el botón **pantalla completa** la pone en horizontal.
+**L** onda estelar (también agachada), **W + L** corte lunar, **Espacio** defensa (de pie o agachada),
+**Enter** empieza o pausa. En el aire se puede corregir el salto, así se pasa por encima de los monstruos
+grandes. La pausa muestra todos los controles. En el celular aparece una botonera
+(cruceta, golpe, patada, poder, defensa y start) y el botón **pantalla completa** la pone en horizontal.
 Si el juego sale de la pantalla, se cambia de pestaña o se hace clic afuera, se pausa solo.
 
 **La historia, en orden:** título → prólogo → nivel 1 (la nave nodriza, monstruos verdes, se avanza hacia el

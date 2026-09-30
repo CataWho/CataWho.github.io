@@ -23,7 +23,7 @@ function splatEgg(shot, world) {
   world.shots.push(
     new Shot({
       x: shot.x, y: world.ground - 6, vx: 0, w: 30, h: 12, kind: "splash", fromHero: false, life: 10, clash: false,
-      hit: { damage: 7, stun: 14, push: 2 },
+      hit: { damage: 5, stun: 14, push: 2 },
     }),
   );
   world.fx.goo(shot.x, world.ground - 3, GOO.neon, 16, 0, 1.8);
@@ -42,20 +42,21 @@ function vomit(m, world) {
   const mouthX = m.x + m.facing * 32;
   const mouthY = m.y - 26;
   world.fx.goo(mouthX, mouthY, GOO.neon, 2, m.facing * 0.8, 1.2);
+  if (m.t === m.move.startup) m.stream = {}; // todas las gotas de este vómito pegan una sola vez
   if ((m.t - m.move.startup) % 3) return;
   world.shots.push(
     new Shot({
       x: mouthX, y: mouthY, vx: m.facing * (1.4 + Math.random() * 1.8), vy: -1.2 - Math.random() * 1.2, gravity: 0.16, w: 6, h: 6,
-      kind: "slime", fromHero: false, clash: false,
+      kind: "slime", fromHero: false, clash: false, group: m.stream,
       onLand: (shot) => world.fx.goo(shot.x, world.ground - 2, GOO.neon, 4, 0, 0.8),
-      hit: { damage: 4, stun: 10, push: 1 },
+      hit: { damage: 7, stun: 16, push: 2.2 },
     }),
   );
 }
 
 /** Escupe varios huevos en arco, repartidos alrededor de Estela. */
 function layEggs(m, world) {
-  const count = 2 + Math.floor(Math.random() * 2);
+  const count = 2;
   const mouthX = m.x + m.facing * 32;
   const mouthY = m.y - 46;
   for (let i = 0; i < count; i++) {
@@ -68,7 +69,7 @@ function layEggs(m, world) {
       new Shot({
         x: mouthX, y: mouthY, vx: (target - mouthX) / time, vy, gravity, w: 9, h: 9, kind: "egg", fromHero: false, life: 400,
         fragile: true, onLand: splatEgg, onPop: popEgg,
-        hit: { damage: 6, stun: 14, push: 1.5 },
+        hit: { damage: 5, stun: 14, push: 1.5 },
       }),
     );
   }
@@ -312,13 +313,13 @@ function drawWormFx(p, m) {
 
 defineMonsters({
   slugQueen: {
-    name: "queen", hp: 170, width: 64, height: 44, body: [-32, -44, 64, 44], goo: "neon", gooAmount: 0,
-    heavy: true, corpse: true, score: 3000, cool: [40, 80],
+    name: "queen", hp: 140, width: 64, height: 44, body: [-32, -44, 64, 44], goo: "neon", gooAmount: 0,
+    heavy: true, corpse: true, score: 3000, cool: [50, 90],
     moves: {
       eggs: { startup: 32, active: 2, recovery: 34, sfx: "egg", launch: layEggs },
-      slam: { startup: 28, active: 8, recovery: 32, box: [14, -54, 40, 54], damage: 14, stun: 20, push: 3.2, knockdown: true, sfx: "kick" },
+      slam: { startup: 28, active: 8, recovery: 32, box: [14, -54, 40, 54], damage: 12, stun: 20, push: 3.2, knockdown: true, sfx: "kick" },
       vomit: { startup: 24, active: 40, recovery: 30, sfx: "buah", during: vomit },
-      slide: { startup: 34, active: 44, recovery: 30, lunge: 2.2, box: [20, -22, 22, 22], damage: 12, stun: 18, push: 3, knockdown: true },
+      slide: { startup: 34, active: 44, recovery: 30, lunge: 2.2, box: [20, -22, 22, 22], damage: 10, stun: 18, push: 3, knockdown: true },
     },
     think(m, world) {
       const d = dist(m, world);
@@ -334,18 +335,18 @@ defineMonsters({
     draw: drawQueen,
   },
   voltWorm: {
-    name: "worm", hp: 190, width: 28, height: 76, body: [-14, -78, 28, 78], goo: "volt", gooAmount: 130, gooPower: 3.6,
-    heavy: true, score: 5000, cool: [24, 56], stamp: bigStamp,
+    name: "worm", hp: 160, width: 28, height: 76, body: [-14, -78, 28, 78], goo: "volt", gooAmount: 130, gooPower: 3.6,
+    heavy: true, score: 5000, cool: [34, 66], stamp: bigStamp,
     moves: {
-      jabHigh: { startup: 26, active: 10, recovery: 22, box: [10, -36, 106, 9], damage: 11, stun: 16, push: 2.5, sfx: "slash" },
-      jabLow: { startup: 26, active: 10, recovery: 22, box: [10, -11, 106, 9], damage: 11, stun: 16, push: 2.5, sfx: "slash" },
+      jabHigh: { startup: 26, active: 10, recovery: 22, box: [10, -36, 106, 9], damage: 9, stun: 16, push: 2.5, sfx: "slash" },
+      jabLow: { startup: 26, active: 10, recovery: 22, box: [10, -11, 106, 9], damage: 9, stun: 16, push: 2.5, sfx: "slash" },
       burrow: {
         startup: 42, active: 8, recovery: 30, sfx: "heavy",
         launch(m, world) {
           world.shots.push(
             new Shot({
               x: m.target, y: world.ground - 30, vx: 0, w: 22, h: 60, kind: "burrow", fromHero: false, life: 8, clash: false,
-              hit: { damage: 14, stun: 20, push: 3, knockdown: true, unblockable: true },
+              hit: { damage: 12, stun: 20, push: 3, knockdown: true, unblockable: true },
             }),
           );
           world.shake(4);
@@ -357,7 +358,7 @@ defineMonsters({
           world.shots.push(
             new Shot({
               x: m.x, y: world.ground - 40, vx: 0, w: 110, h: 80, kind: "zap", fromHero: false, life: 12, clash: false,
-              hit: { damage: 12, stun: 18, push: 3.5, knockdown: true, unblockable: true },
+              hit: { damage: 10, stun: 18, push: 3.5, knockdown: true, unblockable: true },
             }),
           );
         },

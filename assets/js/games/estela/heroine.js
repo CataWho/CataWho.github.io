@@ -6,9 +6,9 @@
 //
 // Controles:
 //   golpe = sablazo (tres seguidos hacen combo) · patada · abajo + golpe/patada = golpes bajos
-//   poder = Onda estelar (disparo) · abajo + poder = Corte lunar (sube cortando, invencible al salir)
+//   poder = Onda estelar (disparo, también agachada) · arriba + poder = Corte lunar (sube cortando, invencible al salir)
 //   con la cruceta también salen: ↓ ↘ → + golpe = Onda · → ↓ ↘ + golpe = Corte lunar
-//   caminar hacia el lado contrario al monstruo = cubrirse (retrocede con el sable en guardia)
+//   defensa (botón propio) = cubrirse con el sable, de pie o agachada · en el aire se puede corregir el salto
 
 import { createStamper, makeSprite } from "../arcade/pixel.js";
 import { Fighter, Shot, worldBox } from "./fight.js";
@@ -358,7 +358,6 @@ export class Heroine extends Fighter {
     this.queued = null;
     this.airAttack = false;
     this.blockLow = false;
-    this.guarding = false;
     this.landFrames = 0;
   }
 
@@ -368,7 +367,8 @@ export class Heroine extends Fighter {
 
   hurtBox() {
     if (!this.onGround && this.state !== "fall") return worldBox(this, [-6, -40, 12, 32]);
-    const low = this.state === "crouch" || this.state === "land" || (this.state === "block" && this.blockLow) || (this.state === "attack" && this.move.low);
+    const guarding = this.state === "guard" || this.state === "block";
+    const low = this.state === "crouch" || this.state === "land" || (guarding && this.blockLow) || (this.state === "attack" && this.move.low);
     return worldBox(this, low ? [-7, -25, 14, 25] : [-6, -44, 12, 44]);
   }
 
@@ -381,21 +381,24 @@ export class Heroine extends Fighter {
 
     // Siempre mira al monstruo más cercano; si no hay ninguno, mira para donde camina.
     const target = this.nearest(world.enemies);
-    if (["idle", "walk", "crouch"].includes(this.state) && this.onGround) {
+    if (["idle", "walk", "crouch", "guard"].includes(this.state) && this.onGround) {
       if (target) this.facing = target.x >= this.x ? 1 : -1;
       else if (this.inputDx) this.facing = this.inputDx;
     }
-    // Con un monstruo en pantalla, ir hacia el lado contrario es cubrirse: retrocede en guardia.
-    this.guarding = Boolean(target) && this.inputDx === -this.facing;
 
     switch (this.state) {
       case "idle":
       case "walk":
       case "crouch":
+      case "guard":
         this.neutral(pad, world);
         break;
       case "jump":
-        if (!this.airAttack && pad.pressed("punch")) this.attack("airSlash");
+        // En el aire se puede corregir hacia dónde va (sirve para pasar por encima de los monstruos).
+        if (this.inputDx) this.vx += (this.inputDx * 1.9 - this.vx) * 0.12;
+        // Arriba + poder, aunque el salto ya haya empezado, sale el Corte lunar.
+        if (this.t < 10 && pad.pressed("special")) this.startRising();
+        else if (!this.airAttack && pad.pressed("punch")) this.attack("airSlash");
         else if (!this.airAttack && pad.pressed("kick")) this.attack("airKick");
         break;
       case "attack":
@@ -441,8 +444,15 @@ export class Heroine extends Fighter {
     if (punch) return this.attack(down ? "lowSlash" : "slash1");
     if (pad.pressed("kick")) return this.attack(down ? "sweep" : "kick");
     if (special) return; // la Onda ya está en pantalla: hay que esperar
+    if (pad.held("block")) {
+      // Defensa: se queda quieta con el sable en guardia (agachada si también aprieta abajo).
+      this.vx = 0;
+      this.blockLow = down;
+      if (this.state !== "guard") this.setState("guard");
+      return;
+    }
     if (pad.held("up")) {
-      this.jump(-5.2, dx * 1.5);
+      this.jump(-5.2, dx * 1.8);
       this.setState("jump");
       this.airAttack = false;
       world.sound.play("jump");
@@ -466,9 +476,8 @@ export class Heroine extends Fighter {
     const punch = pad.pressed("punch");
     const special = pad.pressed("special");
     if (!punch && !special) return false;
-    if ((special && pad.held("down")) || (punch && pad.motion([6, 2, 3], this.facing))) {
-      this.attack("rising");
-      this.invuln = 12;
+    if ((special && pad.held("up")) || (punch && pad.motion([6, 2, 3], this.facing))) {
+      this.startRising();
       return true;
     }
     if (special || (punch && pad.motion([2, 3, 6], this.facing))) {
@@ -477,6 +486,11 @@ export class Heroine extends Fighter {
       return true;
     }
     return false;
+  }
+
+  startRising() {
+    this.attack("rising");
+    this.invuln = 12;
   }
 
   attack(name) {
@@ -525,9 +539,8 @@ export class Heroine extends Fighter {
   takeHit(hit, from, world) {
     if (this.invuln > 0 || this.hp <= 0 || ["down", "fall", "win"].includes(this.state)) return null;
     const fromDir = Math.sign(from.x - this.x) || this.facing;
-    const canBlock = this.onGround && ["idle", "walk", "crouch", "block"].includes(this.state) && !hit.unblockable;
-    if (canBlock && this.inputDx === -fromDir) {
-      this.blockLow = this.state === "crouch" || (this.state === "block" && this.blockLow);
+    // Con el botón de defensa apretado para todo lo que venga, de cualquier lado (menos lo imparable).
+    if (this.onGround && (this.state === "guard" || this.state === "block") && !hit.unblockable) {
       this.setState("block");
       this.stun = Math.round(hit.stun * 0.7) + 2;
       this.vx = -fromDir * (hit.push ?? 1.5) * 0.8;
@@ -580,7 +593,7 @@ export class Heroine extends Fighter {
         const s = Math.sin(this.walkPhase);
         const c = Math.cos(this.walkPhase);
         return {
-          ...(this.guarding ? POSES.block : STANCE),
+          ...STANCE,
           hip: [0, -16 - Math.abs(c) * 0.8],
           ff: [1 + 6 * s, -Math.max(0, c) * 3],
           fk: [3 + 3 * s, -8 - Math.max(0, c) * 2],
@@ -589,11 +602,12 @@ export class Heroine extends Fighter {
         };
       }
       case "crouch":
-        return this.guarding ? POSES.crouchBlock : CROUCH;
+        return CROUCH;
       case "land":
         return CROUCH;
       case "jump":
         return JUMP;
+      case "guard":
       case "block":
         return this.blockLow ? POSES.crouchBlock : POSES.block;
       case "hit":

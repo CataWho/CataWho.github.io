@@ -224,9 +224,10 @@
   background: #ffe45e;
 }
 .pad-special {
-  grid-column: 1 / -1;
-  justify-self: center;
   background: #b98cff;
+}
+.pad-block {
+  background: #9fe8ff;
 }
 .pad-actions button.is-down,
 .pad-start.is-down {

@@ -86,6 +86,7 @@ const TEXTS = {
   notYet: ["¡TODAVÍA NO!", "NOT YET!"],
   splat: ["¡BUAH!", "SPLAT!"],
   grabIt: ["¡AGARRALO!", "GRAB IT!"],
+  fullHp: ["¡VIDA LLENA!", "FULL HEALTH!"],
 
   // --- Continuar, game over, final ------------------------------------------------------------------------------
   continue: ["¿CONTINUAR?", "CONTINUE?"],
@@ -115,15 +116,15 @@ const TEXTS = {
     [
       "A D  CAMINAR   W  SALTAR   S  AGACHARSE",
       "J  GOLPE   K  PATADA   L  ONDA ESTELAR",
-      "S + L  CORTE LUNAR",
-      "CUBRIRSE: IR PARA ATRÁS DEL MONSTRUO",
+      "W + L  CORTE LUNAR   ESPACIO  DEFENSA",
+      "EN EL AIRE SE PUEDE CORREGIR EL SALTO",
       "(TAMBIÉN SIRVEN LAS FLECHAS)",
     ],
     [
       "A D  WALK   W  JUMP   S  CROUCH",
       "J  PUNCH   K  KICK   L  STAR WAVE",
-      "S + L  MOON SLASH",
-      "BLOCK: MOVE AWAY FROM THE MONSTER",
+      "W + L  MOON SLASH   SPACE  BLOCK",
+      "YOU CAN STEER WHILE JUMPING",
       "(ARROW KEYS WORK TOO)",
     ],
   ],
@@ -131,14 +132,14 @@ const TEXTS = {
     [
       "CRUCETA: MOVERSE, SALTAR, AGACHARSE",
       "PODER: ONDA ESTELAR",
-      "ABAJO + PODER: CORTE LUNAR",
-      "CUBRIRSE: IR PARA ATRÁS DEL MONSTRUO",
+      "ARRIBA + PODER: CORTE LUNAR",
+      "DEFENSA: CUBRIRSE CON EL SABLE",
     ],
     [
       "D-PAD: MOVE, JUMP, CROUCH",
       "POWER: STAR WAVE",
-      "DOWN + POWER: MOON SLASH",
-      "BLOCK: MOVE AWAY FROM THE MONSTER",
+      "UP + POWER: MOON SLASH",
+      "BLOCK: GUARD WITH THE SABER",
     ],
   ],
   controlsHint: ["ENTER: PAUSA Y CONTROLES", "ENTER: PAUSE AND CONTROLS"],

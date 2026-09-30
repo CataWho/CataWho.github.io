@@ -15,8 +15,8 @@ import { say } from "../texts.js";
 
 const GROUND = PLANET_GROUND;
 const INTRO = 170;
-const HEART_HEAL = 25;
-const HEART_MARKS = [0.66, 0.33]; // al bajar de estos porcentajes de vida, el jefe suelta un corazón
+const HEART_HEAL = 30;
+const HEART_MARKS = [0.75, 0.5, 0.25]; // al bajar de estos porcentajes de vida, el jefe suelta un corazón
 const REVEAL = { ko: 0, fakeWin: 60, rumble: 150, burst: 240, rise: 320, fight: 400 }; // la escena de "¡todavía no!"
 
 const HEART = makeSprite(
@@ -146,6 +146,10 @@ export function amberPlanetLevel(game) {
       game.sound.music(null);
       game.sound.play("rumble");
       hero.setState("idle");
+      // Recupera el aliento: arranca la segunda parte con la vida llena.
+      hero.heal(hero.maxHp);
+      fx.text(say("fullHp"), hero.x, hero.y - 56, "#ff9ad5");
+      game.sound.play("heal");
     }
     if (s > REVEAL.rumble && s < REVEAL.burst) {
       queen.bulge = (s - REVEAL.rumble) / (REVEAL.burst - REVEAL.rumble);
@@ -207,7 +211,7 @@ export function amberPlanetLevel(game) {
       if (phase === "intro" && phaseT >= INTRO) setPhase("announce");
       else if (phase === "announce" && phaseT >= 110) setPhase("fight");
       else if (phase === "fight") {
-        // Corazones: el jefe suelta uno cada vez que pierde un tercio de su vida.
+        // Corazones: el jefe suelta uno cada vez que pierde un cuarto de su vida.
         while (marks.length && boss.hp / boss.maxHp < marks[0] && boss.hp > 0) {
           marks.shift();
           dropHeart(boss);

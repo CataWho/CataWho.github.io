@@ -1,5 +1,5 @@
 // Controles: teclado en la compu y botonera táctil en el celular.
-// Los juegos solo preguntan por "botones" (left, right, up, down, punch, kick, special, start)
+// Los juegos solo preguntan por "botones" (left, right, up, down, punch, kick, special, block, start)
 // y no les importa si vienen de una tecla o de un dedo.
 
 const KEYS = {
@@ -9,7 +9,6 @@ const KEYS = {
   KeyD: "right",
   ArrowUp: "up",
   KeyW: "up",
-  Space: "up",
   ArrowDown: "down",
   KeyS: "down",
   KeyJ: "punch",
@@ -18,6 +17,7 @@ const KEYS = {
   KeyX: "kick",
   KeyL: "special",
   KeyC: "special",
+  Space: "block",
   Enter: "start",
   KeyP: "start",
   Escape: "start",
