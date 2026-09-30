@@ -14,6 +14,7 @@ const STRINGS = {
   "nav.notes": ["notas", "notes"],
   "nav.gallery": ["galería", "gallery"],
   "nav.quiet": ["zona tranquila", "quiet place"],
+  "nav.games": ["juegos", "games"],
   "nav.aria": ["Navegación principal", "Main navigation"],
   "header.edit": ["editar mi archivo", "edit my archive"],
   "lang.aria": ["Idioma", "Language"],
@@ -379,6 +380,50 @@ const STRINGS = {
   "quiet.golden": ["atardecer", "sunset"],
   "quiet.night": ["noche", "night"],
 
+  // --- Juegos ------------------------------------------------------------------------------------------
+  // Los textos de adentro de cada juego están en su carpeta (por ejemplo games/estela/texts.js).
+  "games.eyebrow": ["08 / sala de juegos", "08 / game room"],
+  "games.title1": ["Sala de", "Game"],
+  "games.title2": ["juegos.", "room."],
+  "games.intro": [
+    "Jueguitos arcade en pixel art, hechos a mano. Entrás, jugás un rato y seguís.",
+    "Handmade pixel art arcade games. Come in, play for a while, move on.",
+  ],
+  "games.sound": ["sonido", "sound"],
+  "games.muted": ["sin sonido", "muted"],
+  "games.full": ["pantalla completa", "full screen"],
+  "games.canvasAria": [
+    "Juego arcade en pixel art. Se juega con el teclado o con los botones de abajo en el celular.",
+    "Pixel art arcade game. Play with the keyboard, or with the buttons below on a phone.",
+  ],
+  "games.focus": ["hacé clic acá para jugar", "click here to play"],
+  "games.punch": ["golpe", "punch"],
+  "games.kick": ["patada", "kick"],
+  "games.special": ["poder", "power"],
+  "games.helpWalk": ["caminar", "walk"],
+  "games.helpJump": ["saltar", "jump"],
+  "games.helpCrouch": ["agacharse", "crouch"],
+  "games.helpArrows": ["(o las flechas)", "(or the arrow keys)"],
+  "games.helpBlock": [
+    "Para cubrirte, caminá hacia el lado contrario al monstruo: Estela retrocede con el sable en guardia.",
+    "To block, walk away from the monster: Estela backs off with her saber on guard.",
+  ],
+  "games.helpWave": ["onda estelar", "star wave"],
+  "games.helpRising": ["corte lunar", "moon slash"],
+  "games.helpStart": ["empezar / pausa y controles", "start / pause and controls"],
+  "games.helpCombo": [
+    "Tres golpes seguidos hacen combo. Truco: abajo, abajo-adelante, adelante + J también tira la onda.",
+    "Three punches in a row make a combo. Trick: down, down-forward, forward + J also throws the wave.",
+  ],
+  "games.cartridges": ["cartuchos", "cartridges"],
+  "games.soon": ["próximamente", "coming soon"],
+  "games.estela.title": ["Estela", "Estela"],
+  "games.estela.blurb": [
+    "Una exploradora de la Tierra busca un planeta donde la humanidad pueda vivir. Peleas cuerpo a cuerpo con sable láser.",
+    "An explorer from Earth looks for a planet where humanity can live. Close-quarters lightsaber fights.",
+  ],
+  "games.estela.bar": ["estela · buscadora de mundos", "estela · world seeker"],
+
   // --- Acceso privado --------------------------------------------------------------------------
   "admin.title": ["Editar mi archivo", "Edit my archive"],
   "admin.back": ["volver al sitio", "back to the site"],
@@ -416,6 +461,7 @@ const STRINGS = {
   "title.notes": ["Notas — Archivo vivo", "Notes — Archivo vivo"],
   "title.gallery": ["Cosas que vi — Archivo vivo", "Things I saw — Archivo vivo"],
   "title.quiet": ["Zona tranquila — Archivo vivo", "Quiet place — Archivo vivo"],
+  "title.games": ["Juegos — Archivo vivo", "Games — Archivo vivo"],
 
   // --- Géneros de iTunes (llegan en castellano) -------------------------------------------------------
   "genre.Alternativa": ["Alternativa", "Alternative"],

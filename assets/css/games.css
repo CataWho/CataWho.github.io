@@ -1,0 +1,344 @@
+/* ==========================================================================
+   Juegos (juegos.html): la sala de arcade.
+   ========================================================================== */
+
+.games-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* --- La ventana del juego ------------------------------------------------- */
+
+.arcade {
+  border: var(--line);
+  background: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.arcade .window-bar {
+  min-height: 37px;
+  padding: 0 11px;
+  border-bottom: var(--line);
+  background: var(--wine);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+.arcade-tools {
+  display: flex;
+  gap: 6px;
+}
+.arcade-tools button {
+  border: 1px solid var(--paper);
+  background: none;
+  color: var(--paper);
+  padding: 4px 8px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  cursor: var(--cursor-link);
+}
+.arcade-tools button[aria-pressed="true"] {
+  background: var(--paper);
+  color: var(--wine);
+}
+
+.arcade-screen {
+  position: relative;
+  background: #0b0614;
+  border-bottom: var(--line);
+}
+.arcade-screen canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  /* Agranda los píxeles sin suavizarlos, como una consola en un televisor. */
+  image-rendering: pixelated;
+  outline: none;
+}
+/* Aviso para hacer clic: el teclado solo le llega al juego si la pantalla tiene el foco. */
+.arcade-focus {
+  position: absolute;
+  inset: auto 0 12px;
+  margin: 0 auto;
+  width: max-content;
+  padding: 6px 10px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  pointer-events: none;
+  animation: arcade-blink 1.4s steps(2) infinite;
+}
+.arcade-screen:focus-within .arcade-focus {
+  display: none;
+}
+@keyframes arcade-blink {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* --- Controles: teclado en la compu, botonera en el celular -------------------- */
+
+.arcade-help {
+  padding: 12px 17px;
+  font: 11px/1.9 var(--mono);
+  color: var(--muted);
+}
+.arcade-help p {
+  margin: 0;
+}
+.arcade-help kbd {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 4px;
+  border: 1px solid var(--ink);
+  border-bottom-width: 2px;
+  background: #fff;
+  color: var(--ink);
+  font: 10px/16px var(--mono);
+  text-align: center;
+}
+.arcade-secret {
+  margin-top: 4px !important;
+  font-size: 10px;
+}
+
+.arcade-pad {
+  display: none;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px 20px;
+  background: var(--wine-dark);
+  /* Que el celular no haga zoom ni seleccione texto al tocar rápido. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* En pantallas táctiles aparece la botonera y se esconden la ayuda del teclado y el aviso de clic. */
+@media (hover: none) {
+  .arcade-pad {
+    display: grid;
+  }
+  .arcade-help,
+  .arcade-focus {
+    display: none;
+  }
+}
+
+/* Cruceta: una cruz de 4 brazos; se ilumina el lado que se está apretando. */
+.dpad {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  touch-action: none;
+}
+.dpad span {
+  position: absolute;
+  background: #2a0c16;
+  border: 2px solid var(--paper);
+}
+.dpad-up,
+.dpad-down {
+  left: 44px;
+  width: 44px;
+  height: 48px;
+}
+.dpad-up {
+  top: 0;
+  border-bottom: 0 !important;
+}
+.dpad-down {
+  bottom: 0;
+  border-top: 0 !important;
+}
+.dpad-left,
+.dpad-right {
+  top: 44px;
+  width: 48px;
+  height: 44px;
+}
+.dpad-left {
+  left: 0;
+  border-right: 0 !important;
+}
+.dpad-right {
+  right: 0;
+  border-left: 0 !important;
+}
+.dpad::after {
+  content: "";
+  position: absolute;
+  left: 44px;
+  top: 44px;
+  width: 44px;
+  height: 44px;
+  background: #2a0c16;
+}
+.dpad[data-dir~="up"] .dpad-up,
+.dpad[data-dir~="down"] .dpad-down,
+.dpad[data-dir~="left"] .dpad-left,
+.dpad[data-dir~="right"] .dpad-right {
+  background: var(--rose);
+}
+
+.pad-start {
+  justify-self: center;
+  align-self: end;
+  padding: 6px 12px;
+  border: 1px solid var(--paper);
+  border-radius: 12px;
+  background: none;
+  color: var(--paper);
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+
+.pad-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 58px);
+  gap: 8px 12px;
+}
+.pad-actions button {
+  width: 58px;
+  height: 58px;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  color: var(--ink);
+  font: 9px var(--mono);
+  text-transform: uppercase;
+  touch-action: none;
+}
+.pad-punch {
+  background: #ff9ad5;
+}
+.pad-kick {
+  background: #ffe45e;
+}
+.pad-special {
+  grid-column: 1 / -1;
+  justify-self: center;
+  background: #b98cff;
+}
+.pad-actions button.is-down,
+.pad-start.is-down {
+  transform: translateY(2px);
+  filter: brightness(0.8);
+}
+
+/* --- Pantalla completa -------------------------------------------------------- */
+
+.arcade.is-full {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  box-shadow: none;
+  background: #0b0614;
+}
+.arcade.is-full .window-bar {
+  align-self: stretch;
+}
+.arcade.is-full .arcade-screen {
+  width: min(100vw, calc((100vh - 40px) * 16 / 9));
+  width: min(100vw, calc((100dvh - 40px) * 16 / 9));
+  border: 0;
+}
+.arcade.is-full .arcade-help {
+  display: none;
+}
+/* En el celular acostado, la botonera flota sobre los costados de la pantalla. */
+.arcade.is-full .arcade-pad {
+  position: absolute;
+  inset: auto 0 0;
+  background: none;
+  pointer-events: none;
+}
+.arcade.is-full .arcade-pad > * {
+  pointer-events: auto;
+  opacity: 0.75;
+}
+.arcade.is-full .dpad {
+  transform: scale(0.85);
+  transform-origin: bottom left;
+}
+.arcade.is-full .pad-actions {
+  transform: scale(0.85);
+  transform-origin: bottom right;
+}
+
+/* --- Cartuchos (la lista de juegos) ------------------------------------------- */
+
+.cartridges ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.cartridge {
+  display: grid;
+  gap: 6px;
+  padding: 14px 14px 16px;
+  border: var(--line);
+  border-top-width: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.cartridge strong {
+  font: 700 13px var(--mono);
+  text-transform: uppercase;
+  color: var(--wine);
+}
+.cartridge span {
+  font-size: 13px;
+  line-height: 1.35;
+}
+.cartridge.is-active {
+  border-top-color: var(--rose);
+}
+a.cartridge:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.cartridge.is-empty {
+  border-style: dashed;
+  border-top-width: 2px;
+  box-shadow: none;
+  color: var(--muted);
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .games-layout {
+    grid-template-columns: 1fr;
+  }
+  .cartridges ul {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .arcade .window-bar {
+    flex-wrap: wrap;
+    padding: 6px 11px;
+  }
+  .arcade-pad {
+    padding: 14px 12px 18px;
+  }
+}

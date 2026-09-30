@@ -48,6 +48,46 @@ perrito que pasea. Tocando el pasto se le tira la pelota y va a buscarla.
 El cielo sigue la hora real de Buenos Aires (día, atardecer o noche) y también se puede elegir con los
 botones de abajo.
 
+## Juegos
+
+`juegos.html` es la sala de arcade. A la derecha están los **cartuchos** (la lista de juegos); por ahora hay
+uno, **Estela · buscadora de mundos**, y dos lugares de "próximamente".
+
+**Cómo se juega.** En la compu, con el teclado (hay que hacer clic en la pantalla del juego primero):
+**A/D** caminar, **W** saltar, **S** agacharse (también sirven las flechas); **J** golpe, **K** patada,
+**L** onda estelar, **S + L** corte lunar, **Enter** empieza o pausa. Para cubrirse, caminar hacia el lado
+contrario al monstruo: Estela retrocede con el sable en guardia. La pausa muestra todos los controles. En el celular aparece una botonera
+(cruceta, golpe, patada, poder y start) y el botón **pantalla completa** la pone en horizontal.
+Si el juego sale de la pantalla, se cambia de pestaña o se hace clic afuera, se pausa solo.
+
+**La historia, en orden:** título → prólogo → nivel 1 (la nave nodriza, monstruos verdes, se avanza hacia el
+hangar) → escena del viaje (despegue, hiperespacio y llegada al planeta rojo de tres lunas) → nivel 2 (el
+planeta Carmín: tres rondas contra monstruos rosa y violeta que revientan en líquido rosa) → segundo viaje
+(nebulosa esmeralda con asteroides) → nivel 3 (el planeta Ámbar, con anillos como Saturno: la Babosa Reina
+verde neón, que se arrastra, vomita baba y escupe huevos; cuando parece muerta le sale del pecho el Gusano
+Voltio azul, con tentáculos con pinzas; del jefe caen corazones que devuelven vida) → "continuará".
+
+**Dónde se cambia cada cosa** (todo en `assets/js/games/estela/`):
+
+- `texts.js`: todos los textos de la historia, en castellano e inglés.
+- `index.js`: la lista de pantallas en orden (`STORY`). Para sumar un nivel: crear su archivo en `screens/`,
+  agregarlo a `SCREENS` y ponerlo en `STORY` donde corresponde.
+- `screens/mothership.js`: las oleadas del nivel 1 (qué monstruos salen, de dónde y cuándo).
+- `screens/red-planet.js`: las rondas del nivel 2 (`ROUNDS`).
+- `screens/amber-planet.js`: el nivel 3 (la escena de "¡todavía no!" y los corazones).
+- `bosses.js`: la Babosa Reina y el Gusano Voltio (sus ataques y cómo se mueven).
+- `screens/voyage.js`: los viajes entre planetas (`VOYAGES`: de dónde sale, qué zona cruza, adónde llega).
+- `monsters.js`: cada monstruo es una ficha (vida, ataques, cómo piensa, cómo se dibuja).
+- `heroine.js`: los golpes de Estela (daño, velocidad) y su dibujo; la cabeza es un dibujo hecho con letras.
+- `audio.js`: efectos de sonido y música de 8 bits (se generan en el momento, no hay archivos de audio).
+
+Para probar una pantalla directo, sin jugar desde el principio: `juegos.html?pantalla=planet`
+(también `ship`, `voyage`, `voyage2`, `amber` o `ending`).
+
+`assets/js/games/arcade/` es el motor compartido (dibujo pixel art, teclado y botonera, sonido): los juegos
+nuevos lo reutilizan. Para sumar un juego a la sala: su carpeta en `games/`, sus textos de la página en
+`i18n.js` (`games.<id>.title`, `.blurb`, `.bar`) y una línea en la lista `GAMES` de `assets/js/pages/games.js`.
+
 ## Cursor y destellos
 
 El cursor es una flecha pixel art (`assets/cursors/`): clara de base y rosa sobre lo que se puede tocar.

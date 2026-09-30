@@ -15,19 +15,21 @@ archivo-vivo/
 ├── notas.html            notas y artículos
 ├── galeria.html          álbumes y fotos
 ├── zona-tranquila.html   el parque de Palermo en pixel art
+├── juegos.html           sala de juegos arcade (el primero: Estela)
 ├── admin.html            acceso privado (Magic Link)
 │
 ├── assets/
 │   ├── cursors/          cursores pixel art (flecha y flecha activa)
 │   ├── css/
 │   │   ├── base.css      colores, tipografía, header, botones, diálogos (todas las páginas)
-│   │   └── home.css, lab.css, notes.css, gallery.css, admin.css   (una por página)
+│   │   └── home.css, lab.css, notes.css, gallery.css, games.css, admin.css   (una por página)
 │   ├── hydra/            código de Hydra del fondo del inicio (se pega tal cual del editor)
 │   ├── images/           avatar pixel art (optimizado)
 │   └── js/
 │       ├── config.js     URL y clave pública de Supabase
 │       ├── core/         piezas base: base de datos, estado, arranque, idiomas (i18n.js), diálogos
 │       ├── features/     una sección por archivo (música, libros, notas, galería, laboratorio…)
+│       ├── games/        los juegos: arcade/ (motor compartido) y una carpeta por juego (estela/)
 │       └── pages/        el punto de entrada de cada página: arma la página con sus secciones
 │
 ├── supabase/

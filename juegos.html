@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c2337" />
+    <title data-i18n="title.games">Juegos — Archivo vivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/games.css" />
+    <script type="module" src="assets/js/pages/games.js"></script>
+  </head>
+  <body class="is-loading">
+    <header class="site-header">
+      <a class="brand" href="index.html">✳ archivo vivo</a>
+      <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
+        <a href="index.html" data-i18n="nav.home">inicio</a>
+        <a href="laboratorio.html" data-i18n="nav.lab">laboratorio</a>
+        <a href="notas.html" data-i18n="nav.notes">notas</a>
+        <a href="galeria.html" data-i18n="nav.gallery">galería</a>
+        <a href="zona-tranquila.html" data-i18n="nav.quiet">zona tranquila</a>
+        <a class="active" href="juegos.html" aria-current="page" data-i18n="nav.games">juegos</a>
+      </nav>
+      <a class="plain-button" href="admin.html" data-i18n="header.edit">editar mi archivo</a>
+    </header>
+
+    <main class="shell subpage">
+      <section class="page-intro">
+        <p class="eyebrow" data-i18n="games.eyebrow">08 / sala de juegos</p>
+        <h1><span data-i18n="games.title1">Sala de</span><br /><i data-i18n="games.title2">juegos.</i></h1>
+        <p data-i18n="games.intro">Jueguitos arcade en pixel art, hechos a mano. Entrás, jugás un rato y seguís.</p>
+      </section>
+
+      <div class="games-layout">
+        <article class="window arcade" data-arcade>
+          <div class="window-bar">
+            <span data-arcade-title></span>
+            <span class="arcade-tools">
+              <button type="button" data-arcade-mute aria-pressed="false" data-i18n="games.sound">sonido</button>
+              <button type="button" data-arcade-full data-i18n="games.full">pantalla completa</button>
+            </span>
+          </div>
+
+          <div class="arcade-screen">
+            <canvas
+              data-arcade-canvas
+              tabindex="0"
+              role="img"
+              aria-label="Juego arcade en pixel art. Se juega con el teclado o con los botones de abajo en el celular."
+              data-i18n-aria-label="games.canvasAria"
+            ></canvas>
+            <p class="arcade-focus" data-i18n="games.focus">hacé clic acá para jugar</p>
+          </div>
+
+          <!-- Botonera para el celular (en la compu se juega con el teclado). -->
+          <div class="arcade-pad" data-arcade-pad>
+            <div class="dpad" data-dpad aria-hidden="true">
+              <span class="dpad-up"></span>
+              <span class="dpad-left"></span>
+              <span class="dpad-right"></span>
+              <span class="dpad-down"></span>
+            </div>
+            <button type="button" class="pad-start" data-button="start">start</button>
+            <div class="pad-actions">
+              <button type="button" class="pad-punch" data-button="punch" data-i18n="games.punch">golpe</button>
+              <button type="button" class="pad-kick" data-button="kick" data-i18n="games.kick">patada</button>
+              <button type="button" class="pad-special" data-button="special" data-i18n="games.special">poder</button>
+            </div>
+          </div>
+
+          <div class="arcade-help">
+            <p>
+              <kbd>A</kbd> <kbd>D</kbd> <span data-i18n="games.helpWalk">caminar</span> ·
+              <kbd>W</kbd> <span data-i18n="games.helpJump">saltar</span> ·
+              <kbd>S</kbd> <span data-i18n="games.helpCrouch">agacharse</span> ·
+              <span data-i18n="games.helpArrows">(o las flechas)</span>
+            </p>
+            <p>
+              <kbd>J</kbd> <span data-i18n="games.punch">golpe</span> ·
+              <kbd>K</kbd> <span data-i18n="games.kick">patada</span> ·
+              <kbd>L</kbd> <span data-i18n="games.helpWave">onda estelar</span> ·
+              <kbd>S</kbd>+<kbd>L</kbd> <span data-i18n="games.helpRising">corte lunar</span> ·
+              <kbd>Enter</kbd> <span data-i18n="games.helpStart">empezar / pausa y controles</span>
+            </p>
+            <p>
+              <span data-i18n="games.helpBlock">
+                Para cubrirte, caminá hacia el lado contrario al monstruo: Estela retrocede con el sable en guardia.
+              </span>
+            </p>
+            <p class="arcade-secret" data-i18n="games.helpCombo">
+              Tres golpes seguidos hacen combo. Truco: abajo, abajo-adelante, adelante + J también tira la onda.
+            </p>
+          </div>
+        </article>
+
+        <aside class="cartridges">
+          <h2 class="eyebrow" data-i18n="games.cartridges">cartuchos</h2>
+          <ul data-game-list></ul>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>archivo vivo · Cata</span>
+      <span data-storage-state>buenos aires</span>
+    </footer>
+  </body>
+</html>
