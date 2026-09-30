@@ -5,7 +5,7 @@
 
 /* La sala ocupa toda la pantalla, del menú para abajo (el pie de página fijo queda encima). */
 .games-page {
-  background: #000000;
+  background: #0b0619;
 }
 .games-main {
   display: flex;
@@ -27,7 +27,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #000000;
+  background: #0b0619;
   color: #f3eff8;
   overflow: hidden;
 }
@@ -163,8 +163,9 @@
 .room-panel {
   min-height: 36px;
   padding: 6px 12px;
-  border-top: 1px solid #2a1f35;
-  background: #0a0710;
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, #ff9ad5, #f5f7ff, #9fe0ff) 1;
+  background: #0e0820;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -210,8 +211,8 @@
 }
 .arcade-help {
   padding: 12px 17px;
-  border-top: 1px solid #2a1f35;
-  background: #0a0710;
+  border-top: 1px solid #2a1f45;
+  background: #0e0820;
   font: 11px/1.9 var(--mono);
   color: #b8b0d8;
 }
@@ -417,11 +418,12 @@
   justify-content: center;
   gap: 18px 28px;
   padding: 14px 18px 16px;
-  border-top: 2px solid #1a1424;
+  /* Una consola del mismo universo: azul noche violáceo con la grilla tenue del piso de la sala. */
   background:
-    radial-gradient(circle at 15% 0%, rgba(255, 79, 176, 0.14), transparent 45%),
-    radial-gradient(circle at 85% 100%, rgba(95, 184, 255, 0.14), transparent 45%),
-    linear-gradient(#0d0a12, #060409);
+    linear-gradient(rgba(159, 224, 255, 0.06) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(159, 224, 255, 0.06) 1px, transparent 1px) 0 0 / 24px 24px,
+    radial-gradient(ellipse at 50% 0%, rgba(120, 90, 255, 0.22), transparent 60%),
+    linear-gradient(#150b2b, #0b0619);
 }
 .tv {
   display: grid;

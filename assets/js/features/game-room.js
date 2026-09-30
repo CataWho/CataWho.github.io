@@ -148,6 +148,9 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
   const cloudShapes = makeClouds();
   const starRand = seeded(3);
   const stars = Array.from({ length: 40 }, () => ({ x: starRand(), y: starRand(), t: starRand() * 100 }));
+  // Estrellas por toda la sala (se ven entre las líneas, en las paredes, el techo y el piso).
+  const skyStars = Array.from({ length: 260 }, () => ({ x: starRand(), y: starRand(), t: starRand() * 100, big: starRand() > 0.9 }));
+  const sky = document.createElement("canvas");
   let banner = makeBanner(marquee);
   let dpr = 1;
   let raf = 0;
@@ -167,8 +170,33 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
     clouds.width = canvas.width;
     clouds.height = canvas.height;
     paintClouds(clouds, cloudShapes);
+    paintSky();
     // El CSS ubica la pantalla del juego con esta medida (así coincide con el cuadrado del fondo).
     view.style.setProperty("--screen-w", `${screenWidth(view.clientWidth, view.clientHeight)}px`);
+  }
+
+  /**
+   * El fondo: espacio profundo violeta, más claro alrededor del cuadrado del fondo y oscuro en los
+   * bordes, con dos nubes de nebulosa muy suaves (rosa arriba a la izquierda, turquesa abajo a la derecha).
+   */
+  function paintSky() {
+    sky.width = canvas.width;
+    sky.height = canvas.height;
+    const c = sky.getContext("2d");
+    const { width: w, height: h } = sky;
+    const glow = c.createRadialGradient(w / 2, h * ROOM.centerY, 0, w / 2, h * ROOM.centerY, Math.max(w, h) * 0.75);
+    glow.addColorStop(0, "#241250");
+    glow.addColorStop(0.45, "#110826");
+    glow.addColorStop(1, "#030108");
+    c.fillStyle = glow;
+    c.fillRect(0, 0, w, h);
+    [[0.15, 0.2, "rgba(255, 79, 176, 0.16)"], [0.85, 0.85, "rgba(47, 224, 192, 0.12)"]].forEach(([x, y, color]) => {
+      const nebula = c.createRadialGradient(x * w, y * h, 0, x * w, y * h, w * 0.4);
+      nebula.addColorStop(0, color);
+      nebula.addColorStop(1, "rgba(0, 0, 0, 0)");
+      c.fillStyle = nebula;
+      c.fillRect(0, 0, w, h);
+    });
   }
 
   function geometry() {
@@ -296,8 +324,13 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
     const room = geometry();
     const { w, h, bw, bh, bx, by, at } = room;
 
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(sky, 0, 0);
+    skyStars.forEach((star) => {
+      const on = Math.sin(time * 0.0015 + star.t) > -0.2;
+      ctx.fillStyle = on ? (star.big ? "#ffffff" : "#c8c0f0") : "#4a4070";
+      const size = star.big ? dpr * 2 : dpr;
+      ctx.fillRect(star.x * w, star.y * h, size, size);
+    });
     drawFloor(time, room);
 
     // El espacio al fondo, con estrellas que titilan.
