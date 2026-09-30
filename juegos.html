@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="assets/css/games.css" />
     <script type="module" src="assets/js/pages/games.js"></script>
   </head>
-  <body class="is-loading">
+  <body class="is-loading games-page">
     <header class="site-header">
       <a class="brand" href="index.html">✳ archivo vivo</a>
       <nav aria-label="Navegación principal" data-i18n-aria-label="nav.aria">
@@ -29,12 +29,9 @@
       <a class="plain-button" href="admin.html" data-i18n="header.edit">editar mi archivo</a>
     </header>
 
-    <main class="shell subpage">
-      <section class="page-intro">
-        <p class="eyebrow" data-i18n="games.eyebrow">08 / sala de juegos</p>
-        <h1><span data-i18n="games.title1">Sala de</span><br /><i data-i18n="games.title2">juegos.</i></h1>
-        <p data-i18n="games.intro">Todo el universo en un solo lugar.</p>
-      </section>
+    <main class="games-main">
+      <!-- El título no se ve (la sala ocupa toda la pantalla), pero lo leen los lectores de pantalla. -->
+      <h1 class="visually-hidden" data-i18n="games.heading">Sala de juegos libre · todo el universo en un solo lugar</h1>
 
       <!-- La sala: una habitación retro con nubes. El juego sale desde el cuadrado del fondo. -->
       <section class="game-room" data-room aria-label="Sala de juegos" data-i18n-aria-label="games.roomAria">

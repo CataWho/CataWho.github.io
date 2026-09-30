@@ -3,15 +3,52 @@
    Arriba la sala retro (dibujada en features/game-room.js) y abajo el panel de teles.
    ========================================================================== */
 
+/* La sala ocupa toda la pantalla, del menú para abajo (el pie de página fijo queda encima). */
+.games-page {
+  background: #000000;
+}
+.games-main {
+  display: flex;
+  flex-direction: column;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .game-room {
   --led: #ff5a3c; /* el rojo de los letreros de luces */
   --glass: #9fe0ff;
   position: relative;
-  border: var(--line);
-  background: #050308;
-  box-shadow: 5px 5px 0 var(--ink);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #000000;
   color: #f3eff8;
   overflow: hidden;
+}
+.room-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+/* En pantallas grandes, todo entra en una sola pantalla: la sala se estira y las teles quedan abajo. */
+@media (min-width: 800px) and (min-height: 560px) {
+  .games-page {
+    height: 100vh;
+    height: 100dvh;
+  }
+  .games-main {
+    min-height: 0;
+  }
+  .game-room {
+    min-height: 0;
+  }
 }
 /* Textura de foto vieja: grano y líneas de tele, por encima de todo sin tapar los clics. */
 .game-room::after {
@@ -31,7 +68,15 @@
 
 .room-view {
   position: relative;
-  aspect-ratio: 16 / 10;
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: 4 / 3.4; /* en el celular: alta, para que entre bien la sala */
+}
+@media (min-width: 800px) and (min-height: 560px) {
+  .room-view {
+    aspect-ratio: auto;
+    min-height: 260px;
+  }
 }
 .room-canvas {
   position: absolute;
@@ -42,13 +87,13 @@
 }
 
 /* La pantalla del juego: espera chiquita en el cuadrado del fondo y al jugar viaja hacia adelante.
-   --room-cy, --room-screen y --room-back los pone game-room.js (así coinciden con el dibujo). */
+   --room-cy, --screen-w y --room-back los pone game-room.js (así coinciden con el dibujo). */
 .arcade-screen {
   position: absolute;
   left: 50%;
   top: calc(var(--room-cy, 0.45) * 100%);
   z-index: 2;
-  width: calc(var(--room-screen, 0.86) * 100%);
+  width: var(--screen-w, 86%);
   background: #0b0614;
   box-shadow:
     0 0 0 1px var(--glass),
@@ -368,9 +413,10 @@
 
 .tv-wall {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  padding: 18px 18px 22px;
+  grid-template-columns: repeat(4, minmax(0, 170px));
+  justify-content: center;
+  gap: 18px 28px;
+  padding: 14px 18px 16px;
   border-top: 2px solid #1a1424;
   background:
     radial-gradient(circle at 15% 0%, rgba(255, 79, 176, 0.14), transparent 45%),

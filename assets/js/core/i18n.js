@@ -382,12 +382,9 @@ const STRINGS = {
 
   // --- Juegos ------------------------------------------------------------------------------------------
   // Los textos de adentro de cada juego están en su carpeta (por ejemplo games/estela/texts.js).
-  "games.eyebrow": ["08 / sala de juegos", "08 / game room"],
-  "games.title1": ["Sala de", "Game"],
-  "games.title2": ["juegos.", "room."],
-  "games.intro": [
-    "Todo el universo en un solo lugar.",
-    "The whole universe in one place.",
+  "games.heading": [
+    "Sala de juegos libre · todo el universo en un solo lugar",
+    "Free game room · the whole universe in one place",
   ],
   "games.sound": ["sonido", "sound"],
   "games.muted": ["sin sonido", "muted"],
