@@ -65,22 +65,30 @@ function makeNoise(seed) {
 }
 
 /**
- * La forma general de cada nube: unas pocas "cúpulas" (más alta en el medio, base chata).
- * x va de 0 a 1 en el ancho de la sala; up, r, width y height están en "unidades de nube".
+ * La forma general de cada nube: unas "cúpulas" (más alta en el medio, base chata), medidas en
+ * proporción al ancho de la nube. side y depth dicen dónde está apoyada en el piso de la sala:
+ * side de 0 (pared izquierda) a 1 (pared derecha), depth de 0 (adelante) a 1 (el fondo).
  */
-function makeCloud(rand, x, base, width, height) {
+function makeCloud(rand, side, depth, width) {
   const domes = [];
-  for (let i = 0; i < 9; i++) {
-    const k = i / 8 - 0.5;
+  for (let i = 0; i < 11; i++) {
+    const k = i / 10 - 0.5;
     const tall = 1 - Math.abs(k) * 1.5;
-    domes.push({ x: x + k * width * 0.9, up: tall * height * (0.35 + rand() * 0.2), r: width * (0.13 + tall * 0.1 + rand() * 0.04) });
+    domes.push({ x: k * 0.85, up: tall * (0.34 + rand() * 0.16), r: 0.12 + tall * 0.1 + rand() * 0.04 });
   }
-  return { domes, base };
+  // Cúpulas más chicas sobre el borde de arriba: la "coliflor" de las nubes de verdad.
+  domes.slice().forEach((dome) => {
+    for (let i = 0; i < 2; i++) {
+      const angle = -Math.PI * (0.2 + rand() * 0.6);
+      domes.push({ x: dome.x + Math.cos(angle) * dome.r * 0.75, up: dome.up - Math.sin(angle) * dome.r * 0.75, r: dome.r * (0.38 + rand() * 0.18) });
+    }
+  });
+  return { domes, side, depth, width };
 }
 
 function makeClouds() {
   const rand = seeded(12);
-  return [makeCloud(rand, 0.18, 0.8, 0.32, 0.34), makeCloud(rand, 0.82, 0.76, 0.34, 0.4), makeCloud(rand, 0.5, 0.66, 0.12, 0.08)];
+  return [makeCloud(rand, 0.22, 0.05, 0.36), makeCloud(rand, 0.78, 0.07, 0.38), makeCloud(rand, 0.5, 0.3, 0.3)];
 }
 
 /** Color HSL (tono 0-360, saturación y luz de 0 a 1) → [r, g, b]. */
@@ -93,33 +101,40 @@ function hsl(h, sat, light) {
 const fbm = makeNoise(21);
 const smooth = (a, b, v) => Math.max(0, Math.min(1, (v - a) / (b - a)));
 
-function paintClouds(canvas, clouds) {
+/**
+ * place(nube) dice dónde queda en la pantalla: { x (centro), floor (línea del piso), size (ancho) }.
+ * Cada nube se dibuja con su sombra y su reflejo en el piso, y con un toque de las luces de la sala
+ * (rosa del lado izquierdo, celeste del derecho).
+ */
+function paintClouds(canvas, clouds, place) {
   const ctx = canvas.getContext("2d");
   const { width: w, height: h } = canvas;
-  const unit = Math.min(w, h * 1.7); // tamaño de las nubes: así no se salen en salas muy anchas
   ctx.clearRect(0, 0, w, h);
   ctx.imageSmoothingEnabled = true;
   const white = [255, 253, 250];
-  const shadow = [104, 112, 142];
+  const shadow = [96, 98, 146]; // sombra violácea, como el ambiente de la sala
+  const pink = [255, 214, 236];
+  const cyan = [206, 238, 255];
 
-  clouds.forEach(({ domes, base }) => {
-    const floor = base * h;
-    const centers = domes.map((d) => ({ x: d.x * w, y: floor - d.up * unit, r: d.r * unit }));
-    const margin = unit * 0.04; // lugar para los bollitos que se asoman del borde
+  // Las del fondo primero, así las de adelante quedan encima.
+  [...clouds].sort((a, b) => b.depth - a.depth).forEach((cloud) => {
+    const { x: cx, floor, size: unit } = place(cloud);
+    const centers = cloud.domes.map((d) => ({ x: cx + d.x * unit, y: floor - d.up * unit, r: d.r * unit }));
+    const margin = unit * 0.06; // lugar para los bollitos que se asoman del borde
     const left = Math.min(...centers.map((c) => c.x - c.r)) - margin;
     const right = Math.max(...centers.map((c) => c.x + c.r)) + margin;
     const top = Math.min(...centers.map((c) => c.y - c.r)) - margin;
     const boxW = right - left;
     const boxH = floor + unit * 0.02 - top;
     // Se calcula a menos resolución (y después se agranda suave): así es rápido.
-    const scale = Math.min(0.5, 280 / boxW);
+    const scale = Math.min(1, 460 / boxW);
     const cw = Math.ceil(boxW * scale);
     const ch = Math.ceil(boxH * scale);
     const layer = document.createElement("canvas");
     layer.width = cw;
     layer.height = ch;
     const image = layer.getContext("2d").createImageData(cw, ch);
-    const grain = unit * 0.045; // tamaño de los bollitos
+    const grain = unit * 0.05; // tamaño de los bollitos
     const density = (X, Y) => {
       let shape = 0;
       centers.forEach((c) => {
@@ -128,12 +143,14 @@ function paintClouds(canvas, clouds) {
         shape = Math.max(shape, 1 - Math.sqrt(dx * dx + dy * dy));
       });
       if (shape <= 0) return -1; // fuera de la forma no hay nube (así no quedan pedacitos sueltos)
-      let value = shape * 1.3 + (fbm(X / grain, Y / grain) - 0.5) * 0.9 * Math.min(1, shape * 3 + 0.3);
+      // El ruido arma los bollitos del borde; adentro casi no actúa, así la nube no tiene agujeros.
+      const edge = 1 - smooth(0.12, 0.45, shape) * 0.7;
+      let value = shape * 1.5 + (fbm(X / grain, Y / grain) - 0.5) * 0.95 * edge * Math.min(1, shape * 3 + 0.3);
       if (Y > floor - unit * 0.03) value -= (Y - (floor - unit * 0.03)) / (unit * 0.02); // base chata
       return value;
     };
-    const lx = -unit * 0.02; // hacia dónde está el sol (arriba a la izquierda)
-    const ly = -unit * 0.03;
+    const lx = -unit * 0.035; // hacia dónde está el sol (arriba a la izquierda)
+    const ly = -unit * 0.05;
     for (let j = 0; j < ch; j++) {
       for (let i = 0; i < cw; i++) {
         const X = left + i / scale;
@@ -142,11 +159,16 @@ function paintClouds(canvas, clouds) {
         const alpha = smooth(0.05, 0.2, d);
         const p = (j * cw + i) * 4;
         if (alpha <= 0) continue;
-        // Si hacia el sol hay más nube, este punto queda en sombra.
-        const occlusion = smooth(0, 0.45, density(X + lx, Y + ly) - d);
+        // Si hacia el sol hay más nube, este punto queda en sombra (se miran tres puntos, más suave).
+        let ahead = 0;
+        for (let k = 1; k <= 3; k++) ahead += Math.max(0, density(X + (lx * k) / 2, Y + (ly * k) / 2) - d);
+        const occlusion = smooth(0, 0.7, ahead / 1.5);
         const high = 1 - smooth(top, floor, Y); // la parte de arriba recibe más luz
-        const light = Math.max(0, Math.min(1, 1 - occlusion * 0.75 - (1 - high) * 0.28 + 0.08));
-        const color = mixColor(shadow, white, light);
+        const crease = (fbm(X / (grain * 0.5), Y / (grain * 0.5)) - 0.5) * 0.35; // pliegues chiquitos
+        const light = Math.max(0, Math.min(1, 1.02 - occlusion * 0.8 - (1 - high) * 0.3 + crease));
+        const across = (X - left) / boxW; // de 0 (izquierda) a 1 (derecha)
+        const lit = mixColor(mixColor(pink, cyan, across), white, 0.55);
+        const color = mixColor(shadow, lit, light);
         image.data[p] = color[0];
         image.data[p + 1] = color[1];
         image.data[p + 2] = color[2];
@@ -154,6 +176,25 @@ function paintClouds(canvas, clouds) {
       }
     }
     layer.getContext("2d").putImageData(image, 0, 0);
+
+    // Sombra en el piso, debajo de la nube.
+    const dark = ctx.createRadialGradient(cx, floor, 0, cx, floor, unit * 0.55);
+    dark.addColorStop(0, "rgba(2, 1, 10, 0.55)");
+    dark.addColorStop(1, "rgba(2, 1, 10, 0)");
+    ctx.save();
+    ctx.translate(0, floor);
+    ctx.scale(1, 0.12);
+    ctx.fillStyle = dark;
+    ctx.fillRect(cx - unit * 0.6, -unit * 0.6, unit * 1.2, unit * 1.2);
+    ctx.restore();
+    // Reflejo: la nube dada vuelta sobre su línea de piso, achatada y transparente.
+    ctx.save();
+    ctx.globalAlpha = 0.16;
+    ctx.translate(0, floor);
+    ctx.scale(1, -0.5);
+    ctx.translate(0, -floor);
+    ctx.drawImage(layer, left, top, boxW, boxH);
+    ctx.restore();
     ctx.drawImage(layer, left, top, boxW, boxH);
   });
 }
@@ -222,7 +263,11 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
     cloudTimer = setTimeout(() => {
       clouds.width = canvas.width;
       clouds.height = canvas.height;
-      paintClouds(clouds, cloudShapes);
+      const { at } = geometry();
+      paintClouds(clouds, cloudShapes, ({ side, depth, width }) => {
+        const [x0, , x1, y1] = at(depth);
+        return { x: x0 + (x1 - x0) * side, floor: y1, size: (x1 - x0) * width };
+      });
     }, 120);
     paintSky();
     // El CSS ubica la pantalla del juego con esta medida (así coincide con el cuadrado del fondo).
@@ -347,13 +392,6 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
     glow.addColorStop(1, "rgba(10, 8, 30, 0.1)");
     ctx.fillStyle = glow;
     ctx.fill(floor);
-    // Reflejo de las nubes: dadas vuelta sobre la línea del piso, transparentes.
-    const horizon = h * 0.74;
-    ctx.globalAlpha = 0.22;
-    ctx.translate(0, horizon * 2);
-    ctx.scale(1, -1);
-    ctx.drawImage(clouds, 0, 0);
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     // Curvas de nivel: líneas onduladas que se van achicando hacia el fondo.
     ctx.globalAlpha = 0.35;
     ctx.strokeStyle = "#b8c8ff";
