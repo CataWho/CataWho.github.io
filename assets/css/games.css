@@ -5,7 +5,7 @@
 
 /* La sala ocupa toda la pantalla, del menú para abajo (el pie de página fijo queda encima). */
 .games-page {
-  background: #0b0619;
+  background: #030207;
 }
 .games-main {
   display: flex;
@@ -27,7 +27,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #0b0619;
+  background: #030207;
   color: #f3eff8;
   overflow: hidden;
 }
@@ -417,13 +417,8 @@
   grid-template-columns: repeat(4, minmax(0, 170px));
   justify-content: center;
   gap: 18px 28px;
-  padding: 14px 18px 16px;
-  /* Una consola del mismo universo: azul noche violáceo con la grilla tenue del piso de la sala. */
-  background:
-    linear-gradient(rgba(159, 224, 255, 0.06) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(90deg, rgba(159, 224, 255, 0.06) 1px, transparent 1px) 0 0 / 24px 24px,
-    radial-gradient(ellipse at 50% 0%, rgba(120, 90, 255, 0.22), transparent 60%),
-    linear-gradient(#150b2b, #0b0619);
+  padding: 14px 18px 18px;
+  background: linear-gradient(#0a0612, #030207);
 }
 .tv {
   display: grid;
@@ -444,42 +439,71 @@ button.tv {
   color: var(--led);
   text-shadow: 0 0 6px var(--led);
 }
-/* El mueble de la tele, con el vidrio curvo de las pantallas viejas. */
+
+/* El mueble de la tele: plástico con relieve, y abajo perillas, una lucecita y la rejilla del parlante. */
 .tv-body {
   position: relative;
-  padding: 9px;
-  border-radius: 10px;
-  background: linear-gradient(#34343c, #16161a);
+  display: block;
+  padding: 9px 9px 22px;
+  border-radius: 9px;
+  background: linear-gradient(150deg, #45444c, #232228 45%, #141317);
   box-shadow:
-    inset 0 0 0 2px #45454f,
-    0 4px 0 #000000;
+    inset 1px 1px 0 rgba(255, 255, 255, 0.14),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.55),
+    0 8px 16px rgba(0, 0, 0, 0.75);
   transition: box-shadow 0.2s;
+}
+.tv-body::after {
+  content: "";
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  bottom: 6px;
+  height: 11px;
+  background:
+    radial-gradient(circle at 5px 5.5px, #d6d6de 0 2.5px, #4a4a52 3px, transparent 4px),
+    radial-gradient(circle at 17px 5.5px, #d6d6de 0 2.5px, #4a4a52 3px, transparent 4px),
+    radial-gradient(circle at 29px 5.5px, #ff4a36 0 1.6px, rgba(255, 74, 54, 0.4) 2.4px, transparent 3.5px),
+    repeating-linear-gradient(90deg, #0a0a0d 0 2px, transparent 2px 4px) right / 38% 100% no-repeat;
+}
+/* El vidrio: hundido en un marco negro, curvo, con reflejo, líneas de tele y bordes más oscuros. */
+.tv-glass {
+  position: relative;
+  display: block;
+  padding: 4px;
+  border-radius: 13% / 17%;
+  background: #050506;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.95),
+    0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .tv-screen {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
-  border-radius: 16% / 20%;
+  border-radius: 12% / 16%;
   background: #000000;
   image-rendering: pixelated;
+  filter: saturate(1.15) contrast(1.08);
 }
-.tv-body::after {
+.tv-glass::after {
   content: "";
   position: absolute;
-  inset: 9px;
-  border-radius: 16% / 20%;
+  inset: 4px;
+  border-radius: 12% / 16%;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.18), transparent 45%),
-    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0 1px, transparent 1px 3px);
-  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.8);
+    radial-gradient(ellipse 70% 45% at 30% 18%, rgba(255, 255, 255, 0.22), transparent 70%),
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.28) 0 1px, transparent 1px 3px);
+  box-shadow: inset 0 0 22px 6px rgba(0, 0, 0, 0.7);
 }
 button.tv:hover .tv-body,
 button.tv:focus-visible .tv-body {
   box-shadow:
-    inset 0 0 0 2px #ff9ad5,
-    0 4px 0 #000000,
-    0 0 22px rgba(255, 79, 176, 0.55);
+    inset 1px 1px 0 rgba(255, 255, 255, 0.14),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.55),
+    0 8px 16px rgba(0, 0, 0, 0.75),
+    0 0 24px rgba(255, 79, 176, 0.55);
 }
 .tv-play,
 .tv-live,
@@ -493,7 +517,7 @@ button.tv:focus-visible .tv-body {
   text-transform: uppercase;
 }
 .tv-play {
-  bottom: 16px;
+  bottom: 12px;
   padding: 3px 8px;
   background: rgba(10, 7, 16, 0.85);
   border: 1px solid #ff9ad5;
@@ -502,7 +526,7 @@ button.tv:focus-visible .tv-body {
   animation: arcade-blink 1.6s steps(2) infinite;
 }
 .tv-live {
-  bottom: 16px;
+  bottom: 12px;
   display: none;
   color: var(--led);
   text-shadow: 0 0 6px var(--led);

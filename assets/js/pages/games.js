@@ -25,9 +25,11 @@ function renderTvs() {
                   aria-label="${esc(t("games.playAria", { title: t(`games.${game.id}.title`) }))}">
             <span class="tv-top">${channel}</span>
             <span class="tv-body">
-              <canvas class="tv-screen" width="240" height="180"></canvas>
-              <span class="tv-play">${esc(t("games.play"))}</span>
-              <span class="tv-live">${esc(t("games.onAir"))}</span>
+              <span class="tv-glass">
+                <canvas class="tv-screen" width="240" height="180"></canvas>
+                <span class="tv-play">${esc(t("games.play"))}</span>
+                <span class="tv-live">${esc(t("games.onAir"))}</span>
+              </span>
             </span>
             <span class="tv-label">${esc(t(`games.${game.id}.title`))}</span>
           </button>`)
@@ -35,8 +37,10 @@ function renderTvs() {
           <div class="tv is-off">
             <span class="tv-top">${channel}</span>
             <span class="tv-body">
-              <canvas class="tv-screen" width="80" height="60"></canvas>
-              <span class="tv-nosignal">${esc(t("games.noSignal"))}</span>
+              <span class="tv-glass">
+                <canvas class="tv-screen" width="80" height="60"></canvas>
+                <span class="tv-nosignal">${esc(t("games.noSignal"))}</span>
+              </span>
             </span>
             <span class="tv-label">—</span>
           </div>`);
