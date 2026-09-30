@@ -33,28 +33,34 @@
       <section class="page-intro">
         <p class="eyebrow" data-i18n="games.eyebrow">08 / sala de juegos</p>
         <h1><span data-i18n="games.title1">Sala de</span><br /><i data-i18n="games.title2">juegos.</i></h1>
-        <p data-i18n="games.intro">Jueguitos arcade en pixel art, hechos a mano. Entrás, jugás un rato y seguís.</p>
+        <p data-i18n="games.intro">Todo el universo en un solo lugar.</p>
       </section>
 
-      <div class="games-layout">
-        <article class="window arcade" data-arcade>
-          <div class="window-bar">
-            <span data-arcade-title></span>
+      <!-- La sala: una habitación retro con nubes. El juego sale desde el cuadrado del fondo. -->
+      <section class="game-room" data-room aria-label="Sala de juegos" data-i18n-aria-label="games.roomAria">
+        <div class="room-stage" data-arcade>
+          <div class="room-view">
+            <canvas class="room-canvas" data-room-canvas aria-hidden="true"></canvas>
+            <div class="arcade-screen">
+              <canvas
+                data-arcade-canvas
+                tabindex="-1"
+                role="img"
+                aria-label="Juego arcade en pixel art. Se juega con el teclado o con los botones de abajo en el celular."
+                data-i18n-aria-label="games.canvasAria"
+              ></canvas>
+              <p class="arcade-focus" data-i18n="games.focus">hacé clic acá para jugar</p>
+            </div>
+            <p class="room-hint" data-i18n="games.pickChannel">elegí un canal para jugar ↓</p>
+          </div>
+
+          <div class="room-panel">
+            <span class="room-readout" data-arcade-title></span>
             <span class="arcade-tools">
               <button type="button" data-arcade-mute aria-pressed="false" data-i18n="games.sound">sonido</button>
               <button type="button" data-arcade-full data-i18n="games.full">pantalla completa</button>
+              <button type="button" data-room-back data-i18n="games.back">⏏ sacar el juego</button>
             </span>
-          </div>
-
-          <div class="arcade-screen">
-            <canvas
-              data-arcade-canvas
-              tabindex="0"
-              role="img"
-              aria-label="Juego arcade en pixel art. Se juega con el teclado o con los botones de abajo en el celular."
-              data-i18n-aria-label="games.canvasAria"
-            ></canvas>
-            <p class="arcade-focus" data-i18n="games.focus">hacé clic acá para jugar</p>
           </div>
 
           <!-- Botonera para el celular (en la compu se juega con el teclado). -->
@@ -89,22 +95,16 @@
               <kbd>Espacio</kbd> <span data-i18n="games.block">defensa</span> ·
               <kbd>Enter</kbd> <span data-i18n="games.helpStart">empezar / pausa y controles</span>
             </p>
-            <p>
-              <span data-i18n="games.helpBlock">
-                En el aire podés corregir el salto para pasar por encima de los monstruos.
-              </span>
-            </p>
+            <p data-i18n="games.helpBlock">En el aire podés corregir el salto para pasar por encima de los monstruos.</p>
             <p class="arcade-secret" data-i18n="games.helpCombo">
               Tres golpes seguidos hacen combo. Truco: abajo, abajo-adelante, adelante + J también tira la onda.
             </p>
           </div>
-        </article>
+        </div>
 
-        <aside class="cartridges">
-          <h2 class="eyebrow" data-i18n="games.cartridges">cartuchos</h2>
-          <ul data-game-list></ul>
-        </aside>
-      </div>
+        <!-- El panel de teles: cada canal es un juego (los que todavía no existen, sin señal). -->
+        <div class="tv-wall" data-tv-wall></div>
+      </section>
     </main>
 
     <footer class="site-footer">

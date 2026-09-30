@@ -1,56 +1,69 @@
 /* ==========================================================================
-   Juegos (juegos.html): la sala de arcade.
+   Juegos (juegos.html): la sala de juegos.
+   Arriba la sala retro (dibujada en features/game-room.js) y abajo el panel de teles.
    ========================================================================== */
 
-.games-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 230px;
-  gap: 28px;
-  align-items: start;
-}
-
-/* --- La ventana del juego ------------------------------------------------- */
-
-.arcade {
-  border: var(--line);
-  background: var(--paper);
-  box-shadow: 5px 5px 0 var(--ink);
-}
-.arcade .window-bar {
-  min-height: 37px;
-  padding: 0 11px;
-  border-bottom: var(--line);
-  background: var(--wine);
-  color: var(--paper);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font: 10px var(--mono);
-  text-transform: uppercase;
-}
-.arcade-tools {
-  display: flex;
-  gap: 6px;
-}
-.arcade-tools button {
-  border: 1px solid var(--paper);
-  background: none;
-  color: var(--paper);
-  padding: 4px 8px;
-  font: 10px var(--mono);
-  text-transform: uppercase;
-  cursor: var(--cursor-link);
-}
-.arcade-tools button[aria-pressed="true"] {
-  background: var(--paper);
-  color: var(--wine);
-}
-
-.arcade-screen {
+.game-room {
+  --led: #ff5a3c; /* el rojo de los letreros de luces */
+  --glass: #9fe0ff;
   position: relative;
+  border: var(--line);
+  background: #050308;
+  box-shadow: 5px 5px 0 var(--ink);
+  color: #f3eff8;
+  overflow: hidden;
+}
+/* Textura de foto vieja: grano y líneas de tele, por encima de todo sin tapar los clics. */
+.game-room::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 3px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+}
+
+/* --- La sala ------------------------------------------------------------------ */
+
+.room-view {
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+.room-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* La pantalla del juego: espera chiquita en el cuadrado del fondo y al jugar viaja hacia adelante.
+   --room-cy, --room-screen y --room-back los pone game-room.js (así coinciden con el dibujo). */
+.arcade-screen {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--room-cy, 0.45) * 100%);
+  z-index: 2;
+  width: calc(var(--room-screen, 0.86) * 100%);
   background: #0b0614;
-  border-bottom: var(--line);
+  box-shadow:
+    0 0 0 1px var(--glass),
+    0 0 40px rgba(159, 224, 255, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(var(--room-back, 0.3));
+  transition:
+    transform 1s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.35s;
+}
+.game-room.is-playing .arcade-screen {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
 }
 .arcade-screen canvas {
   display: block;
@@ -64,18 +77,20 @@
 .arcade-focus {
   position: absolute;
   inset: auto 0 12px;
+  display: none;
   margin: 0 auto;
   width: max-content;
   padding: 6px 10px;
-  background: var(--paper);
-  border: 1px solid var(--ink);
+  background: #0b0614;
+  border: 1px solid var(--glass);
+  color: var(--glass);
   font: 10px var(--mono);
   text-transform: uppercase;
   pointer-events: none;
   animation: arcade-blink 1.4s steps(2) infinite;
 }
-.arcade-screen:focus-within .arcade-focus {
-  display: none;
+.game-room.is-playing .arcade-screen:not(:focus-within) .arcade-focus {
+  display: block;
 }
 @keyframes arcade-blink {
   50% {
@@ -83,12 +98,77 @@
   }
 }
 
-/* --- Controles: teclado en la compu, botonera en el celular -------------------- */
+.room-hint {
+  position: absolute;
+  inset: auto 0 5%;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  font: 11px var(--mono);
+  text-transform: uppercase;
+  color: #ffb3e0;
+  text-shadow: 0 0 8px #ff4fb0;
+  animation: arcade-blink 1.8s steps(2) infinite;
+}
+.game-room.is-playing .room-hint {
+  display: none;
+}
 
+/* Barra de luces rojas: el nombre del canal y los botones del juego. */
+.room-panel {
+  min-height: 36px;
+  padding: 6px 12px;
+  border-top: 1px solid #2a1f35;
+  background: #0a0710;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+.room-readout {
+  color: var(--led);
+  text-shadow: 0 0 6px var(--led);
+}
+.arcade-tools {
+  display: flex;
+  gap: 6px;
+}
+.game-room:not(.is-playing) .arcade-tools {
+  display: none;
+}
+.arcade-tools button {
+  border: 1px solid var(--led);
+  background: none;
+  color: var(--led);
+  padding: 4px 8px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  cursor: var(--cursor-link);
+}
+.arcade-tools button:hover,
+.arcade-tools button[aria-pressed="true"] {
+  background: var(--led);
+  color: #0a0710;
+}
+
+/* --- Controles: teclado en la compu, botonera en el celular (solo mientras se juega) --- */
+
+.arcade-help,
+.arcade-pad {
+  display: none;
+}
+.game-room.is-playing .arcade-help {
+  display: block;
+}
 .arcade-help {
   padding: 12px 17px;
+  border-top: 1px solid #2a1f35;
+  background: #0a0710;
   font: 11px/1.9 var(--mono);
-  color: var(--muted);
+  color: #b8b0d8;
 }
 .arcade-help p {
   margin: 0;
@@ -97,10 +177,10 @@
   display: inline-block;
   min-width: 20px;
   padding: 0 4px;
-  border: 1px solid var(--ink);
+  border: 1px solid #b8b0d8;
   border-bottom-width: 2px;
-  background: #fff;
-  color: var(--ink);
+  background: #1a1424;
+  color: #f3eff8;
   font: 10px/16px var(--mono);
   text-align: center;
 }
@@ -110,7 +190,6 @@
 }
 
 .arcade-pad {
-  display: none;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 10px;
@@ -125,11 +204,11 @@
 
 /* En pantallas táctiles aparece la botonera y se esconden la ayuda del teclado y el aviso de clic. */
 @media (hover: none) {
-  .arcade-pad {
+  .game-room.is-playing .arcade-pad {
     display: grid;
   }
-  .arcade-help,
-  .arcade-focus {
+  .game-room.is-playing .arcade-help,
+  .game-room.is-playing .arcade-screen .arcade-focus {
     display: none;
   }
 }
@@ -235,111 +314,192 @@
   filter: brightness(0.8);
 }
 
-/* --- Pantalla completa -------------------------------------------------------- */
+/* --- Pantalla completa: solo el juego, grande, sobre negro ---------------------------- */
 
-.arcade.is-full {
+.room-stage.is-full {
   position: fixed;
   inset: 0;
   z-index: 200;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  box-shadow: none;
-  background: #0b0614;
+  background: #000000;
 }
-.arcade.is-full .window-bar {
-  align-self: stretch;
+.room-stage.is-full .room-view {
+  flex: 1;
+  aspect-ratio: auto;
+  display: grid;
+  place-items: center;
 }
-.arcade.is-full .arcade-screen {
-  width: min(100vw, calc((100vh - 40px) * 16 / 9));
-  width: min(100vw, calc((100dvh - 40px) * 16 / 9));
-  border: 0;
-}
-.arcade.is-full .arcade-help {
+.room-stage.is-full .room-canvas,
+.room-stage.is-full .arcade-help {
   display: none;
 }
+.room-stage.is-full .arcade-screen {
+  position: static;
+  width: min(100vw, calc((100vh - 44px) * 16 / 9));
+  width: min(100vw, calc((100dvh - 44px) * 16 / 9));
+  transform: none;
+  box-shadow: none;
+}
+.room-stage.is-full .room-panel {
+  order: -1;
+}
 /* En el celular acostado, la botonera flota sobre los costados de la pantalla. */
-.arcade.is-full .arcade-pad {
+.room-stage.is-full .arcade-pad {
   position: absolute;
   inset: auto 0 0;
   background: none;
   pointer-events: none;
 }
-.arcade.is-full .arcade-pad > * {
+.room-stage.is-full .arcade-pad > * {
   pointer-events: auto;
   opacity: 0.75;
 }
-.arcade.is-full .dpad {
+.room-stage.is-full .dpad {
   transform: scale(0.85);
   transform-origin: bottom left;
 }
-.arcade.is-full .pad-actions {
+.room-stage.is-full .pad-actions {
   transform: scale(0.85);
   transform-origin: bottom right;
 }
 
-/* --- Cartuchos (la lista de juegos) ------------------------------------------- */
+/* --- El panel de teles ----------------------------------------------------------- */
 
-.cartridges ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.tv-wall {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  padding: 18px 18px 22px;
+  border-top: 2px solid #1a1424;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 79, 176, 0.14), transparent 45%),
+    radial-gradient(circle at 85% 100%, rgba(95, 184, 255, 0.14), transparent 45%),
+    linear-gradient(#0d0a12, #060409);
 }
-.cartridge {
+.tv {
   display: grid;
   gap: 6px;
-  padding: 14px 14px 16px;
-  border: var(--line);
-  border-top-width: 10px;
-  background: var(--paper);
-  color: var(--ink);
-  text-decoration: none;
-  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  font: inherit;
 }
-.cartridge strong {
-  font: 700 13px var(--mono);
+button.tv {
+  cursor: var(--cursor-link);
+}
+.tv-top {
+  font: 9px var(--mono);
   text-transform: uppercase;
-  color: var(--wine);
+  color: var(--led);
+  text-shadow: 0 0 6px var(--led);
 }
-.cartridge span {
-  font-size: 13px;
-  line-height: 1.35;
+/* El mueble de la tele, con el vidrio curvo de las pantallas viejas. */
+.tv-body {
+  position: relative;
+  padding: 9px;
+  border-radius: 10px;
+  background: linear-gradient(#34343c, #16161a);
+  box-shadow:
+    inset 0 0 0 2px #45454f,
+    0 4px 0 #000000;
+  transition: box-shadow 0.2s;
 }
-.cartridge.is-active {
-  border-top-color: var(--rose);
+.tv-screen {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16% / 20%;
+  background: #000000;
+  image-rendering: pixelated;
 }
-a.cartridge:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink);
+.tv-body::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 16% / 20%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.18), transparent 45%),
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0 1px, transparent 1px 3px);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.8);
 }
-.cartridge.is-empty {
-  border-style: dashed;
-  border-top-width: 2px;
-  box-shadow: none;
-  color: var(--muted);
+button.tv:hover .tv-body,
+button.tv:focus-visible .tv-body {
+  box-shadow:
+    inset 0 0 0 2px #ff9ad5,
+    0 4px 0 #000000,
+    0 0 22px rgba(255, 79, 176, 0.55);
+}
+.tv-play,
+.tv-live,
+.tv-nosignal {
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  white-space: nowrap;
   font: 10px var(--mono);
   text-transform: uppercase;
 }
+.tv-play {
+  bottom: 16px;
+  padding: 3px 8px;
+  background: rgba(10, 7, 16, 0.85);
+  border: 1px solid #ff9ad5;
+  color: #ffb3e0;
+  text-shadow: 0 0 6px #ff4fb0;
+  animation: arcade-blink 1.6s steps(2) infinite;
+}
+.tv-live {
+  bottom: 16px;
+  display: none;
+  color: var(--led);
+  text-shadow: 0 0 6px var(--led);
+}
+.game-room.is-playing button.tv .tv-play {
+  display: none;
+}
+.game-room.is-playing button.tv .tv-live {
+  display: block;
+}
+.tv-nosignal {
+  top: 50%;
+  translate: 0 -50%;
+  padding: 2px 6px;
+  background: #000000;
+  color: #f3eff8;
+}
+.tv-label {
+  font: 11px var(--mono);
+  text-transform: uppercase;
+  color: #f3eff8;
+}
+.tv.is-off .tv-label {
+  color: #51474a;
+}
 
-@media (max-width: 900px) {
-  .games-layout {
-    grid-template-columns: 1fr;
-  }
-  .cartridges ul {
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+@media (max-width: 700px) {
+  .tv-wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 14px;
   }
 }
 
 @media (max-width: 460px) {
-  .arcade .window-bar {
-    flex-wrap: wrap;
-    padding: 6px 11px;
-  }
   .arcade-pad {
     padding: 14px 12px 18px;
+  }
+  .room-hint {
+    font-size: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-screen {
+    transition: none;
   }
 }

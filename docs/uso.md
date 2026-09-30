@@ -50,8 +50,16 @@ botones de abajo.
 
 ## Juegos
 
-`juegos.html` es la sala de arcade. A la derecha están los **cartuchos** (la lista de juegos); por ahora hay
-uno, **Estela · buscadora de mundos**, y dos lugares de "próximamente".
+`juegos.html` es la **sala de juegos**: una habitación retro de líneas de luz en perspectiva, con nubes, un
+piso que refleja, un cuadrado negro al fondo (el espacio) y un letrero pintado en las paredes y el techo que
+corre despacio ("SALA DE JUEGOS LIBRE · TODO EL UNIVERSO EN UN SOLO LUGAR"). La dibuja
+`assets/js/features/game-room.js` (el texto del letrero está en `i18n.js`, clave `games.marquee`).
+
+Abajo hay un **panel de 4 teles**: cada canal es un juego. El canal 01 es **Estela · buscadora de mundos** y
+muestra en vivo lo que pasa en el juego; los otros tres están "sin señal" (estática de colores, barras de
+prueba y arcoíris) hasta que haya más juegos. Al tocar
+una tele, la pantalla del juego viaja desde el fondo de la sala hacia adelante; **⏏ sacar el juego** (o tocar
+la tele otra vez) lo pausa y lo manda de nuevo al fondo.
 
 **Cómo se juega.** En la compu, con el teclado (hay que hacer clic en la pantalla del juego primero):
 **A/D** caminar, **W** saltar, **S** agacharse (también sirven las flechas); **J** golpe, **K** patada,
