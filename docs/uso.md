@@ -103,6 +103,19 @@ El cursor es una flecha pixel art (`assets/cursors/`): clara de base y rosa sobr
 Al mover el mouse aparecen destellos pixelados que se apagan solos. No aparecen en pantallas táctiles ni si
 la compu tiene activado "reducir movimiento".
 
+## Sonido de las salas
+
+Arriba a la derecha, junto a **ES / EN**, está el botón de **volumen**: prende o apaga el sonido propio de
+cada sala en todo el sitio (y también el de los juegos). La web recuerda la elección. Como los navegadores
+no dejan sonar nada hasta que la persona toca algo, el sonido arranca con el primer clic o tecla.
+
+- La sala de juegos tiene un ambiente "intergaláctico" (`assets/js/features/space-ambience.js`): un colchón
+  grave que respira, un brillo agudo, viento espacial y destellos sueltos. Todo se genera en el momento, no
+  hay archivos de audio. Mientras se juega, baja de volumen para que se escuche el juego.
+- Para darle sonido a otra sala: armar su función (como `spaceAmbience`) y en la página llamar a
+  `setAmbience(...)` de `assets/js/core/room-sound.js`.
+- La música de "escuchando" es aparte: no depende de este botón.
+
 ## Idiomas (español / inglés)
 
 Arriba a la derecha está el selector **ES / EN**. La web recuerda la elección; la primera vez usa el idioma del

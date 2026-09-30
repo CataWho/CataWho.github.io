@@ -65,16 +65,18 @@ function makeNoise(seed) {
 }
 
 /**
- * La forma general de cada nube: unas "cúpulas" (más alta en el medio, base chata), medidas en
- * proporción al ancho de la nube. side y depth dicen dónde está apoyada en el piso de la sala:
- * side de 0 (pared izquierda) a 1 (pared derecha), depth de 0 (adelante) a 1 (el fondo).
+ * La forma general de cada nube: unas "cúpulas" con base chata, medidas en proporción al ancho de la
+ * nube. Dónde está apoyada en el piso de la sala: side de 0 (pared izquierda) a 1 (pared derecha) y
+ * depth de 0 (adelante) a 1 (el fondo). peak: dónde está su parte más alta (0 izquierda, 1 derecha);
+ * height: qué tan alta es; count: cuántas cúpulas (más = más alargada).
+ * Si se pasa de una pared, queda cortada contra ella (como apoyada).
  */
-function makeCloud(rand, side, depth, width) {
+function makeCloud(rand, { side, depth, width, peak = 0.5, height = 1, count = 11 }) {
   const domes = [];
-  for (let i = 0; i < 11; i++) {
-    const k = i / 10 - 0.5;
-    const tall = 1 - Math.abs(k) * 1.5;
-    domes.push({ x: k * 0.85, up: tall * (0.34 + rand() * 0.16), r: 0.12 + tall * 0.1 + rand() * 0.04 });
+  for (let i = 0; i < count; i++) {
+    const k = i / (count - 1) - 0.5;
+    const tall = Math.max(0.15, 1 - Math.abs(k - (peak - 0.5)) * 1.4);
+    domes.push({ x: k * 0.85, up: tall * height * (0.34 + rand() * 0.16), r: (0.12 + tall * 0.1 + rand() * 0.04) * (11 / count) ** 0.4 });
   }
   // Cúpulas más chicas sobre el borde de arriba: la "coliflor" de las nubes de verdad.
   domes.slice().forEach((dome) => {
@@ -88,7 +90,13 @@ function makeCloud(rand, side, depth, width) {
 
 function makeClouds() {
   const rand = seeded(12);
-  return [makeCloud(rand, 0.22, 0.05, 0.36), makeCloud(rand, 0.78, 0.07, 0.38), makeCloud(rand, 0.5, 0.3, 0.3)];
+  // Desparejas a propósito: cada una con su tamaño, su altura y su lugar.
+  return [
+    makeCloud(rand, { side: 0.2, depth: 0.03, width: 0.46, peak: 0.75, height: 0.75, count: 14 }), // grande y alargada, contra la pared
+    makeCloud(rand, { side: 0.84, depth: 0.06, width: 0.24, peak: 0.45, height: 1.35, count: 8 }), // alta y angosta
+    makeCloud(rand, { side: 0.3, depth: 0.38, width: 0.3, peak: 0.3, height: 0.6, count: 9 }), // lejos, corrida del centro
+    makeCloud(rand, { side: 0.95, depth: 0.6, width: 0.32, peak: 0.2, height: 0.7, count: 7 }), // chiquita, contra la pared
+  ];
 }
 
 /** Color HSL (tono 0-360, saturación y luz de 0 a 1) → [r, g, b]. */
@@ -118,7 +126,12 @@ function paintClouds(canvas, clouds, place) {
 
   // Las del fondo primero, así las de adelante quedan encima.
   [...clouds].sort((a, b) => b.depth - a.depth).forEach((cloud) => {
-    const { x: cx, floor, size: unit } = place(cloud);
+    const { x: cx, floor, size: unit, wallLeft, wallRight } = place(cloud);
+    // Nada sale de la sala: la nube se corta donde están las paredes (las que se apoyan quedan planas ahí).
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(wallLeft, 0, wallRight - wallLeft, h);
+    ctx.clip();
     const centers = cloud.domes.map((d) => ({ x: cx + d.x * unit, y: floor - d.up * unit, r: d.r * unit }));
     const margin = unit * 0.06; // lugar para los bollitos que se asoman del borde
     const left = Math.min(...centers.map((c) => c.x - c.r)) - margin;
@@ -196,6 +209,7 @@ function paintClouds(canvas, clouds, place) {
     ctx.drawImage(layer, left, top, boxW, boxH);
     ctx.restore();
     ctx.drawImage(layer, left, top, boxW, boxH);
+    ctx.restore();
   });
 }
 
@@ -266,7 +280,7 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
       const { at } = geometry();
       paintClouds(clouds, cloudShapes, ({ side, depth, width }) => {
         const [x0, , x1, y1] = at(depth);
-        return { x: x0 + (x1 - x0) * side, floor: y1, size: (x1 - x0) * width };
+        return { x: x0 + (x1 - x0) * side, floor: y1, size: (x1 - x0) * width, wallLeft: x0, wallRight: x1 };
       });
     }, 120);
     paintSky();
@@ -469,9 +483,7 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Nubes que se mecen apenas.
-    const drift = reducedMotion ? 0 : Math.sin(time * 0.0002) * w * 0.006;
-    ctx.drawImage(clouds, drift, 0);
+    ctx.drawImage(clouds, 0, 0);
 
     // Letreros de luces rojas arriba, como en los tableros viejos.
     ctx.font = `${10 * dpr}px "DM Mono", monospace`;

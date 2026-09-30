@@ -6,7 +6,9 @@
 import { esc, node, q } from "../core/dom.js";
 import { boot } from "../core/boot.js";
 import { t } from "../core/i18n.js";
+import { onSoundChange, setAmbience, setAmbienceLevel, soundOn } from "../core/room-sound.js";
 import { NO_SIGNAL, mountGameRoom } from "../features/game-room.js";
+import { spaceAmbience } from "../features/space-ambience.js";
 
 // Los juegos de la sala. Para sumar uno: su carpeta en games/, sus textos en i18n.js y una línea acá.
 const GAMES = [{ id: "estela", load: () => import("../games/estela/index.js") }];
@@ -93,6 +95,7 @@ boot(async () => {
     tvs: tvs.map((tv, i) => ({ canvas: tv.canvas, source: tv.game === current ? canvas : null, mode: NO_SIGNAL[i % NO_SIGNAL.length] })),
   });
   readout.textContent = t("games.roomIdle");
+  setAmbience(spaceAmbience); // el sonido intergaláctico de la sala
 
   const { startGame } = await current.load();
   const arcade = await startGame({
@@ -109,6 +112,7 @@ boot(async () => {
     readout.textContent = t(`games.${current.id}.bar`);
     canvas.tabIndex = 0;
     canvas.focus({ preventScroll: true });
+    setAmbienceLevel(0.25); // el ambiente baja para que se escuche el juego
     stage.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
   // Sacar el juego: se pausa y la pantalla vuelve al fondo (la sala queda vacía otra vez).
@@ -118,6 +122,7 @@ boot(async () => {
     room.classList.remove("is-playing");
     readout.textContent = t("games.roomIdle");
     canvas.tabIndex = -1;
+    setAmbienceLevel(1);
   }
 
   tvs.forEach((tv) => {
@@ -132,15 +137,7 @@ boot(async () => {
   q("[data-room-back]").addEventListener("click", back);
   if (params.get("pantalla")) play(); // al probar un nivel directo, ya arranca adelante
 
-  const mute = q("[data-arcade-mute]");
-  const showMute = () => {
-    mute.setAttribute("aria-pressed", String(arcade.muted));
-    mute.textContent = t(arcade.muted ? "games.muted" : "games.sound");
-  };
-  showMute();
-  mute.addEventListener("click", () => {
-    arcade.toggleMute();
-    showMute();
-    canvas.focus(); // así el teclado sigue manejando el juego
-  });
+  // El botón de volumen de arriba también calla (o prende) el juego.
+  arcade.setMuted(!soundOn());
+  onSoundChange((on) => arcade.setMuted(!on));
 });

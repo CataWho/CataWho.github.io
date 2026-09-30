@@ -3,10 +3,12 @@
 
 import { q } from "../core/dom.js";
 import { mountLanguageSwitch, t, translatePage } from "../core/i18n.js";
+import { mountSoundSwitch } from "../core/room-sound.js";
 import { currentUser, ensureProfile, hasDatabase, sendMagicLink, signOut } from "../core/db.js";
 
 translatePage();
 mountLanguageSwitch();
+mountSoundSwitch();
 
 const form = q("[data-admin-form]");
 const status = q("[data-admin-status]");

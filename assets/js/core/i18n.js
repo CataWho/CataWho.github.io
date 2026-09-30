@@ -18,6 +18,8 @@ const STRINGS = {
   "nav.aria": ["Navegación principal", "Main navigation"],
   "header.edit": ["editar mi archivo", "edit my archive"],
   "lang.aria": ["Idioma", "Language"],
+  "sound.on": ["Sonido de las salas: prendido (tocá para apagar)", "Room sound: on (click to turn off)"],
+  "sound.off": ["Sonido de las salas: apagado (tocá para prender)", "Room sound: off (click to turn on)"],
   "common.close": ["Cerrar", "Close"],
   "common.cancel": ["cancelar", "cancel"],
   "common.save": ["guardar", "save"],
@@ -386,8 +388,6 @@ const STRINGS = {
     "Sala de juegos libre · todo el universo en un solo lugar",
     "Free game room · the whole universe in one place",
   ],
-  "games.sound": ["sonido", "sound"],
-  "games.muted": ["sin sonido", "muted"],
   "games.full": ["pantalla completa", "full screen"],
   "games.canvasAria": [
     "Juego arcade en pixel art. Se juega con el teclado o con los botones de abajo en el celular.",

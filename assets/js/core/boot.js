@@ -6,6 +6,7 @@ import { state } from "./state.js";
 import { currentUser, getArchive, signOut } from "./db.js";
 import { startCursorSparkles } from "../features/cursor-sparkles.js";
 import { mountLanguageSwitch, t, translatePage } from "./i18n.js";
+import { mountSoundSwitch } from "./room-sound.js";
 
 /**
  * Solo la dueña ve este aviso en la barra de abajo: así siempre sabe que tiene
@@ -30,6 +31,7 @@ export async function boot(renderPage) {
   // Primero el idioma, así la página no se ve un instante en el otro.
   translatePage();
   mountLanguageSwitch();
+  mountSoundSwitch();
   const footerStatus = q("[data-storage-state]");
   try {
     state.archive = await getArchive();

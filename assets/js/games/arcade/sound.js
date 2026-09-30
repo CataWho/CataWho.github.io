@@ -3,7 +3,6 @@
 // Los navegadores no dejan sonar nada hasta que la persona toca una tecla o la pantalla:
 // por eso el sonido "arranca" recién con el primer toque (unlock).
 
-const STORAGE_KEY = "archivo-vivo-juegos-mudo";
 const NOTE_INDEX = { C: 0, "C#": 1, D: 2, "D#": 3, E: 4, F: 5, "F#": 6, G: 7, "G#": 8, A: 9, "A#": 10, B: 11 };
 
 /** "A4" → 440 Hz. */
@@ -11,14 +10,6 @@ function frequency(note) {
   const [, name, octave] = /^([A-G]#?)(\d)$/.exec(note);
   const midi = 12 * (Number(octave) + 1) + NOTE_INDEX[name];
   return 440 * 2 ** ((midi - 69) / 12);
-}
-
-function readMuted() {
-  try {
-    return localStorage.getItem(STORAGE_KEY) === "1";
-  } catch {
-    return false;
-  }
 }
 
 /**
@@ -32,7 +23,7 @@ export function createSound(effects) {
   let sfxBus;
   let musicBus;
   let noiseBuffer;
-  let muted = readMuted();
+  let muted = false; // lo decide el botón de volumen del sitio (ver pages/games.js)
   let song = null;
   let songSource = null; // la canción tal como la pasó el juego (para no reiniciarla si es la misma)
   let step = 0;
@@ -153,18 +144,9 @@ export function createSound(effects) {
       this.paused = false;
       if (ac?.state === "suspended") ac.resume();
     },
-    get muted() {
-      return muted;
-    },
-    toggleMute() {
-      muted = !muted;
+    setMuted(value) {
+      muted = value;
       if (master) master.gain.value = muted ? 0 : 0.5;
-      try {
-        localStorage.setItem(STORAGE_KEY, muted ? "1" : "0");
-      } catch {
-        // Si el navegador no deja guardar, se recuerda solo mientras la página siga abierta.
-      }
-      return muted;
     },
   };
 }

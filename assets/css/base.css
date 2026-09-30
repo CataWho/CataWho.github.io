@@ -129,6 +129,24 @@ body.is-loading main {
   text-underline-offset: 5px;
 }
 
+/* Botón de volumen de las salas (lo agrega room-sound.js, junto al selector de idioma). */
+.sound-switch {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: var(--cursor-link);
+}
+.sound-switch[aria-pressed="true"] {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: var(--paper);
+}
+
 /* Selector de idioma ES / EN (lo agrega i18n.js a la derecha del header). */
 .header-tools {
   display: flex;

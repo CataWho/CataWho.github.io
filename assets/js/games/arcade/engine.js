@@ -151,9 +151,6 @@ export async function createArcade({ root, canvas, pad: padRoot, screens, story,
     game,
     togglePause: () => setPaused(!paused),
     pause: () => setPaused(true),
-    toggleMute: () => sound.toggleMute(),
-    get muted() {
-      return sound.muted;
-    },
+    setMuted: (value) => sound.setMuted(value),
   };
 }
