@@ -52,7 +52,8 @@ botones de abajo.
 
 `juegos.html` es la **sala de juegos**: una habitación retro de líneas de luz en perspectiva, con nubes, un
 piso que refleja, un cuadrado negro al fondo (el espacio) y un letrero pintado en las paredes y el techo que
-corre despacio ("SALA DE JUEGOS LIBRE · TODO EL UNIVERSO EN UN SOLO LUGAR"). La dibuja
+corre despacio ("SALA DE JUEGOS LIBRE · TODO EL UNIVERSO EN UN SOLO LUGAR"). Cada tanto una estrella fugaz cruza el
+cuadrado del fondo, y pasar el mouse por una tele suena como cambiar de canal. La dibuja
 `assets/js/features/game-room.js` (el texto del letrero está en `i18n.js`, clave `games.marquee`).
 
 Abajo hay un **panel de 4 teles**: cada canal es un juego. El canal 01 es **Estela · buscadora de mundos** y

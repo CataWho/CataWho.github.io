@@ -258,6 +258,8 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
   let banner = makeBanner(marquee);
   let dpr = 1;
   let cloudTimer = 0;
+  let meteor = null; // la estrella fugaz que está cruzando (o null)
+  let nextMeteor = 4000; // cuándo sale la próxima (en milisegundos)
   let raf = 0;
   let visible = true;
   let frame = 0;
@@ -388,6 +390,46 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
   }
 
   /**
+   * Cada tanto (entre 6 y 16 segundos) una estrella fugaz cruza en diagonal el cuadrado del fondo,
+   * dejando una estela que se apaga. Queda recortada al cuadrado: es "el espacio" de afuera.
+   */
+  function drawMeteor(time, { bx, by, bw, bh }) {
+    if (reducedMotion) return;
+    if (!meteor && time > nextMeteor) {
+      const fromLeft = Math.random() < 0.5;
+      meteor = { start: time, fromLeft, y: 0.1 + Math.random() * 0.4, slope: 0.25 + Math.random() * 0.35 };
+      nextMeteor = time + 6000 + Math.random() * 10000;
+    }
+    if (!meteor) return;
+    const k = (time - meteor.start) / 900; // tarda casi un segundo en cruzar
+    if (k > 1.3) {
+      meteor = null;
+      return;
+    }
+    const x = meteor.fromLeft ? bx + k * bw * 1.2 : bx + bw - k * bw * 1.2;
+    const y = by + meteor.y * bh + k * bw * meteor.slope;
+    const tail = bw * 0.28;
+    const dir = meteor.fromLeft ? -1 : 1;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(bx, by, bw, bh);
+    ctx.clip();
+    const trail = ctx.createLinearGradient(x, y, x + dir * tail, y - tail * meteor.slope);
+    trail.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+    trail.addColorStop(0.3, "rgba(255, 179, 224, 0.5)");
+    trail.addColorStop(1, "rgba(159, 224, 255, 0)");
+    ctx.strokeStyle = trail;
+    ctx.lineWidth = 1.6 * dpr;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + dir * tail, y - tail * meteor.slope);
+    ctx.stroke();
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(x - dpr, y - dpr, 2 * dpr, 2 * dpr);
+    ctx.restore();
+  }
+
+  /**
    * El piso, como en la ilustración: un brillo azulado que se apaga hacia adelante, el reflejo de las
    * nubes y unas curvas de nivel suaves (como un mapa topográfico), todo en perspectiva.
    */
@@ -446,6 +488,7 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
       ctx.fillStyle = Math.sin(time * 0.002 + star.t) > 0.3 ? "#ffffff" : "#6a6090";
       ctx.fillRect(bx + star.x * bw, by + star.y * bh, dpr, dpr);
     });
+    drawMeteor(time, room);
 
     // El letrero, pintado en las superficies (por debajo de las líneas de luz).
     drawMarquee(time, room);

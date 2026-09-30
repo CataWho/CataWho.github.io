@@ -6,9 +6,9 @@
 import { esc, node, q } from "../core/dom.js";
 import { boot } from "../core/boot.js";
 import { t } from "../core/i18n.js";
-import { onSoundChange, setAmbience, setAmbienceLevel, soundOn } from "../core/room-sound.js";
+import { onSoundChange, playEffect, setAmbience, setAmbienceLevel, soundOn } from "../core/room-sound.js";
 import { NO_SIGNAL, mountGameRoom } from "../features/game-room.js";
-import { spaceAmbience } from "../features/space-ambience.js";
+import { channelClick, spaceAmbience } from "../features/space-ambience.js";
 
 // Los juegos de la sala. Para sumar uno: su carpeta en games/, sus textos en i18n.js y una línea acá.
 const GAMES = [{ id: "estela", load: () => import("../games/estela/index.js") }];
@@ -135,6 +135,11 @@ boot(async () => {
     });
   });
   q("[data-room-back]").addEventListener("click", back);
+  // Pasar por una tele suena como cambiar de canal.
+  tvs.forEach(({ element }) => {
+    element.addEventListener("pointerenter", () => playEffect(channelClick));
+    element.addEventListener("focus", () => playEffect(channelClick));
+  });
   if (params.get("pantalla")) play(); // al probar un nivel directo, ya arranca adelante
 
   // El botón de volumen de arriba también calla (o prende) el juego.

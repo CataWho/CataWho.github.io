@@ -2,9 +2,40 @@
 // (no hay archivos de audio). Tiene cuatro capas:
 //   un colchón grave que respira · un brillo agudo que tiembla · viento espacial (ruido filtrado)
 //   y destellos: notas sueltas que suenan cada tanto, con eco, de un lado o del otro.
-// Se usa con setAmbience (ver core/room-sound.js).
+// Se usa con setAmbience (ver core/room-sound.js). Acá también está el "clic" de cambiar de canal.
 
 const TWINKLE_NOTES = [880, 987.77, 1174.66, 1318.51, 1567.98, 1760]; // escala pentatónica, aguda
+
+/** Cambio de canal de una tele vieja: el clic de la perilla y un chasquido de estática. */
+export function channelClick(ac, destination) {
+  const now = ac.currentTime;
+  const click = ac.createOscillator();
+  click.type = "square";
+  click.frequency.setValueAtTime(1400, now);
+  click.frequency.exponentialRampToValueAtTime(300, now + 0.03);
+  const clickGain = ac.createGain();
+  clickGain.gain.setValueAtTime(0.08, now);
+  clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+  click.connect(clickGain).connect(destination);
+  click.start(now);
+  click.stop(now + 0.05);
+
+  const length = Math.floor(ac.sampleRate * 0.22);
+  const buffer = ac.createBuffer(1, length, ac.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
+  const hiss = ac.createBufferSource();
+  hiss.buffer = buffer;
+  const band = ac.createBiquadFilter();
+  band.type = "bandpass";
+  band.frequency.value = 3200;
+  band.Q.value = 0.7;
+  const hissGain = ac.createGain();
+  hissGain.gain.setValueAtTime(0.06, now + 0.02);
+  hissGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+  hiss.connect(band).connect(hissGain).connect(destination);
+  hiss.start(now + 0.02);
+}
 
 /** Un eco largo "de catedral espacial": ruido que se apaga de a poco. */
 function makeReverb(ac, seconds = 4, decay = 2.5) {

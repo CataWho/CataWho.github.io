@@ -70,6 +70,15 @@ export function setAmbience(build) {
   window.addEventListener("keydown", unlock, { once: true });
 }
 
+/**
+ * Un sonido cortito de la sala (por ejemplo, al pasar por una tele). Solo suena si el sonido está
+ * prendido y el navegador ya dejó sonar (después del primer clic o tecla).
+ */
+export function playEffect(build) {
+  if (!enabled || !ac || ac.state !== "running") return;
+  build(ac, master);
+}
+
 /** Sube o baja el ambiente (de 0 a 1): por ejemplo, más bajito mientras se juega. */
 export function setAmbienceLevel(value) {
   level = value;
