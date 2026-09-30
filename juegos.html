@@ -13,6 +13,24 @@
     />
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/games.css" />
+    <!-- Se piden de entrada los archivos que siempre hacen falta (así no esperan uno detrás del otro)
+         y se abre antes la conexión con la base de datos. -->
+    <link rel="preconnect" href="https://pxzbnzgjtmbyntrlclsd.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="modulepreload" href="assets/js/core/boot.js" />
+    <link rel="modulepreload" href="assets/js/core/dom.js" />
+    <link rel="modulepreload" href="assets/js/core/i18n.js" />
+    <link rel="modulepreload" href="assets/js/core/state.js" />
+    <link rel="modulepreload" href="assets/js/core/db.js" />
+    <link rel="modulepreload" href="assets/js/core/room-sound.js" />
+    <link rel="modulepreload" href="assets/js/config.js" />
+    <link rel="modulepreload" href="assets/js/features/cursor-sparkles.js" />
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm" />
+    <link rel="modulepreload" href="assets/js/features/game-room.js" />
+    <link rel="modulepreload" href="assets/js/features/space-ambience.js" />
+    <link rel="modulepreload" href="assets/js/games/arcade/pixel.js" />
+    <link rel="modulepreload" href="assets/js/games/arcade/engine.js" />
+    <link rel="modulepreload" href="assets/js/games/estela/index.js" />
     <script type="module" src="assets/js/pages/games.js"></script>
   </head>
   <body class="is-loading games-page">
@@ -88,7 +106,7 @@
               <kbd>K</kbd> <span data-i18n="games.kick">patada</span> ·
               <kbd>L</kbd> <span data-i18n="games.helpWave">onda estelar</span> ·
               <kbd>W</kbd>+<kbd>L</kbd> <span data-i18n="games.helpRising">corte lunar</span> ·
-              <kbd>Espacio</kbd> <span data-i18n="games.block">defensa</span> ·
+              <kbd data-i18n="games.spaceKey">Espacio</kbd> <span data-i18n="games.block">defensa</span> ·
               <kbd>Enter</kbd> <span data-i18n="games.helpStart">empezar / pausa y controles</span>
             </p>
             <p data-i18n="games.helpBlock">En el aire podés corregir el salto para pasar por encima de los monstruos.</p>

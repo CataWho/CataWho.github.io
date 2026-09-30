@@ -398,6 +398,7 @@ const STRINGS = {
   "games.kick": ["patada", "kick"],
   "games.special": ["poder", "power"],
   "games.block": ["defensa", "block"],
+  "games.spaceKey": ["Espacio", "Space"],
   "games.helpWalk": ["caminar", "walk"],
   "games.helpJump": ["saltar", "jump"],
   "games.helpCrouch": ["agacharse", "crouch"],

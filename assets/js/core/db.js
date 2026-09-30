@@ -26,19 +26,13 @@ function expectRows(data) {
 
 export async function getArchive() {
   if (!db) return { profile: { display_name: "Cata", bio: "", layout: {} }, items: [], projects: [] };
-  const { data: profile, error } = await db
-    .from("profiles")
-    .select("*")
-    .eq("slug", config.profileSlug)
-    .single();
+  // Todo en una sola consulta (el perfil con sus cosas y proyectos adentro): así hay un solo viaje
+  // hasta Supabase en vez de dos, y la página aparece antes.
+  const { data, error } = await db.from("profiles").select("*, items(*), projects(*)").eq("slug", config.profileSlug).single();
   if (error) throw error;
-  const [items, projects] = await Promise.all([
-    db.from("items").select("*").eq("profile_id", profile.id).order("created_at", { ascending: false }),
-    db.from("projects").select("*").eq("profile_id", profile.id).order("created_at", { ascending: false }),
-  ]);
-  if (items.error) throw items.error;
-  if (projects.error) throw projects.error;
-  return { profile, items: items.data || [], projects: projects.data || [] };
+  const { items = [], projects = [], ...profile } = data;
+  const newestFirst = (a, b) => (a.created_at < b.created_at ? 1 : -1);
+  return { profile, items: items.sort(newestFirst), projects: projects.sort(newestFirst) };
 }
 
 async function profileId() {

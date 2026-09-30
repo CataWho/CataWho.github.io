@@ -27,18 +27,29 @@ function showOwnerBadge() {
   footer.lastElementChild.before(badge);
 }
 
-export async function boot(renderPage) {
+function show(renderPage) {
+  renderPage();
+  document.body.classList.remove("is-loading");
+  startCursorSparkles();
+}
+
+/**
+ * needsArchive: false para las páginas que no muestran datos del archivo (juegos, zona tranquila):
+ * aparecen enseguida y los datos (solo para saber si es la dueña) se buscan mientras tanto.
+ */
+export async function boot(renderPage, { needsArchive = true } = {}) {
   // Primero el idioma, así la página no se ve un instante en el otro.
   translatePage();
   mountLanguageSwitch();
   mountSoundSwitch();
+  if (!needsArchive) show(renderPage);
   const footerStatus = q("[data-storage-state]");
   try {
     state.archive = await getArchive();
   } catch (error) {
     console.error(error);
     if (footerStatus) footerStatus.textContent = t("footer.offline");
-    alert(t("footer.loadFailed", { message: error.message }));
+    if (needsArchive) alert(t("footer.loadFailed", { message: error.message }));
   }
 
   const user = await currentUser();
@@ -47,7 +58,5 @@ export async function boot(renderPage) {
   document.body.classList.toggle("is-owner", state.isOwner);
   if (state.isOwner) showOwnerBadge();
 
-  renderPage();
-  document.body.classList.remove("is-loading");
-  startCursorSparkles();
+  if (needsArchive) show(renderPage);
 }

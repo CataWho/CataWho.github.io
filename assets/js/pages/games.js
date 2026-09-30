@@ -79,9 +79,12 @@ function mountFullscreen(stage, button, canvas) {
   };
 }
 
+const params = new URLSearchParams(location.search);
+const current = GAMES.find((game) => game.id === params.get("juego")) ?? GAMES[0];
+// El juego se empieza a bajar ya mismo, mientras se arma la sala.
+const gameModule = current.load();
+
 boot(async () => {
-  const params = new URLSearchParams(location.search);
-  const current = GAMES.find((game) => game.id === params.get("juego")) ?? GAMES[0];
   const room = q("[data-room]");
   const stage = q("[data-arcade]");
   const canvas = q("[data-arcade-canvas]");
@@ -97,7 +100,7 @@ boot(async () => {
   readout.textContent = t("games.roomIdle");
   setAmbience(spaceAmbience); // el sonido intergaláctico de la sala
 
-  const { startGame } = await current.load();
+  const { startGame } = await gameModule;
   const arcade = await startGame({
     root: stage,
     canvas,
@@ -145,4 +148,4 @@ boot(async () => {
   // El botón de volumen de arriba también calla (o prende) el juego.
   arcade.setMuted(!soundOn());
   onSoundChange((on) => arcade.setMuted(!on));
-});
+}, { needsArchive: false }); // no usa datos del archivo: aparece enseguida

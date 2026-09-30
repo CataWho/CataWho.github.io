@@ -13,6 +13,19 @@
     />
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/home.css" />
+    <!-- Se piden de entrada los archivos que siempre hacen falta (así no esperan uno detrás del otro)
+         y se abre antes la conexión con la base de datos. -->
+    <link rel="preconnect" href="https://pxzbnzgjtmbyntrlclsd.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="modulepreload" href="assets/js/core/boot.js" />
+    <link rel="modulepreload" href="assets/js/core/dom.js" />
+    <link rel="modulepreload" href="assets/js/core/i18n.js" />
+    <link rel="modulepreload" href="assets/js/core/state.js" />
+    <link rel="modulepreload" href="assets/js/core/db.js" />
+    <link rel="modulepreload" href="assets/js/core/room-sound.js" />
+    <link rel="modulepreload" href="assets/js/config.js" />
+    <link rel="modulepreload" href="assets/js/features/cursor-sparkles.js" />
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm" />
     <script type="module" src="assets/js/pages/home.js"></script>
   </head>
   <body class="is-loading">

@@ -31,4 +31,4 @@ boot(() => {
       scene.setPhase(button.dataset.phase);
     }),
   );
-});
+}, { needsArchive: false }); // no usa datos del archivo: aparece enseguida

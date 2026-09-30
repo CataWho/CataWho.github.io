@@ -14,7 +14,7 @@ const ROOM = {
   centerY: 0.46, // altura del centro del cuadrado (0 arriba, 1 abajo)
   screen: 0.86, // la pantalla del juego adelante ocupa como mucho este ancho de la sala...
   screenHeight: 0.84, // ...y como mucho este alto
-  back: 0.3, // tamaño del cuadrado del fondo comparado con la pantalla adelante
+  back: 0.3, // el cuadrado del fondo es la sala en chiquito (misma forma que la pantalla): así no se estira
 };
 
 /** Ancho (en píxeles) de la pantalla del juego cuando está adelante: lo más grande que entre. */
@@ -266,7 +266,6 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
 
   // El CSS toma las medidas del cuadrado desde acá.
   view.style.setProperty("--room-cy", ROOM.centerY);
-  view.style.setProperty("--room-back", ROOM.back);
   // Si la tipografía pixel todavía no había cargado, se vuelve a armar la tira del letrero.
   document.fonts?.ready.then(() => (banner = makeBanner(marquee)));
 
@@ -281,13 +280,21 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
       clouds.height = canvas.height;
       const { at } = geometry();
       paintClouds(clouds, cloudShapes, ({ side, depth, width }) => {
-        const [x0, , x1, y1] = at(depth);
-        return { x: x0 + (x1 - x0) * side, floor: y1, size: (x1 - x0) * width, wallLeft: x0, wallRight: x1 };
+        const [x0, y0, x1, y1] = at(depth);
+        // El tamaño sale del ancho del piso, pero sin pasarse de lo que da el alto (en pantallas muy anchas
+        // las nubes no se agrandan de más).
+        const span = Math.min(x1 - x0, (y1 - y0) * 1.6);
+        return { x: x0 + (x1 - x0) * side, floor: y1, size: span * width, wallLeft: x0, wallRight: x1 };
       });
     }, 120);
     paintSky();
     // El CSS ubica la pantalla del juego con esta medida (así coincide con el cuadrado del fondo).
-    view.style.setProperty("--screen-w", `${screenWidth(view.clientWidth, view.clientHeight)}px`);
+    const cssW = view.clientWidth;
+    const cssH = view.clientHeight;
+    const screenW = screenWidth(cssW, cssH);
+    view.style.setProperty("--screen-w", `${screenW}px`);
+    // Cuánto hay que achicar la pantalla del juego para que entre justo en el cuadrado del fondo.
+    view.style.setProperty("--room-back", Math.min((cssW * ROOM.back) / screenW, (cssH * ROOM.back) / ((screenW * 9) / 16)));
   }
 
   /**
@@ -316,8 +323,8 @@ export function mountGameRoom({ view, canvas, tvs, marquee }) {
 
   function geometry() {
     const { width: w, height: h } = canvas;
-    const bw = screenWidth(w, h) * ROOM.back;
-    const bh = (bw * 9) / 16;
+    const bw = w * ROOM.back;
+    const bh = h * ROOM.back;
     const bx = (w - bw) / 2;
     const by = h * ROOM.centerY - bh / 2;
     // Rectángulo a una profundidad u (0 = adelante, 1 = el fondo), con perspectiva.

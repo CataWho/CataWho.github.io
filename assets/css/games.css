@@ -5,7 +5,11 @@
 
 /* La sala ocupa toda la pantalla, del menú para abajo (el pie de página fijo queda encima). */
 .games-page {
+  padding-bottom: 0; /* acá no hay pie de página: la sala llega hasta abajo */
   background: #030207;
+}
+.games-page .site-footer {
+  display: none;
 }
 .games-main {
   display: flex;
